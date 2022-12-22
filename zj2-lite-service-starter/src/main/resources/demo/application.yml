@@ -1,0 +1,69 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ${APPLICATION_NAME}
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 10240MB
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB_NAME}?serverTimezone=GMT%2B8&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: Hikari
+      maximum-pool-size: ${DB_POOL_SIZE:300}
+      minimum-idle: 5
+      max-lifetime: 600000
+      idle-timeout: 1200000
+  redis:
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD:}
+    port: ${REDIS_POST:6379}
+    database: ${REDIS_DATABASE:0}
+    lettuce:
+      pool:
+        max-active: ${REDIS_POOL_SIZE:100}
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    redisson:
+      config:
+        singleServerConfig:
+          address: redis://${REDIS_HOST}:${REDIS_POST:6379}
+          password: ${REDIS_PASSWORD:}
+          database: ${REDIS_DATABASE:0}
+          connectionMinimumIdleSize: 0
+          connectionPoolSize: ${REDIS_POOL_SIZE:100}
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: ${ZJ2_DOC_ENABLE:true}
+    enabled: ${ZJ2_DOC_ENABLE:true}
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+zj2:
+  doc:
+    enabled: ${ZJ2_DOC_ENABLE:true}
+    title: ${ZJ2_DOC_TITLE:}
+  crypt:
+    secret: ${ZJ2_CRYPT_SECRET:}
+  web:
+    index: ${ZJ2_WEB_INDEX:}
+    cors:
+      allowedOrigins: ${ZJ2_WEB_CORS_ALLOWED_ORIGINS:*}
+      allowHeaders: ${ZJ2_WEB_CORS_ALLOWED_HEADERS:*}
+      allowMethods: ${ZJ2_WEB_CORS_ALLOWED_METHODS:*}
+      maxAge: ${ZJ2_WEB_CORS_MAX_AGE:1800}
+  log:
+    level: ${ZJ2_LOG_LEVEL:INFO}
+    path: ${ZJ2_LOG_PATH:/logs}
