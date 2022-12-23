@@ -1,4 +1,4 @@
-package org.zj2.lite.service.event;
+package org.zj2.lite.service.entity.event;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;

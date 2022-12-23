@@ -17,6 +17,11 @@
             <groupId>org.zj2.lite</groupId>
             <artifactId>zj2-lite-service-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.zj2.lite.module</groupId>
+            <artifactId>zj2-common-sys</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

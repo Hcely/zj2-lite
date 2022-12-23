@@ -17,8 +17,8 @@ import org.zj2.lite.common.util.BeanUtil;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.service.constant.ServiceConstants;
-import org.zj2.lite.service.request.wrapper.ZQueryWrapper;
-import org.zj2.lite.service.request.wrapper.ZUpdateWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
 import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.service.util.SafeLogUtil;
 import org.zj2.lite.spring.SpringUtil;
@@ -26,6 +26,7 @@ import org.zj2.lite.service.cache.CacheUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +49,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     protected final Class<DO> entityType;
     protected final Class<DTO> dtoType;
     protected TableInfo tableInfo;
-    protected String keyProperty;
-    protected Map<String, TableFieldInfo> tableFieldMap;
+    protected Map<String, String> tableFieldMap;
 
     public BaseServiceImpl() {
         entityType = (Class<DO>) ReflectionKit.getSuperClassGenericType(this.getClass(), BaseServiceImpl.class, 1);
@@ -68,8 +68,11 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     public void afterPropertiesSet() throws Exception {
         tableInfo = TableInfoHelper.getTableInfo(entityType);
         Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
-        tableFieldMap = CollUtil.toMap(tableInfo.getFieldList(), e -> e.getField().getName());
-        keyProperty = tableInfo.getKeyProperty();
+        tableFieldMap = new HashMap<>();
+        for (TableFieldInfo e : CollUtil.of(tableInfo.getFieldList())) {
+            tableFieldMap.put(e.getProperty(), e.getColumn());
+        }
+        tableFieldMap.put(tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
         SafeLogUtil.addSensitiveProperty(entityType);
         SafeLogUtil.addSensitiveProperty(dtoType);
     }
@@ -103,24 +106,26 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     public DTO getOne(ZQueryWrapper<DTO> wrapper) {
         wrapper.limit(1);
         return BeanUtil.toBean(
-                mapper.selectOne(WrapperUtil.buildQueryCondition(keyProperty, tableFieldMap, wrapper)), dtoType);
+                mapper.selectOne(WrapperUtil.buildQueryCondition(tableInfo.getKeyColumn(), tableFieldMap, wrapper)),
+                dtoType);
     }
 
     @Override
     public List<DTO> query(ZQueryWrapper<DTO> wrapper) {
         return BeanUtil.copyToList(
-                mapper.selectList(WrapperUtil.buildQueryCondition(keyProperty, tableFieldMap, wrapper)), dtoType);
+                mapper.selectList(WrapperUtil.buildQueryCondition(tableInfo.getKeyColumn(), tableFieldMap, wrapper)),
+                dtoType);
     }
 
     @Override
     public int selectCount(ZQueryWrapper<DTO> wrapper) {
-        Long i = mapper.selectCount(WrapperUtil.buildQueryCondition(keyProperty, tableFieldMap, wrapper));
+        Long i = mapper.selectCount(WrapperUtil.buildQueryCondition(tableInfo.getKeyColumn(), tableFieldMap, wrapper));
         return i == null ? 0 : i.intValue();
     }
 
     @Override
     public boolean exists(ZQueryWrapper<DTO> wrapper) {
-        return mapper.exists(WrapperUtil.buildQueryCondition(keyProperty, tableFieldMap, wrapper));
+        return mapper.exists(WrapperUtil.buildQueryCondition(tableInfo.getKeyColumn(), tableFieldMap, wrapper));
     }
 
     @Override

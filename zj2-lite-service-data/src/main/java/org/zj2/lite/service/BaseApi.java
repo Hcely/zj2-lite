@@ -1,7 +1,6 @@
 package org.zj2.lite.service;
 
-import org.zj2.lite.service.annotation.ApiReference;
-import org.zj2.lite.service.request.wrapper.ZQueryWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
 
 import java.util.Collection;
 import java.util.List;

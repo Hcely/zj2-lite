@@ -1,5 +1,7 @@
-package org.zj2.lite.service.request.wrapper;
+package org.zj2.lite.service.entity.request.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UpdateField implements Serializable {
     private static final long serialVersionUID = 3798121877468231721L;
-    private String name;
+    @JSONField(name = "m")
+    @JsonProperty("m")
     private UpdateMode mode;
+    @JSONField(name = "v")
+    @JsonProperty("v")
     private Object value;//NOSONAR
 }

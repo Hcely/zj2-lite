@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.zj2.lite.service.entity.event.BaseEvent;
+import org.zj2.lite.service.entity.event.MqEvent;
 
 /**
  * redis队列消息发布者

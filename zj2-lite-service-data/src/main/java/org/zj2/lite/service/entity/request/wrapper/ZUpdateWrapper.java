@@ -1,4 +1,4 @@
-package org.zj2.lite.service.request.wrapper;
+package org.zj2.lite.service.entity.request.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.zj2.lite.common.PropFunc;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  *  UpdateWrapper
@@ -17,9 +16,9 @@ import java.util.Map;
 @Getter
 public class ZUpdateWrapper<T> extends AbstractWrapper<T, ZUpdateWrapper<T>> {
     private static final long serialVersionUID = 7695434712267582650L;
-    @JSONField
-    @JsonProperty
-    private Map<String, UpdateField> updateFields;
+    @JSONField(name = "up")
+    @JsonProperty("up")
+    private LinkedHashMap<String, UpdateField> updateFields;
 
     public ZUpdateWrapper<T> set(PropFunc<T, ?> prop, Object value) {
         return set(true, prop, value);
@@ -81,7 +80,7 @@ public class ZUpdateWrapper<T> extends AbstractWrapper<T, ZUpdateWrapper<T>> {
         if (!b) {return this;}
         String name = getFieldName(prop);
         if (updateFields == null) {updateFields = new LinkedHashMap<>(5);}
-        updateFields.put(name, new UpdateField(name, mode, value));
+        updateFields.put(name, new UpdateField(mode, value));
         return this;
     }
 }

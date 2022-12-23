@@ -1,4 +1,4 @@
-package org.zj2.lite.service.request.wrapper;
+package org.zj2.lite.service.entity.request.wrapper;
 
 public enum WhereMode {
     EQ,//

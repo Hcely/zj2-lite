@@ -31,7 +31,7 @@
         </encoder>
     </appender>
     <!-- 开发环境下的日志配置 -->
-    <springProfile name="local,test,qa,qa1,uat,dev">
+    <springProfile name="local,local0,local1,test,test0,test1,qa,qa0,qa1,uat,dev,develop">
         <root level="${LOG_LEVEL}">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="SYSTEM_FILE"/>

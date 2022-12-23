@@ -31,7 +31,7 @@ public class SequenceSeqKeyHandler implements BizVHandler<SequenceNextContext> {
         for (FormatPart part : formatter.getParts()) {
             if (part instanceof SlotFormatPart) {
                 SlotFormatPart slotPart = (SlotFormatPart) part;
-                if (StringUtils.startsWith(slotPart.getKey(), "seq")) {
+                if (!StringUtils.startsWith(slotPart.getKey(), "seq")) {
                     slotPart.appendObj(sb, context.getParams());
                 }
             }

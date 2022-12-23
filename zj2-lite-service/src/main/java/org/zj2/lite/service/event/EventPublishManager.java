@@ -3,6 +3,7 @@ package org.zj2.lite.service.event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.service.entity.event.BaseEvent;
 import org.zj2.lite.spring.InstanceHolder;
 import org.zj2.lite.spring.SpringUtil;
 import org.zj2.lite.util.TransactionSyncUtil;

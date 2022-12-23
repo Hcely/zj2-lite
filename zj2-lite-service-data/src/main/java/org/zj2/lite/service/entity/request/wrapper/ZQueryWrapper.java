@@ -1,9 +1,9 @@
-package org.zj2.lite.service.request.wrapper;
+package org.zj2.lite.service.entity.request.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.zj2.lite.service.request.PageRequest;
+import org.zj2.lite.service.entity.request.PageRequest;
 import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.common.util.CollUtil;
 
@@ -20,23 +20,23 @@ import java.util.List;
 @Getter
 public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     private static final long serialVersionUID = 4191953336206744062L;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "sl")
+    @JsonProperty("sl")
     private LinkedHashSet<String> selectProps;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "asc")
+    @JsonProperty("asc")
     private boolean sortAsc;
     @JSONField
     @JsonProperty
     private List<String> sorts;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "off")
+    @JsonProperty("off")
     private int offset = 0;
     @JSONField
     @JsonProperty
     private int size = -1;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "fu")
+    @JsonProperty("fu")
     boolean forUpdate = false;
 
     public ZQueryWrapper<T> select(PropFunc<T, ?> prop) {

@@ -3,6 +3,7 @@ log/
 .mvn/
 .DS_Store
 .flattened-pom.xml
+*.log
 
 ### STS ###
 .apt_generated
@@ -21,4 +22,3 @@ log/
 
 ### VS Code ###
 .vscode/
-/start/src/main/resources/application-prod.yml

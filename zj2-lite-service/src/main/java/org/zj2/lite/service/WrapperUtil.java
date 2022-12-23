@@ -4,20 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.commons.text.TextStringBuilder;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.common.util.NumUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.constant.ServiceConstants;
-import org.zj2.lite.service.request.wrapper.PropCondition;
-import org.zj2.lite.service.request.wrapper.ZQueryWrapper;
-import org.zj2.lite.service.request.wrapper.UpdateField;
-import org.zj2.lite.service.request.wrapper.ZUpdateWrapper;
-import org.zj2.lite.common.entity.result.ZError;
+import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.entity.request.wrapper.PropCondition;
+import org.zj2.lite.service.entity.request.wrapper.UpdateField;
+import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
 
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
@@ -39,7 +38,7 @@ class WrapperUtil {
     private static final List<String> EMPTY_COLL = Collections.singletonList("_$NULL$_");
 
     public static <DTO, DO> Wrapper<DO>//NOSONAR
-    buildCondition(Map<String, TableFieldInfo> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
+    buildCondition(Map<String, String> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
         QueryWrapper<DO> result = Wrappers.query();
         for (PropCondition c : CollUtil.of(wrapper.getConditions())) {
             addCondition(tableFieldMap, c, result);
@@ -48,7 +47,7 @@ class WrapperUtil {
     }
 
     public static <DTO, DO> QueryWrapper<DO>//NOSONAR
-    buildQueryCondition(String keyProperty, Map<String, TableFieldInfo> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
+    buildQueryCondition(String keyColumn, Map<String, String> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
         QueryWrapper<DO> result = Wrappers.query();
         if (CollUtil.isNotEmpty(wrapper.getSelectProps())) {
             result.select(getColumns(tableFieldMap, wrapper.getSelectProps()));
@@ -59,9 +58,8 @@ class WrapperUtil {
         if (CollUtil.isNotEmpty(wrapper.getSorts())) {
             result.orderBy(true, wrapper.isSortAsc(), getColumnList(tableFieldMap, wrapper.getSorts()));
         } else {
-            result.orderByAsc(getColumnName(tableFieldMap, keyProperty));
+            result.orderByAsc(keyColumn);
         }
-
         if (wrapper.getOffset() >= 0 && wrapper.getSize() > 0) {
             StringBuilder sb = new StringBuilder(32);
             sb.append("LIMIT ").append(wrapper.getOffset()).append(',').append(wrapper.getSize());
@@ -74,7 +72,7 @@ class WrapperUtil {
     }
 
     public static <DTO, DO> UpdateWrapper<DO>//NOSONAR
-    buildUpdate(Map<String, TableFieldInfo> tableFieldMap, ZUpdateWrapper<DTO> wrapper) {
+    buildUpdate(Map<String, String> tableFieldMap, ZUpdateWrapper<DTO> wrapper) {
         UpdateWrapper<DO> result = Wrappers.update();
         for (PropCondition c : CollUtil.of(wrapper.getConditions())) {
             addCondition(tableFieldMap, c, result);
@@ -92,22 +90,22 @@ class WrapperUtil {
             updateFields.remove(ServiceConstants.UPDATE_USER);
             updateFields.remove(ServiceConstants.UPDATE_USER_NAME);
             //
-            for (UpdateField field : updateFields.values()) {
-                addUpdateField(tableFieldMap, field, result);
+            for (Map.Entry<String, UpdateField> e : updateFields.entrySet()) {
+                addUpdateField(tableFieldMap, e.getKey(), e.getValue(), result);
             }
         }
-        TableFieldInfo fieldInfo = tableFieldMap.get(ServiceConstants.UPDATE_TIME);
-        if (fieldInfo != null) {result.set(fieldInfo.getColumn(), LocalDateTime.now());}
+        String column = tableFieldMap.get(ServiceConstants.UPDATE_TIME);
+        if (column != null) {result.set(column, LocalDateTime.now());}
         //
-        fieldInfo = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (fieldInfo != null) {result.set(fieldInfo.getColumn(), AuthenticationContext.currentUserId());}
+        column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
+        if (column != null) {result.set(column, AuthenticationContext.currentUserId());}
         //
-        fieldInfo = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (fieldInfo != null) {result.set(fieldInfo.getColumn(), AuthenticationContext.currentUserName());}
+        column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
+        if (column != null) {result.set(column, AuthenticationContext.currentUserName());}
         return result;
     }
 
-    private static String[] getColumns(Map<String, TableFieldInfo> tableFieldMap, Collection<String> props) {
+    private static String[] getColumns(Map<String, String> tableFieldMap, Collection<String> props) {
         String[] columns = new String[props.size()];
         int i = 0;
         for (String prop : props) {
@@ -116,7 +114,7 @@ class WrapperUtil {
         return columns;
     }
 
-    private static List<String> getColumnList(Map<String, TableFieldInfo> tableFieldMap, Collection<String> props) {
+    private static List<String> getColumnList(Map<String, String> tableFieldMap, Collection<String> props) {
         List<String> list = new ArrayList<>(props.size());
         for (String prop : props) {
             list.add(getColumnName(tableFieldMap, prop));
@@ -124,7 +122,7 @@ class WrapperUtil {
         return list;
     }
 
-    private static void addCondition(Map<String, TableFieldInfo> tableFieldMap, PropCondition condition,
+    private static void addCondition(Map<String, String> tableFieldMap, PropCondition condition,
             AbstractWrapper wrapper) {
         if (condition.getMode() == null) {return;}
         String column = getColumnName(tableFieldMap, condition.getName());
@@ -180,10 +178,10 @@ class WrapperUtil {
         }
     }
 
-    private static void addUpdateField(Map<String, TableFieldInfo> tableFieldMap, UpdateField field,
+    private static void addUpdateField(Map<String, String> tableFieldMap, String name, UpdateField field,
             UpdateWrapper wrapper) {
         if (field.getMode() == null) {return;}
-        String column = getColumnName(tableFieldMap, field.getName());
+        String column = getColumnName(tableFieldMap, name);
         switch (field.getMode()) {
             case SET:
                 wrapper.set(column, field.getValue());
@@ -237,9 +235,9 @@ class WrapperUtil {
         }
     }
 
-    private static String getColumnName(Map<String, TableFieldInfo> tableFieldMap, String propName) {
-        TableFieldInfo fieldInfo = tableFieldMap.get(propName);
-        if (fieldInfo == null) {throw new ZError(propName + "-字段不存在!");}
-        return fieldInfo.getColumn();
+    private static String getColumnName(Map<String, String> tableFieldMap, String propName) {
+        String column = tableFieldMap.get(propName);
+        if (column == null) {throw new ZError(propName + "-字段不存在!");}
+        return column;
     }
 }

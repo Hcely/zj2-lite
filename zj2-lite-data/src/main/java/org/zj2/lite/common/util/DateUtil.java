@@ -241,12 +241,36 @@ public class DateUtil {
         return time == null ? null : DATE_FORMATTER.format(time);
     }
 
+    public static int formatDateAsNum(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return formatDateAsNum(calendar);
+    }
+
+    public static int formatDateAsNum(Long time) {
+        if (time == null) {
+            return 0;
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(time);
+            return formatDateAsNum(calendar);
+        }
+    }
+
     public static int formatDateAsNum(Date time) {
         if (time == null) {
             return 0;
         } else {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(time);
+            return formatDateAsNum(calendar);
+        }
+    }
+
+    public static int formatDateAsNum(Calendar calendar) {
+        if (calendar == null) {
+            return 0;
+        } else {
             return calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(
                     Calendar.DAY_OF_MONTH);
         }

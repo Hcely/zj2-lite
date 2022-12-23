@@ -1,5 +1,6 @@
 package org.zj2.lite.service.event;
 
+import org.zj2.lite.service.entity.event.BaseEvent;
 import org.zj2.lite.spring.SpringUtil;
 
 /**

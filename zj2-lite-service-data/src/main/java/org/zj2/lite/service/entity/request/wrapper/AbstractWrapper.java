@@ -1,4 +1,4 @@
-package org.zj2.lite.service.request.wrapper;
+package org.zj2.lite.service.entity.request.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,11 +26,11 @@ import java.util.List;
 @Getter
 public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements Serializable {
     private static final long serialVersionUID = 4191953336206744062L;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "cds")
+    @JsonProperty("cds")
     private List<PropCondition> conditions;
-    @JSONField
-    @JsonProperty
+    @JSONField(name = "iemy")
+    @JsonProperty("iemy")
     private boolean ignoreEmpty;
 
     public W ignoreEmpty(boolean ignoreEmpty) {

@@ -1,4 +1,4 @@
-package org.zj2.lite.service.event;
+package org.zj2.lite.service.entity.event;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package org.zj2.lite.service.request;
+package org.zj2.lite.service.entity.request;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,8 @@
 package org.zj2.lite.service;
 
 import org.slf4j.Logger;
-import org.zj2.lite.service.request.wrapper.ZQueryWrapper;
-import org.zj2.lite.service.request.wrapper.ZUpdateWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
+import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
 
 import java.util.Collection;
 import java.util.List;
