@@ -13,32 +13,43 @@ import org.zj2.lite.service.BaseInnerService;
  */
 public interface OrgEmployeeService extends BaseInnerService<OrgEmployeeDTO>, OrgEmployeeApi {
     /**
-     *
+     * 添加职员
      * @param req
      * @return
      */
     OrgEmployeeDTO addEmployee(OrgEmployeeAddReq req);
 
-
     /**
-     *
+     * 创建职员
      */
     OrgEmployeeDTO createEmployee(OrgEmployeeCreateReq req);
 
     /**
-     *
+     * 可用
      * @param orgEmployeeId
      */
     void enable(String orgEmployeeId);
 
     /**
-     *
+     * 禁用
      * @param orgEmployeeId
      */
     void disable(String orgEmployeeId);
 
     /**
-     *
+     * 可见
+     * @param orgEmployeeId
+     */
+    void visible(String orgEmployeeId);
+
+    /**
+     * 隐藏
+     * @param orgEmployeeId
+     */
+    void divisible(String orgEmployeeId);
+
+    /**
+     * 离职
      * @param orgEmployeeId
      */
     void quit(String orgEmployeeId);

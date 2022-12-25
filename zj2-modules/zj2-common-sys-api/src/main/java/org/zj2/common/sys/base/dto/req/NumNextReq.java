@@ -18,26 +18,26 @@ import java.io.Serializable;
 @Setter
 @Accessors(chain = true)
 @NoArgsConstructor
-public class SequenceNextReq implements Serializable {
+public class NumNextReq implements Serializable {
     private static final long serialVersionUID = 20221210031326L;
     private String appCode;
-    private String sequenceRuleCode;
-    private String seqNoFormat;
+    private String numRuleCode;
+    private String numRuleFormat;
     private String seqIncKeyFormat;
     private JSONObject params;
 
-    public SequenceNextReq(String sequenceRuleCode, String seqNoFormat) {
-        this.sequenceRuleCode = sequenceRuleCode;
-        this.seqNoFormat = seqNoFormat;
+    public NumNextReq(String numRuleCode, String numRuleFormat) {
+        this.numRuleCode = numRuleCode;
+        this.numRuleFormat = numRuleFormat;
     }
 
-    public SequenceNextReq(String sequenceRuleCode, String seqNoFormat, String seqIncKeyFormat) {
-        this.sequenceRuleCode = sequenceRuleCode;
-        this.seqNoFormat = seqNoFormat;
+    public NumNextReq(String numRuleCode, String numRuleFormat, String seqIncKeyFormat) {
+        this.numRuleCode = numRuleCode;
+        this.numRuleFormat = numRuleFormat;
         this.seqIncKeyFormat = seqIncKeyFormat;
     }
 
-    public <T extends Serializable> void addParam(String key, T value) {
+    public <T extends Serializable> void putParam(String key, T value) {
         if (params == null) {params = new JSONObject();}
         params.put(key, value);
     }

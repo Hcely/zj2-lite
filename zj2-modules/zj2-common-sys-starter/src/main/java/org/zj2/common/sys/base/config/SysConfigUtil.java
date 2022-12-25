@@ -1,9 +1,8 @@
-package org.zj2.common.sys.base.util;
+package org.zj2.common.sys.base.config;
 
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.sys.base.dto.SysConfigDTO;
 import org.zj2.common.sys.base.service.SysConfigApi;
-import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.spring.SpringBeanRef;
@@ -52,7 +51,6 @@ public class SysConfigUtil {
     }
 
     private static final class EmptyConfig extends SysConfigDTO {
-
 
         private static final long serialVersionUID = -93247274151172300L;
 

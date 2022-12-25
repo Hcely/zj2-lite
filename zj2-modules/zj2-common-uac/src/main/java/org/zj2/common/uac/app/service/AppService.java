@@ -10,4 +10,10 @@ import org.zj2.lite.service.BaseInnerService;
  * @date 2022/12/3 7:37
  */
 public interface AppService extends BaseInnerService<AppDTO>, AppApi {
+    AppDTO createOrUpdate();
+
+    void editSecret();
+
+
+
 }

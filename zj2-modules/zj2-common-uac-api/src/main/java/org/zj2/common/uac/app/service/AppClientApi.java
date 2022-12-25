@@ -14,7 +14,7 @@ import java.util.List;
  */
 @ApiReference
 public interface AppClientApi extends BaseApi<AppClientDTO> {
-    boolean existClient(String appCode);
+    boolean hasClient(String appCode);
 
     AppClientDTO getByCode(String appCode, String clientCode);
 

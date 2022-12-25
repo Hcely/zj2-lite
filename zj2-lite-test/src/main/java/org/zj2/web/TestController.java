@@ -3,7 +3,7 @@ package org.zj2.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.zj2.common.sys.base.dto.req.SequenceNextReq;
+import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.service.SysSequenceService;
 
 /**
@@ -26,12 +26,12 @@ public class TestController {
 
     @GetMapping("generateNum")
     public String generateNum() {
-        SequenceNextReq req = new SequenceNextReq();
+        NumNextReq req = new NumNextReq();
         req.setAppCode("COMMON");
-        req.setSequenceRuleCode("testGenerateNum");
-        req.setSeqNoFormat("{header}-{date,yyyyMMdd}{seq,####}");
+        req.setNumRuleCode("testGenerateNum");
+        req.setNumRuleFormat("{header}-{date,yyyyMMdd}{seq,####}");
         req.setSeqIncKeyFormat("{date,yyyyMMdd}");
-        req.addParam("header", "AA");
+        req.putParam("header", "AA");
         return sysSequenceService.next(req).getSequenceNo();
     }
 }

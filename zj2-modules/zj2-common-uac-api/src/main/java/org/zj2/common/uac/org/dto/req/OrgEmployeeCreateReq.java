@@ -20,6 +20,7 @@ public class OrgEmployeeCreateReq implements Serializable {
     private static final long serialVersionUID = 20221209220953L;
     private String orgCode;
     private String userName;
+    private String userMobileAreaCode;
     private String userMobile;
     private LocalDateTime entryTime;
 }

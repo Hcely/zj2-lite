@@ -1,4 +1,4 @@
-package org.zj2.lite.service.configure;
+package org.zj2.lite.service.configure.date;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -23,7 +23,7 @@ import java.util.List;
  * @date 2022/12/23 15:10
  */
 @Configuration
-public class ZJacksonConfiguration implements InitializingBean {
+public class ZJacksonDateConfiguration implements InitializingBean {
     @Autowired(required = false)
     private List<ObjectMapper> objectMappers;
 

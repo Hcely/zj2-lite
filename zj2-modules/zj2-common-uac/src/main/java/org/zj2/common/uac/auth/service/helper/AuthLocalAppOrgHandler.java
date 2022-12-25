@@ -49,7 +49,7 @@ public class AuthLocalAppOrgHandler implements BizVHandler<AuthContext> {
     private void loadAppClient(AuthContext context, AuthReq req) {
         if (StringUtils.isEmpty(req.getAppCode())) {return;}
         if (StringUtils.isEmpty(req.getClientCode())) {
-            if (appClientService.existClient(req.getAppCode())) {throw ZRBuilder.failureErr("没有客户端");}
+            if (appClientService.hasClient(req.getAppCode())) {throw ZRBuilder.failureErr("没有客户端");}
             return;
         }
         AppClientDTO client = appClientService.getByCode(req.getAppCode(), req.getClientCode());

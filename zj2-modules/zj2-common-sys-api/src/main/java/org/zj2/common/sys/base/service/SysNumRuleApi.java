@@ -1,6 +1,7 @@
 package org.zj2.common.sys.base.service;
 
-import org.zj2.common.sys.base.dto.req.SequenceNextReq;
+import org.zj2.common.sys.base.dto.SysNumRuleDTO;
+import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.lite.service.annotation.ApiReference;
 
@@ -11,10 +12,10 @@ import org.zj2.lite.service.annotation.ApiReference;
  * @date 2022/12/10 2:16
  */
 @ApiReference
-public interface SysSequenceApi {
-    SequenceNo next(SequenceNextReq rule);
+public interface SysNumRuleApi {
+    SysNumRuleDTO getRule(String numRuleCode);
 
-    void setSequenceNum(SequenceNextReq rule, long num);
+    SequenceNo next(NumNextReq rule);
 
     void back(SequenceNo sequenceNo);
 }

@@ -23,5 +23,4 @@ public interface UserApi extends BaseApi<UserDTO> {
 
     UserDTO getUser(UserValueTypeEnum valueType, String userValue, String userExtValue);
 
-
 }

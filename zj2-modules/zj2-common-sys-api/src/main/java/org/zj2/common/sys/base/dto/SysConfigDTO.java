@@ -114,7 +114,7 @@ public class SysConfigDTO implements Serializable {
         return BooleanUtil.parse(configValue, null);
     }
 
-    public boolean valueBoolean(boolean defaultValue) {
+    public Boolean valueBoolean(Boolean defaultValue) {
         return BooleanUtil.parse(configValue, defaultValue);
     }
 

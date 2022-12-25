@@ -4,12 +4,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.zj2.common.sys.base.dto.SequenceNextContext;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.zj2.common.sys.base.dto.NumNextContext;
+import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.SysSequenceDTO;
-import org.zj2.common.sys.base.dto.req.SequenceNextReq;
+import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.entity.SysSequence;
 import org.zj2.common.sys.base.mapper.SysSequenceMapper;
+import org.zj2.common.sys.base.service.SysNumRuleService;
 import org.zj2.common.sys.base.service.SysSequenceService;
 import org.zj2.common.sys.base.service.helper.SequenceNextNoHelper;
 import org.zj2.common.sys.base.service.helper.SequenceSetNumHelper;
@@ -30,18 +34,27 @@ public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, S
     SequenceSetNumHelper sequenceSetNumHelper;
     @Autowired
     StringRedisTemplate redisTemplate;
+    @Autowired
+    private SysNumRuleService sysNumRuleService;
 
     @Override
-    public SequenceNo next(SequenceNextReq rule) {
-        SequenceNextContext context = new SequenceNextContext(rule);
+    public SysNumRuleDTO getRule(String numRuleCode) {
+        return sysNumRuleService.getRule(numRuleCode);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public SequenceNo next(NumNextReq rule) {
+        NumNextContext context = new NumNextContext(rule);
         nextHelper.handle(context);
         return context.getSequenceNo();
     }
 
     @Override
-    public void setSequenceNum(SequenceNextReq rule, long num) {
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void setSequenceNum(NumNextReq rule, long num) {
         if (num < 0) {return;}
-        SequenceNextContext context = new SequenceNextContext(rule);
+        NumNextContext context = new NumNextContext(rule);
         context.setSequenceNum(num);
         sequenceSetNumHelper.handle(context);
     }
@@ -58,6 +71,7 @@ public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, S
     }
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void back(SequenceNo sequenceNo) {
         SysSequenceDTO sequence = getOne(
                 wrapper().eq(SysSequenceDTO::getSequenceRuleCode, sequenceNo.getSequenceRuleCode())

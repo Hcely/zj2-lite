@@ -3,7 +3,7 @@ package org.zj2.common.sys.base.service.helper;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zj2.common.sys.base.dto.SequenceNextContext;
+import org.zj2.common.sys.base.dto.NumNextContext;
 import org.zj2.common.sys.base.dto.SysSequenceDTO;
 import org.zj2.common.sys.base.service.SysSequenceService;
 import org.zj2.lite.common.entity.result.ZRBuilder;
@@ -16,22 +16,22 @@ import org.zj2.lite.helper.handler.BizHandler;
  * @date 2022/12/11 23:57
  */
 @Component
-public class SequenceIncNumHandler implements BizHandler<SequenceNextContext> {
+public class SequenceIncNumHandler implements BizHandler<NumNextContext> {
     @Autowired
     private SysSequenceService sysSequenceService;
 
     @Override
-    public boolean handle(SequenceNextContext context) {
+    public boolean handle(NumNextContext context) {
         Long sequenceNum = nextSequenceNum(context);
         context.setSequenceNum(sequenceNum);
-        context.addParam("sequence", sequenceNum);
-        context.addParam("sequenceNum", sequenceNum);
-        context.addParam("seq", sequenceNum);
-        context.addParam("seqNum", sequenceNum);
+        context.putParam("sequence", sequenceNum);
+        context.putParam("sequenceNum", sequenceNum);
+        context.putParam("seq", sequenceNum);
+        context.putParam("seqNum", sequenceNum);
         return true;
     }
 
-    private Long nextSequenceNum(SequenceNextContext context) {
+    private Long nextSequenceNum(NumNextContext context) {
         String key = context.getSequenceKey();
         for (int i = 0; i < 10000; ++i) {
             SysSequenceDTO sequence = sysSequenceService.getByKey(key);
@@ -39,7 +39,7 @@ public class SequenceIncNumHandler implements BizHandler<SequenceNextContext> {
                 try {
                     sequence = new SysSequenceDTO();
                     sequence.setSequenceKey(key);
-                    sequence.setSequenceRuleCode(context.getSequenceRuleCode());
+                    sequence.setSequenceRuleCode(context.getNumRuleCode());
                     sequence.setSequenceNum(1L);
                     sysSequenceService.add(sequence);
                     return 1L;

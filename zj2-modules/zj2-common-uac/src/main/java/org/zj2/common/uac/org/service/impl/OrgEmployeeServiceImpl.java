@@ -45,6 +45,16 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     }
 
     @Override
+    public void visible(String orgEmployeeId) {
+        
+    }
+
+    @Override
+    public void divisible(String orgEmployeeId) {
+
+    }
+
+    @Override
     public void quit(String orgEmployeeId) {
 
     }

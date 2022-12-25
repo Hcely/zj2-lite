@@ -1,5 +1,6 @@
 target/
 log/
+generation/
 .mvn/
 .DS_Store
 .flattened-pom.xml

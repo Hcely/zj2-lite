@@ -20,7 +20,7 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
         implements AppClientService {
 
     @Override
-    public boolean existClient(String appCode) {
+    public boolean hasClient(String appCode) {
         return exists(wrapper().eq(AppClientDTO::getAppCode, appCode));
     }
 

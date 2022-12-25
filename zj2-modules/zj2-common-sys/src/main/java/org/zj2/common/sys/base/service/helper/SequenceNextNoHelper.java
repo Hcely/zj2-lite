@@ -1,6 +1,6 @@
 package org.zj2.common.sys.base.service.helper;
 
-import org.zj2.common.sys.base.dto.SequenceNextContext;
+import org.zj2.common.sys.base.dto.NumNextContext;
 import org.zj2.lite.helper.BizReference;
 import org.zj2.lite.helper.CommonBizHelper;
 
@@ -17,5 +17,5 @@ import org.zj2.lite.helper.CommonBizHelper;
         SequenceIncNumHandler.class,//
         SequenceBuildNoHandler.class,//
 })
-public class SequenceNextNoHelper extends CommonBizHelper<SequenceNextContext> {
+public class SequenceNextNoHelper extends CommonBizHelper<NumNextContext> {
 }

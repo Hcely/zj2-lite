@@ -41,4 +41,11 @@ public class ZJErrorHandler {
         return new ZResult().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS)
                 .setMsg(StringUtils.join(messages, ';'));
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public ZResult sysError(Exception error) {
+        log.error(error.toString(), error);
+        return new ZResult().setSuccess(false).setStatus(ZStatusMsg.SYS_ERROR_STATUS).setMsg("系统异常");
+    }
 }
