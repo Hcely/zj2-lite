@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.zj2.lite.common.annotation.JProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class AppClientDTO implements Serializable {
-
+    protected static final String CLIENT_CONFIG = "clientConfig";
     private static final long serialVersionUID = 1L;
 
     /**
@@ -49,9 +50,10 @@ public class AppClientDTO implements Serializable {
     private String namespace;
 
     /**
-     * 应用配置
+     * token过期时间
      */
-    private JSONObject clientConfig;
+    @JProperty(json = CLIENT_CONFIG)
+    private Long tokenTimeout;
 
     /**
      * 应用状态

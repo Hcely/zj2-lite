@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.zj2.lite.common.annotation.JProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class AppDTO implements Serializable {
     public static final String COMMON_APP_CODE = "COMMON";
+    protected static final String APP_CONFIG = "appConfig";
     private static final long serialVersionUID = 1L;
 
     /**
@@ -46,7 +48,20 @@ public class AppDTO implements Serializable {
     /**
      * 应用配置
      */
-    private JSONObject appConfig;
+    @JProperty(json = APP_CONFIG)
+    private Integer allowAllUser;
+
+    /**
+     * 单点登录
+     */
+    @JProperty(json = APP_CONFIG)
+    private Integer singleSignOn;
+    
+    /**
+     * token过期时间
+     */
+    @JProperty(json = APP_CONFIG)
+    private Long tokenTimeout;
 
     /**
      * 应用状态

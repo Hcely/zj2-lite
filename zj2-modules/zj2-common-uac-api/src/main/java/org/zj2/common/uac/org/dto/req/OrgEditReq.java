@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrgCreateReq implements Serializable {
+public class OrgEditReq implements Serializable {
     private static final long serialVersionUID = 20221209121656L;
     /**
      * 机构编码

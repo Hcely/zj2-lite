@@ -1,19 +1,38 @@
 package org.zj2.common.uac.org.service;
 
 import org.zj2.common.uac.org.dto.OrgDTO;
-import org.zj2.common.uac.org.dto.req.OrgCreateReq;
+import org.zj2.common.uac.org.dto.req.OrgEditReq;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  UserLogService
+ *  OrgService
  *
  * @author peijie.ye
  * @date 2022/11/28 11:37
  */
 public interface OrgService extends BaseInnerService<OrgDTO>, OrgApi {
-    OrgDTO create(OrgCreateReq req);
+    /**
+     * 创建
+     * @param req
+     * @return
+     */
+    OrgDTO create(OrgEditReq req);
 
+    /**
+     * 编辑
+     * @param req
+     */
+    void edit(OrgEditReq req);
+
+    /**
+     * 启用
+     * @param orgCode
+     */
     void enable(String orgCode);
 
+    /**
+     * 禁用
+     * @param orgCode
+     */
     void disable(String orgCode);
 }

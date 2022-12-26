@@ -85,7 +85,7 @@ public class SysConfigUtil {
         }
 
         @Override
-        public SysConfigDTO setConfigAppCode(String configAppCode) {
+        public SysConfigDTO setAppCode(String appCode) {
             return this;
         }
 

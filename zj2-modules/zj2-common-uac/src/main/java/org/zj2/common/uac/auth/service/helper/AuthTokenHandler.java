@@ -3,7 +3,6 @@ package org.zj2.common.uac.auth.service.helper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.app.constant.AppConfigs;
 import org.zj2.common.uac.app.dto.AppClientDTO;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.dto.AuthContext;
@@ -16,6 +15,7 @@ import org.zj2.common.uac.user.dto.UserDTO;
 import org.zj2.common.uac.user.dto.UserLogDTO;
 import org.zj2.common.uac.user.service.UserLogService;
 import org.zj2.common.uac.user.service.UserService;
+import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
 
@@ -61,18 +61,18 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         AuthenticationJWT token = new AuthenticationJWT();
         token.setUserId(user.getUserId());
         token.setUserName(user.getUserName());
-        long timeout = 3600000L * 4;
+        Long timeout = null;
         String namespace = null;
         if (app != null) {
             token.setAppCode(app.getAppCode());
-            boolean onlyToken = AppConfigs.onlyToken.getValue(app.getAppConfig());
-            timeout = AppConfigs.tokenTimeout.getValue(app.getAppConfig());
+            timeout = app.getTokenTimeout();
             if (client != null) {
-                timeout = AppConfigs.tokenTimeout.getValue(client.getClientConfig(), timeout);
+                timeout = client.getTokenTimeout();
                 namespace = client.getNamespace();
             }
-            if (onlyToken && StringUtils.isEmpty(namespace)) {namespace = "1";}
+            if (BooleanUtil.isTrue(app.getSingleSignOn()) && StringUtils.isEmpty(namespace)) {namespace = "1";}
         }
+        if (timeout == null) {timeout = 3600000L * 4;}
         token.setExpireAt(System.currentTimeMillis() + timeout);
         token.setNamespace(namespace);
         if (org != null) {token.setOrgCode(org.getOrgCode());}

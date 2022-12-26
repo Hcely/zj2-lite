@@ -12,7 +12,12 @@ import java.util.regex.Pattern;
  */
 public class PatternUtil {
     private static final Pattern WORD_PATTERN = Pattern.compile("^[0-9a-zA-Z]+$");
+    private static final Pattern ASCII_PATTERN = Pattern.compile("^[\\x00-\\x7F]+$");
     private static final Pattern INT_NUM_PATTERN = Pattern.compile("^\\d+$");
+
+    public static boolean isAscii(String value) {
+        return test(ASCII_PATTERN, value);
+    }
 
     public static boolean isWord(String value) {
         return test(WORD_PATTERN, value);

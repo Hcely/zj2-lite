@@ -1,7 +1,5 @@
 package org.zj2.common.sys.base.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -62,7 +60,7 @@ public class SysConfigDTO implements Serializable {
     /**
      * 应用编码
      */
-    private String configAppCode;
+    private String appCode;
 
     /**
      * 创建时间

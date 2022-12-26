@@ -9,13 +9,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
 @Slf4j
 class LocalCacheHelper extends AbsCacheHelper implements Runnable {
-    private static final int RETRY_COUNT = 3;
+    private static final int RETRY_COUNT = 100;
     private static final ScheduledThreadPoolExecutor LOCAL_CACHE_POOL_EXECUTOR = new ScheduledThreadPoolExecutor(1,
             r -> {
                 Thread thread = new Thread(r);
@@ -81,11 +82,14 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
             handler.result = null;
             try {
                 cacheObjMap.compute(cacheKey, handler);
+                return (T) handler.result;
             } catch (IllegalStateException e) {
                 // 对象发生并发，再取一次
+                LockSupport.parkNanos(1000000);
             }
         }
-        return (T) handler.result;
+        // 缓存失效，直接读取数据
+        return getter.apply(dataKey);
     }
 
     @SuppressWarnings("all")

@@ -2,7 +2,6 @@ package org.zj2.common.uac.auth.service.helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.app.constant.AppConfigs;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.service.AppUserService;
@@ -35,8 +34,7 @@ public class AuthAppUserCheckHandler implements Supportable<AuthContext>, BizVHa
         UserDTO user = context.getUser();
         AppUserDTO appUser = appUserService.getAppUser(app.getAppCode(), user.getUserId());
         if (appUser == null) {
-            Boolean flag = AppConfigs.allowAllUser.getValue(app.getAppConfig());
-            if (BooleanUtil.isFalse(flag)) {throw ZRBuilder.failureErr("应用账号无法使用");}
+            if (BooleanUtil.isFalse(app.getAllowAllUser())) {throw ZRBuilder.failureErr("应用账号无法使用");}
         } else if (BooleanUtil.isFalse(appUser.getEnableFlag())) {
             throw ZRBuilder.failureErr("应用账号无法使用");
         }

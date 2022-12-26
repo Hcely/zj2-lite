@@ -10,4 +10,29 @@ import org.zj2.lite.service.BaseInnerService;
  * @date 2022/12/3 7:37
  */
 public interface AppUserService extends BaseInnerService<AppUserDTO>, AppUserApi {
+    /**
+     * 添加用户
+     * @param appCode
+     * @param userId
+     * @return
+     */
+    AppUserDTO addUser(String appCode, String userId);
+
+    /**
+     * 移除用户
+     * @param appUserId
+     */
+    void removeUser(String appUserId);
+
+    /**
+     * 启用
+     * @param appUserId
+     */
+    void enable(String appUserId);
+
+    /**
+     * 禁用
+     * @param appUserId
+     */
+    void disable(String appUserId);
 }

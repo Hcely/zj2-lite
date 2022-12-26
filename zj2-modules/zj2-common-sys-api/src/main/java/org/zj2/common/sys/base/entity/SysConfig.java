@@ -2,6 +2,8 @@ package org.zj2.common.sys.base.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
@@ -60,7 +62,7 @@ public class SysConfig implements Serializable {
     /**
      * 应用编码
      */
-    private String configAppCode;
+    private String appCode;
 
     /**
      * 创建时间

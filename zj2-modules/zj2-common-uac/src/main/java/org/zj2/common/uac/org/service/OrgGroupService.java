@@ -4,7 +4,7 @@ import org.zj2.common.uac.org.dto.OrgGroupDTO;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  UserLogService
+ *  OrgGroupService
  *
  * @author peijie.ye
  * @date 2022/11/28 11:37

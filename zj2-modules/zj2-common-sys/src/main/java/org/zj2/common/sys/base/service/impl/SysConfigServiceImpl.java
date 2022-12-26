@@ -25,27 +25,26 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     public SysConfigDTO get(String appCode, String configCode) {
         if (StringUtils.isEmpty(configCode)) {return null;}
         appCode = StringUtils.defaultIfEmpty(appCode, SysConfigDTO.COMMON_APP_CODE);
-        return getOne(
-                wrapper().eq(SysConfigDTO::getConfigAppCode, appCode).eq(SysConfigDTO::getConfigCode, configCode));
+        return getOne(wrapper().eq(SysConfigDTO::getAppCode, appCode).eq(SysConfigDTO::getConfigCode, configCode));
     }
 
     @Override
     public SysConfigDTO edit(SysConfigEditReq req) {
         fillEditReqParams(req);
         SysConfigDTO sysConfig = saveConfig(req);
-        String key = SysConfigUtil.getConfigKey(sysConfig.getConfigAppCode(), sysConfig.getConfigCode());
+        String key = SysConfigUtil.getConfigKey(sysConfig.getAppCode(), sysConfig.getConfigCode());
         CacheUtil.sendCacheSign(key);
         return sysConfig;
     }
 
     private void fillEditReqParams(SysConfigEditReq req) {
-        String appCode = req.getConfigAppCode();
+        String appCode = req.getAppCode();
         if (StringUtils.isEmpty(appCode)) {
             appCode = AuthenticationContext.currentAppCode();
         } else if (StringUtils.equalsIgnoreCase(SysConfigDTO.COMMON_APP_CODE, appCode)) {
             appCode = SysConfigDTO.COMMON_APP_CODE;
         }
-        req.setConfigAppCode(appCode);
+        req.setAppCode(appCode);
         req.setConfigName(StringUtils.trimToEmpty(req.getConfigName()));
         req.setConfigValue(StringUtils.trimToEmpty(req.getConfigValue()));
         req.setConfigExtValue0(StringUtils.trimToEmpty(req.getConfigExtValue0()));
@@ -53,11 +52,12 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     }
 
     private SysConfigDTO saveConfig(SysConfigEditReq req) {
-        SysConfigDTO config = get(req.getConfigAppCode(), req.getConfigCode());
+        SysConfigDTO config = get(req.getAppCode(), req.getConfigCode());
         if (config == null) {
+            AuthenticationContext.current().setAppCode(req.getAppCode());
             config = new SysConfigDTO();
             config.setConfigCode(req.getConfigCode());
-            config.setConfigAppCode(req.getConfigAppCode());
+            config.setAppCode(req.getAppCode());
         }
         config.setConfigName(req.getConfigName());
         config.setConfigValue(req.getConfigValue());

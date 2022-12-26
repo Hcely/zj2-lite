@@ -20,7 +20,7 @@ public class SysConfigEditReq implements Serializable {
     /**
      *
      */
-    private String configAppCode;
+    private String appCode;
     /**
      *
      */
