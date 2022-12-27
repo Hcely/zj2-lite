@@ -2,6 +2,8 @@ package org.zj2.lite.common.context;
 
 import lombok.SneakyThrows;
 
+import java.util.function.Supplier;
+
 /**
  *  IContext
  *
@@ -11,6 +13,18 @@ import lombok.SneakyThrows;
 public abstract class BaseContext implements Cloneable {
     protected static int nextIdx() {
         return ZContext.nextIdx();
+    }
+
+    protected static <T extends BaseContext> T getSubContext(int idx, Supplier<T> supplier) {
+        return ZContext.getSubContext(idx, supplier);
+    }
+
+    protected static <T extends BaseContext> T setSubContext(int idx, T context) {
+        return ZContext.setSubContext(idx, context);
+    }
+
+    protected static <T extends BaseContext> T clearSubContext(int idx) {
+        return ZContext.clearSubContext(idx);
     }
 
     @Override

@@ -11,32 +11,37 @@ import java.util.function.Supplier;
  */
 public class ZContext {
     private static final long serialVersionUID = 20221203071103L;
+    private static final BaseContext[] EMPTY_CONTEXT = {};
     private static final ThreadLocal<ZContext> CONTEXT_TL = ThreadLocal.withInitial(ZContext::new);//NOSONAR
     private static final AtomicInteger contextIdx = new AtomicInteger(0);
-    private BaseContext[] contexts = new BaseContext[16];
+
+    private BaseContext[] contexts;
 
     private ZContext() {
+        contexts = EMPTY_CONTEXT;
     }
 
     private ZContext(ZContext context) {
         BaseContext[] tmp = context.contexts;
-        if (tmp != null) {
+        if (tmp != null && tmp.length > 0) {
             int len = tmp.length;
             contexts = new BaseContext[len];
             for (int i = 0; i < len; ++i) {
                 BaseContext c = tmp[i];
                 contexts[i] = c == null ? null : c.clone();
             }
+        } else {
+            contexts = EMPTY_CONTEXT;
         }
     }
 
-    protected static int nextIdx() {
+    static int nextIdx() {
         return contextIdx.getAndIncrement();
     }
 
     public static ZContext current() {
         ZContext context = CONTEXT_TL.get();
-        if (context == null) {context = new ZContext();}
+        if (context == null) {CONTEXT_TL.set(context = new ZContext());}//NOSONAR
         return context;
     }
 
@@ -59,7 +64,7 @@ public class ZContext {
     }
 
 
-    public static <T extends BaseContext> T getSubContext(int idx, Supplier<T> supplier) {
+    static <T extends BaseContext> T getSubContext(int idx, Supplier<T> supplier) {
         ZContext zcontext = current();
         BaseContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
@@ -74,7 +79,7 @@ public class ZContext {
         return (T) result;
     }
 
-    public static <T extends BaseContext> T setSubContext(int idx, T context) {
+    static <T extends BaseContext> T setSubContext(int idx, T context) {
         ZContext zcontext = current();
         BaseContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
@@ -87,7 +92,7 @@ public class ZContext {
         return (T) old;
     }
 
-    public static <T extends BaseContext> T clearSubContext(int idx) {
+    static <T extends BaseContext> T clearSubContext(int idx) {
         ZContext zcontext = CONTEXT_TL.get();
         if (zcontext == null) {return null;}
         BaseContext[] tmp = zcontext.contexts;

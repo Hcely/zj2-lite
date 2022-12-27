@@ -3,7 +3,6 @@ package org.zj2.common.uac.auth.filter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.zj2.lite.common.context.ZContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 
 import javax.servlet.Filter;
@@ -21,24 +20,20 @@ import java.io.IOException;
  * @date 2022/12/4 14:25
  */
 @Component
-public class WebContextFilter extends AbsContextFilter<HttpServletRequest> implements Filter {
+public class WebServiceRequestContextFilter extends AbsContextFilter<HttpServletRequest> implements Filter {
     private static final String[] IP_HEADERS = {"x-forwarded-for", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP",
             "HTTP_X_FORWARDED_FOR"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        try {
-            if (request instanceof HttpServletRequest) {
-                HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-                String uri = httpServletRequest.getRequestURI();
-                String method = StringUtils.upperCase(httpServletRequest.getMethod());
-                setContext(httpServletRequest, method, uri);
-            }
-            chain.doFilter(request, response);
-        } finally {
-            ZContext.clearContext();
+        if (request instanceof HttpServletRequest) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            String uri = httpServletRequest.getRequestURI();
+            String method = StringUtils.upperCase(httpServletRequest.getMethod());
+            setContext(httpServletRequest, method, uri);
         }
+        chain.doFilter(request, response);
     }
 
     @Override

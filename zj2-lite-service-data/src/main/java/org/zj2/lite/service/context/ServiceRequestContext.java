@@ -21,26 +21,26 @@ public class ServiceRequestContext extends BaseContext {
     public static final String DEVICE = "device";
 
     public static String currentAttrIp() {
-        ServiceRequestContext requestContext = ZContext.getSubContext(IDX, null);
+        ServiceRequestContext requestContext = getSubContext(IDX, null);
         return requestContext == null ? "" : requestContext.getAttrIp();
     }
 
     public static String currentDevice() {
-        ServiceRequestContext requestContext = ZContext.getSubContext(IDX, null);
+        ServiceRequestContext requestContext = getSubContext(IDX, null);
         return requestContext == null ? "" : requestContext.getDevice();
     }
 
     public static boolean currentAuthenticated() {
-        ServiceRequestContext requestContext = ZContext.getSubContext(IDX, null);
+        ServiceRequestContext requestContext = getSubContext(IDX, null);
         return requestContext != null && requestContext.isAuthenticated();
     }
 
     public static ServiceRequestContext setContext(ServiceRequestContext context) {
-        return ZContext.setSubContext(IDX, context);
+        return setSubContext(IDX, context);
     }
 
     public static ServiceRequestContext currentContext() {
-        return ZContext.getSubContext(IDX, ServiceRequestContext::new);
+        return getSubContext(IDX, ServiceRequestContext::new);
     }
 
     @Getter

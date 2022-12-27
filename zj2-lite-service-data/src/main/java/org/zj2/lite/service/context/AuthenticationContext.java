@@ -25,26 +25,26 @@ public class AuthenticationContext extends BaseContext {
     public static final String ORG_CODE = "org";
 
     public static AuthenticationContext current() {
-        return ZContext.getSubContext(IDX, AuthenticationContext::new);
+        return getSubContext(IDX, AuthenticationContext::new);
     }
 
     public static String currentUserId() {
-        AuthenticationContext context = ZContext.getSubContext(IDX, null);
+        AuthenticationContext context = getSubContext(IDX, null);
         return context == null ? "" : context.getUserId();
     }
 
     public static String currentUserName() {
-        AuthenticationContext context = ZContext.getSubContext(IDX, null);
+        AuthenticationContext context = getSubContext(IDX, null);
         return context == null ? "" : context.getUserName();
     }
 
     public static String currentAppCode() {
-        AuthenticationContext context = ZContext.getSubContext(IDX, null);
+        AuthenticationContext context = getSubContext(IDX, null);
         return context == null ? "" : context.getAppCode();
     }
 
     public static String currentOrgCode() {
-        AuthenticationContext context = ZContext.getSubContext(IDX, null);
+        AuthenticationContext context = getSubContext(IDX, null);
         return context == null ? "" : context.getOrgCode();
     }
 
@@ -53,11 +53,11 @@ public class AuthenticationContext extends BaseContext {
     }
 
     public static AuthenticationContext setContext(AuthenticationContext context) {
-        return ZContext.setSubContext(IDX, context);
+        return setSubContext(IDX, context);
     }
 
     public static AuthenticationContext clearContext() {
-        return ZContext.clearSubContext(IDX);
+        return clearSubContext(IDX);
     }
 
 

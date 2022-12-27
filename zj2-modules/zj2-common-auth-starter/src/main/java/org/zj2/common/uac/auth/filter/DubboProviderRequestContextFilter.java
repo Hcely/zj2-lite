@@ -18,19 +18,15 @@ import org.zj2.lite.service.context.ServiceRequestContext;
  * @date 2022/12/9 0:43
  */
 @Activate(group = CommonConstants.PROVIDER, order = -2000)
-public class DubboProviderContextFilter extends AbsContextFilter<Invocation> implements Filter {
+public class DubboProviderRequestContextFilter extends AbsContextFilter<Invocation> implements Filter {
     static final String DUBBO_METHOD = "DUBBO";
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String uri = ServerSignUtil.getUri(invoker.getInterface(), invocation.getMethodName(),
                 invocation.getParameterTypes());
-        try {
-            setContext(invocation, DUBBO_METHOD, uri);
-            return invoker.invoke(invocation);
-        } finally {
-            ZContext.clearContext();
-        }
+        setContext(invocation, DUBBO_METHOD, uri);
+        return invoker.invoke(invocation);
     }
 
     @Override

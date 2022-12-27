@@ -38,7 +38,7 @@
         </root>
     </springProfile>
     <!-- 生产环境下的日志配置 -->
-    <springProfile name="prod">
+    <springProfile name="prod,product">
         <root level="${LOG_LEVEL}">
             <appender-ref ref="SYSTEM_FILE"/>
         </root>
