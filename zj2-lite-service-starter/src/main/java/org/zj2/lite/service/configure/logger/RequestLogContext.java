@@ -19,9 +19,10 @@ class RequestLogContext extends BaseContext {
     public static final int STATE_COMPLETED = 3;
     private static final int IDX = nextIdx();
 
-    static RequestLogContext setContext(String method, String uri) {
+    static RequestLogContext setContext(String rpc, String method, String uri) {
         RequestLogContext context = getSubContext(IDX, RequestLogContext::new);
         context.startTime = System.currentTimeMillis();
+        context.rpc = rpc;
         context.method = method;
         context.uri = uri;
         context.logState = STATE_INITIALIZED;
@@ -39,6 +40,7 @@ class RequestLogContext extends BaseContext {
     private long executeStartTime;
     private long executeEndTime;
     //
+    private String rpc;
     private String method;
     private String uri;
     private int logState;

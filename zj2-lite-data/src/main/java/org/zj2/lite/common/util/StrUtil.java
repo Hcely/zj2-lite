@@ -76,6 +76,14 @@ public class StrUtil {
         return sb.toString();
     }
 
+    public static String concat(String value1, char value2, String value3) {
+        int len = length(value1) + length(value3) + 1;
+        TextStringBuilder sb = new TextStringBuilder(len);
+        if (value1 != null) {sb.append(value1);}
+        sb.append(value2);
+        if (value3 != null) {sb.append(value3);}
+        return sb.toString();
+    }
 
     public static String concat(String value1, String value2, String value3) {
         int len = length(value1) + length(value2) + length(value3);
