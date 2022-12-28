@@ -1,5 +1,6 @@
 package org.zj2.lite.service.configure.logger;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +26,6 @@ import javax.servlet.ServletResponse;
 @Aspect
 @Component
 public class ZJRequestLogInterceptor {
-    private final Logger log = LoggerFactory.getLogger(ZJRequestLogInterceptor.class);
 
     @Pointcut("@within(org.springframework.web.bind.annotation.RestController)||@within(org.springframework.stereotype.Controller)")
     private void pointcut() {
@@ -39,7 +39,6 @@ public class ZJRequestLogInterceptor {
         Object result = null;
         try {
             context = getContext();
-            if (context != null) {logRequest(context);}
             result = joinPoint.proceed();
             return result;
         } catch (Throwable e) {//NOSONAR
@@ -47,89 +46,45 @@ public class ZJRequestLogInterceptor {
             throw e;
         } finally {
             if (context != null) {
-                context.setResponse(error == null ? 200 : 500, result, error);
-                logResponse(joinPoint, context);
+                setResponse(context, joinPoint, result, error);
             }
         }
     }
 
     private RequestLogContext getContext() {
         RequestLogContext context = RequestLogContext.current();
-        if (context != null && context.getLogState() == RequestLogContext.INITIALIZED) {
-            context.setLogState(RequestLogContext.REQUESTING);
+        if (context != null && context.request()) {
             return context;
         } else {
             return null;
         }
     }
 
-    private void logRequest(RequestLogContext context) {
-        //noinspection StringBufferReplaceableByString
-        StringBuilder sb = new StringBuilder(192);
-        sb.append("http req[").append(context.getMethod()).append("]-").append(context.getUri());
-        String message = sb.toString();
-        log.info(message);
+    private void setResponse(RequestLogContext context, ProceedingJoinPoint joinPoint, Object result, Throwable error) {
+        Object[] params = error != null && !(error instanceof ZStatusMsg) ? buildArgs(joinPoint.getArgs()) : null;
+        context.response(result, params, error);
     }
 
-    private void logResponse(ProceedingJoinPoint joinPoint, RequestLogContext context) {
-        long take = context.getEndTime() - context.getStartTime();
-        TextStringBuilder sb = new TextStringBuilder(256);
-        sb.append("http resp[").append(context.getMethod()).append("]-").append(context.getUri()).append('(')
-                .append(take).append("ms)");
-        final Object result = context.getResult();
-        final Throwable error = context.getError();
-        boolean resultError = false;
-        if (error != null) {
-            if (error instanceof ZStatusMsg) {
-                appendStatusMsg(sb, (ZStatusMsg) error);
-            } else {
-                resultError = true;
-                sb.ensureCapacity(1024 * 4);
-                sb.append(",reqParams:[");
-                appendArgs(sb, joinPoint.getArgs());
-                sb.append(']');
-            }
-        } else if (result == null) {
-            sb.append(",null result");
-        } else if (result instanceof ZStatusMsg) {
-            appendStatusMsg(sb, (ZStatusMsg) result);
-        } else if (BeanUtils.isSimpleValueType(result.getClass())) {
-            sb.append(",result:").append(result);
-        } else {
-            sb.append(",unknown result(").append(result.getClass().getSimpleName()).append(')');
-        }
-        String message = sb.toString();
-        if (resultError) {
-            log.error(message, error);
-        } else {
-            log.info(message);
-        }
-    }
-
-    private void appendStatusMsg(TextStringBuilder sb, ZStatusMsg statusMsg) {
-        sb.append(",success:").append(statusMsg.isSuccess());
-        sb.append(",status:").append(statusMsg.getStatus());
-        sb.append(",msg:").append(statusMsg.getMsg());
-    }
-
-    private void appendArgs(TextStringBuilder sb, Object[] args) {
-        if (args == null || args.length == 0) {return;}
+    private Object[] buildArgs(Object[] args) {
+        if (args == null || args.length == 0) {return ArrayUtils.EMPTY_OBJECT_ARRAY;}
         int i = 0;
+        Object[] params = new Object[args.length];
         for (Object arg : args) {
-            if (++i > 1) {sb.append(',');}
             if (arg == null) {
-                sb.append("null");
+                params[i] = "null";
             } else if (BeanUtils.isSimpleValueType(arg.getClass())) {
-                sb.append(arg);
+                params[i] = (arg);
             } else if (arg instanceof ServletRequest) {
-                sb.append("ServletRequest");
+                params[i] = "ServletRequest";
             } else if (arg instanceof ServletResponse) {
-                sb.append("ServletResponse");
+                params[i] = "ServletResponse";
             } else if (arg instanceof InputStreamSource) {
-                sb.append("StreamSource");
+                params[i] = "StreamSource";
             } else {
-                sb.append(SafeLogUtil.toJSONStr(arg));
+                params[i] = SafeLogUtil.toJSONStr(arg);
             }
+            ++i;
         }
+        return params;
     }
 }

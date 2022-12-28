@@ -2,7 +2,6 @@ package org.zj2.lite.service.configure.logger;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.zj2.lite.common.context.BaseContext;
 
 /**
@@ -14,9 +13,10 @@ import org.zj2.lite.common.context.BaseContext;
 @Getter
 @NoArgsConstructor
 class RequestLogContext extends BaseContext {
-    public static final int INITIALIZED = 0;
-    public static final int REQUESTING = 1;
-    public static final int RESPONSE = 2;
+    public static final int STATE_INITIALIZED = 0;
+    public static final int STATE_REQUEST = 1;
+    public static final int STATE_RESPONSE = 2;
+    public static final int STATE_COMPLETED = 3;
     private static final int IDX = nextIdx();
 
     static RequestLogContext setContext(String method, String uri) {
@@ -24,7 +24,7 @@ class RequestLogContext extends BaseContext {
         context.startTime = System.currentTimeMillis();
         context.method = method;
         context.uri = uri;
-        context.logState = INITIALIZED;
+        context.logState = STATE_INITIALIZED;
         return context;
     }
 
@@ -36,20 +36,40 @@ class RequestLogContext extends BaseContext {
     private long startTime;
     private long endTime;
     //
+    private long executeStartTime;
+    private long executeEndTime;
+    //
     private String method;
     private String uri;
-    @Setter
     private int logState;
     //
     private int responseStatus;
+    private Object[] params;
     private Object result;
     private Throwable error;
 
-    public void setResponse(int responseStatus, Object result, Throwable error) {
-        this.endTime = System.currentTimeMillis();
-        this.responseStatus = responseStatus;
+
+    public boolean request() {
+        if (logState == STATE_INITIALIZED) {
+            logState = STATE_REQUEST;
+            executeStartTime = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void response(Object result, Object[] params, Throwable error) {
+        this.logState = STATE_RESPONSE;
+        this.executeEndTime = System.currentTimeMillis();
+        this.params = params;
         this.result = result;
         this.error = error;
-        this.logState = RESPONSE;
+    }
+
+    public void completed(int responseStatus) {
+        this.logState = STATE_COMPLETED;
+        this.responseStatus = responseStatus;
+        this.endTime = System.currentTimeMillis();
     }
 }
