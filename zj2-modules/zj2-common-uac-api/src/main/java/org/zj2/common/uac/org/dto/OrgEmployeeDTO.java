@@ -67,6 +67,16 @@ public class OrgEmployeeDTO implements Serializable {
     private LocalDateTime disabledTime;
 
     /**
+     * 入职时间
+     */
+    private LocalDateTime entryTime;
+
+    /**
+     * 离职时间
+     */
+    private LocalDateTime quitTime;
+
+    /**
      * 机构编码
      */
     private String orgCode;

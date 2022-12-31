@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.filter;
+package org.zj2.common.uac.auth.request;
 
 import org.zj2.common.uac.auth.dto.AuthenticationJWT;
 import org.zj2.common.uac.auth.dto.AuthenticationSign;

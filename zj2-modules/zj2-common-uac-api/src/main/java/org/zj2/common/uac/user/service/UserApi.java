@@ -21,6 +21,6 @@ public interface UserApi extends BaseApi<UserDTO> {
 
     UserDTO getByMobile(String mobileAreaCode, String mobile);
 
-    UserDTO getUser(UserValueTypeEnum valueType, String userValue, String userExtValue);
+    UserDTO findUser(UserValueTypeEnum valueType, String userValue, String userExtValue);
 
 }

@@ -54,8 +54,7 @@ public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, S
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void setSequenceNum(NumNextReq rule, long num) {
         if (num < 0) {return;}
-        NumNextContext context = new NumNextContext(rule);
-        context.setSequenceNum(num);
+        NumNextContext context = new NumNextContext(rule, num);
         sequenceSetNumHelper.handle(context);
     }
 

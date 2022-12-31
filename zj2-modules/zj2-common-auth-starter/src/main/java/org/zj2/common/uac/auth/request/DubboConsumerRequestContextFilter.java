@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.filter;
+package org.zj2.common.uac.auth.request;
 
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;

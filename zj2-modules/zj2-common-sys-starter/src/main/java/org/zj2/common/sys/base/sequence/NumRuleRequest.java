@@ -22,6 +22,16 @@ public class NumRuleRequest {
         return this;
     }
 
+    public NumRuleRequest orgCode(String orgCode) {
+        req.setOrgCode(orgCode);
+        return this;
+    }
+
+    public NumRuleRequest appCode(String appCode) {
+        req.setAppCode(appCode);
+        return this;
+    }
+
     public String next() {
         return next(false);
     }

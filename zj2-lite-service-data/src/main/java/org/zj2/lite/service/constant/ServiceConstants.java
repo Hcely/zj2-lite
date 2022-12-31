@@ -6,7 +6,7 @@ package org.zj2.lite.service.constant;
  * @author peijie.ye
  * @date 2022/11/27 20:34
  */
-public interface ServiceConstants {//NOSONAR
+public interface ServiceConstants {
     String APP_CODE = "appCode";
     String ORG_CODE = "orgCode";
     String ORG_GROUP_CODE = "orgGroupCode";

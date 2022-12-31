@@ -1,5 +1,6 @@
 package org.zj2.common.uac.org.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 
@@ -76,6 +77,16 @@ public class OrgEmployee implements Serializable {
     private LocalDateTime disabledTime;
 
     /**
+     * 入职时间
+     */
+    private LocalDateTime entryTime;
+
+    /**
+     * 离职时间
+     */
+    private LocalDateTime quitTime;
+
+    /**
      * 机构编码
      */
     private String orgCode;
@@ -113,7 +124,6 @@ public class OrgEmployee implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDeleted;
-
-
 }

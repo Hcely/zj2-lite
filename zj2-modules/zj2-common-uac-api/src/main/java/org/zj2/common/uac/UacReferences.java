@@ -6,7 +6,7 @@ import org.zj2.lite.common.entity.ZReference;
 /**
  * 命名空间: 1xxx
  */
-public interface UacReferences {//NOSONAR
+public interface UacReferences {
     // 主表
     //
     ZReference USER = new ZReference(1001, "用户");

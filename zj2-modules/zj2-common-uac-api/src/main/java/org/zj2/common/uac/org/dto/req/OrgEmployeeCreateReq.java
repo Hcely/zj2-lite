@@ -22,5 +22,6 @@ public class OrgEmployeeCreateReq implements Serializable {
     private String userName;
     private String userMobileAreaCode;
     private String userMobile;
+    private String employeeNo;
     private LocalDateTime entryTime;
 }

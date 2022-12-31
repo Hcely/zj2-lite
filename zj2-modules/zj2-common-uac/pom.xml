@@ -23,6 +23,10 @@
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
+            <artifactId>zj2-common-sys-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-auth-starter</artifactId>
         </dependency>
     </dependencies>

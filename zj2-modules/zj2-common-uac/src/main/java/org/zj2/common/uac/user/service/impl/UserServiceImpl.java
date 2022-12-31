@@ -2,6 +2,7 @@ package org.zj2.common.uac.user.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zj2.common.uac.user.constant.UserConstants;
 import org.zj2.common.uac.user.constant.UserValueTypeEnum;
 import org.zj2.common.uac.user.dto.UserDTO;
@@ -53,26 +54,26 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
 
     @Override
     public UserDTO getByAccountName(String accountName) {
-        return getUser(UserValueTypeEnum.ACCOUNT_NAME, accountName, null);
+        return findUser(UserValueTypeEnum.ACCOUNT_NAME, accountName, null);
     }
 
     @Override
     public UserDTO getByEmail(String email) {
-        return getUser(UserValueTypeEnum.EMAIL, email, null);
+        return findUser(UserValueTypeEnum.EMAIL, email, null);
     }
 
     @Override
     public UserDTO getByMobile(String mobile) {
-        return getUser(UserValueTypeEnum.MOBILE, mobile, UserConstants.CN_AREA_CODE);
+        return findUser(UserValueTypeEnum.MOBILE, mobile, UserConstants.DEF_MOBILE_AREA_CODE);
     }
 
     @Override
     public UserDTO getByMobile(String mobileAreaCode, String mobile) {
-        return getUser(UserValueTypeEnum.MOBILE, mobile, mobileAreaCode);
+        return findUser(UserValueTypeEnum.MOBILE, mobile, mobileAreaCode);
     }
 
     @Override
-    public UserDTO getUser(UserValueTypeEnum valueType, String userValue, String userExtValue) {
+    public UserDTO findUser(UserValueTypeEnum valueType, String userValue, String userExtValue) {
         String userId = userValueService.findUserId(valueType, userValue, userExtValue);
         return get(userId);
     }
@@ -85,24 +86,28 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
     }
 
     @Override
-    public UserDTO create(UserCreateReq user) {
-        log.info("createUser-user:{}", user);
-        return userCreateHelper.handle(user);
+    @Transactional
+    public UserDTO create(UserCreateReq req) {
+        log.info("createUser-req:{}", req);
+        return userCreateHelper.handle(req);
     }
 
     @Override
+    @Transactional
     public void editPassword(UserEditPasswordReq req) {
         log.info("editPassword-userId:{}", req.getUserId());
         userEditPasswordHelper.handle(req);
     }
 
     @Override
+    @Transactional
     public void editUserValue(UserEditValueReq req) {
         log.info("editUserValue-req:{}", req);
         userEditValueHelper.handle(req);
     }
 
     @Override
+    @Transactional
     public void enable(UserOperationReq req) {
         log.info("enable-req:{}", req);
         userEnableHelper.handle(req);

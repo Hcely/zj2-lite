@@ -21,6 +21,7 @@ import java.io.Serializable;
 public class NumNextReq implements Serializable {
     private static final long serialVersionUID = 20221210031326L;
     private String appCode;
+    private String orgCode;
     private String numRuleCode;
     private String numRuleFormat;
     private String seqIncKeyFormat;
@@ -35,6 +36,10 @@ public class NumNextReq implements Serializable {
         this.numRuleCode = numRuleCode;
         this.numRuleFormat = numRuleFormat;
         this.seqIncKeyFormat = seqIncKeyFormat;
+    }
+
+    public boolean hasParam(String key) {
+        return params != null && params.containsKey(key);
     }
 
     public <T extends Serializable> void putParam(String key, T value) {

@@ -37,15 +37,19 @@ public class SequenceUtil {
     }
 
     public static String serializeSeq(long value, String formatter) {
-        int bitSize = getFormatterBizSize(formatter);
-        StringBuilder sb = new StringBuilder(bitSize);
-        sb.setLength(bitSize);
-        for (int idx = bitSize - 1; idx >= 0; --idx, value /= 10) {
-            char ch = (char) ('0' + (value % 10));
-            sb.setCharAt(idx, ch);
+        if (StringUtils.isEmpty(formatter)) {
+            return String.valueOf(value);
+        } else {
+            int bitSize = getFormatterBizSize(formatter);
+            StringBuilder sb = new StringBuilder(bitSize);
+            sb.setLength(bitSize);
+            for (int idx = bitSize - 1; idx >= 0; --idx, value /= 10) {
+                char ch = (char) ('0' + (value % 10));
+                sb.setCharAt(idx, ch);
+            }
+            if (value > 0) {throw ZRBuilder.failureErr("系统自增序号超出最大值");}
+            return sb.toString();
         }
-        if (value > 0) {throw ZRBuilder.failureErr("系统自增序号超出最大值");}
-        return sb.toString();
     }
 
     public static int getFormatterBizSize(String formatter) {

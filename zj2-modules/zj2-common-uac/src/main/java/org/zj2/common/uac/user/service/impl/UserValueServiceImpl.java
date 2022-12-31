@@ -8,7 +8,6 @@ import org.zj2.common.uac.user.dto.UserValueDTO;
 import org.zj2.common.uac.user.mapper.UserValueMapper;
 import org.zj2.common.uac.user.entity.UserValue;
 import org.zj2.common.uac.user.service.UserValueService;
-import org.zj2.common.uac.user.service.helper.UserUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.util.CryptUtil;
@@ -44,7 +43,7 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
     public String findUserId(UserValueTypeEnum valueType, String userValue, String userExtValue) {
         if (valueType.isCrypt()) {userValue = CryptUtil.encrypt(userValue);}
         if (UserValueTypeEnum.MOBILE.eq(valueType)) {
-            if (StringUtils.isEmpty(userExtValue)) {userExtValue = UserConstants.CN_AREA_CODE;}
+            if (StringUtils.isEmpty(userExtValue)) {userExtValue = UserConstants.DEF_MOBILE_AREA_CODE;}
         }
         UserValueDTO value = getOne(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
                 .eq(UserValueDTO::getUserValue, userValue)

@@ -19,13 +19,29 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
         context.putParam("date", context.getDate());
         context.putParam("now", context.getDate());
         context.putParam("currentDate", context.getDate());
+        putAppCode(context);
+        putOrgCode(context);
+    }
+
+    private void putAppCode(NumNextContext context) {
         String appCode = context.getAppCode();
-        if (StringUtils.isEmpty(appCode)) {appCode = AuthenticationContext.currentAppCode();}
-        context.setAppCode(appCode);
+        if (StringUtils.isEmpty(appCode)) {
+            appCode = AuthenticationContext.currentAppCode();
+            context.setAppCode(appCode);
+        }
+        if (StringUtils.isEmpty(appCode)) {return;}
         context.putParam("app", appCode);
         context.putParam("appCode", appCode);
-        String orgCode = AuthenticationContext.currentOrgCode();
-        context.putParam("org", orgCode);
-        context.putParam("orgCode", orgCode);
+    }
+
+    private void putOrgCode(NumNextContext context) {
+        String orgCode = context.getOrgCode();
+        if (StringUtils.isEmpty(orgCode)) {
+            orgCode = AuthenticationContext.currentOrgCode();
+            context.setOrgCode(orgCode);
+        }
+        if (StringUtils.isEmpty(orgCode)) {return;}
+        if (!context.hasParam("org")) {context.putParam("org", orgCode);}
+        if (!context.hasParam("orgCode")) {context.putParam("orgCode", orgCode);}
     }
 }

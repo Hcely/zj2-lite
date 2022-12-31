@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.filter;
+package org.zj2.common.uac.auth.request;
 
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
@@ -8,7 +8,6 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
-import org.zj2.lite.common.context.ZContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 
 /**

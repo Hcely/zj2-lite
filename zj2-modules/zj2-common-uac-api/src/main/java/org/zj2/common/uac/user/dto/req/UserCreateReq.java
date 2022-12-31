@@ -21,12 +21,6 @@ import java.time.LocalDateTime;
 public class UserCreateReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 用户id
-     */
-    private String userId;
-
     /**
      * 用户账号名称
      */

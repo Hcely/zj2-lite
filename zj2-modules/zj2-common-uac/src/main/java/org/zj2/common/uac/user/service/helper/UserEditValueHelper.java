@@ -63,7 +63,7 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
             if (StringUtils.isEmpty(req.getUserValue())) {
                 req.setUserExtValue("");
             } else if (StringUtils.isEmpty(req.getUserExtValue())) {
-                req.setUserExtValue(UserConstants.CN_AREA_CODE);
+                req.setUserExtValue(UserConstants.DEF_MOBILE_AREA_CODE);
             }
         }
     }

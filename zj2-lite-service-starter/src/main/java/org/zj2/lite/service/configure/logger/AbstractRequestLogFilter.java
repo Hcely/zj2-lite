@@ -47,9 +47,9 @@ public class AbstractRequestLogFilter {
         sb.append(context.getUri()).append('(').append(take).append('|').append(executeTake);
         sb.append(executeTake > SHOW_RESPONSE_THRESHOLD ? "ms SLOW)" : "ms)");
         sb.append(",resp:").append(context.getResponseStatus());
-        final Object result = context.getResult();
+        final Object result = context.getResponse();
         final Throwable error = context.getError();
-        final Object[] params = context.getParams();
+        final Object[] params = context.getRequestParams();
         boolean resultError = false;
         if (error != null) {
             if (error instanceof ZStatusMsg) {

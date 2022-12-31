@@ -61,7 +61,7 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
         user.setUserEmail(StringUtils.trimToEmpty(user.getUserEmail()));
         user.setUserName(StringUtils.trimToEmpty(user.getUserName()));
         if (StringUtils.isNotEmpty(user.getUserMobile()) && StringUtils.isEmpty(user.getUserMobileAreaCode())) {
-            user.setUserMobileAreaCode(UserConstants.CN_AREA_CODE);
+            user.setUserMobileAreaCode(UserConstants.DEF_MOBILE_AREA_CODE);
         }
         user.setUserPassword(UserUtil.buildPassword(user.getUserPassword()));
         user.setEnableFlag(1);

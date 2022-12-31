@@ -37,12 +37,12 @@ public class AuthNamePwHandler implements BizVHandler<AuthContext> {
     private UserDTO getUser(AuthNamePwReq req) {
         UserDTO user = null;
         if (UserUtil.isMobile(req.getName())) {
-            user = userService.getUser(UserValueTypeEnum.MOBILE, req.getName(), req.getNameExtValue());
+            user = userService.findUser(UserValueTypeEnum.MOBILE, req.getName(), req.getNameExtValue());
         } else if (UserUtil.isEmail(req.getName())) {
-            user = userService.getUser(UserValueTypeEnum.MOBILE, req.getName(), null);
+            user = userService.findUser(UserValueTypeEnum.MOBILE, req.getName(), null);
         }
         if (user == null) {
-            user = userService.getUser(UserValueTypeEnum.ACCOUNT_NAME, req.getName(), null);
+            user = userService.findUser(UserValueTypeEnum.ACCOUNT_NAME, req.getName(), null);
         }
         return user;
     }

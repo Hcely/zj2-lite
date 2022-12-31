@@ -12,6 +12,9 @@ import org.zj2.lite.service.BaseInnerService;
  * @date 2022/11/28 11:37
  */
 public interface OrgEmployeeService extends BaseInnerService<OrgEmployeeDTO>, OrgEmployeeApi {
+
+    boolean existEmployeeNo(String orgCode, String employeeNo);
+
     /**
      * 添加职员
      * @param req

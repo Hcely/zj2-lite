@@ -13,7 +13,7 @@ import org.zj2.lite.common.CodeEnum;
 public enum EmployeeStatusEnum implements CodeEnum<Integer> {
     WORKING(100, "在职"),
 
-    LEFT(9999, "离职"),
+    QUIT(9999, "离职"),
     ;
 
     private final Integer code;

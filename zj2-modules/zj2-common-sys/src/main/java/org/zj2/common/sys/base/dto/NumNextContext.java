@@ -27,6 +27,10 @@ public class NumNextContext extends NumNextReq {
         this(rule, null, -1L);
     }
 
+    public NumNextContext(NumNextReq rule, long sequenceNum) {
+        this(rule, null, sequenceNum);
+    }
+
     public NumNextContext(NumNextReq rule, LocalDateTime date) {
         this(rule, date, -1L);
     }

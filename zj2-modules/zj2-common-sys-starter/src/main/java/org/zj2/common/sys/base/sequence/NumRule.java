@@ -36,6 +36,18 @@ public class NumRule {
         return request;
     }
 
+    public NumRuleRequest orgCode(String orgCode) {
+        NumRuleRequest request = new NumRuleRequest(buildReq());
+        request.orgCode(orgCode);
+        return request;
+    }
+
+    public NumRuleRequest appCode(String appCode) {
+        NumRuleRequest request = new NumRuleRequest(buildReq());
+        request.appCode(appCode);
+        return request;
+    }
+
     public String next() {
         return next(false);
     }

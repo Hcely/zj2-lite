@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.filter;
+package org.zj2.common.uac.auth.request;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;

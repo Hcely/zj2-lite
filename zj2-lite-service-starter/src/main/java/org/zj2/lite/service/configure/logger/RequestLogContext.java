@@ -46,8 +46,8 @@ class RequestLogContext extends BaseContext {
     private int logState;
     //
     private int responseStatus;
-    private Object[] params;
-    private Object result;
+    private Object[] requestParams;
+    private Object response;
     private Throwable error;
 
 
@@ -64,8 +64,8 @@ class RequestLogContext extends BaseContext {
     public void response(Object result, Object[] params, Throwable error) {
         this.logState = STATE_RESPONSE;
         this.executeEndTime = System.currentTimeMillis();
-        this.params = params;
-        this.result = result;
+        this.requestParams = params;
+        this.response = result;
         this.error = error;
     }
 
