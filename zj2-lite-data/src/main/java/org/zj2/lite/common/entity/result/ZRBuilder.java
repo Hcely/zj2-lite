@@ -26,9 +26,12 @@ public class ZRBuilder implements Serializable {
         return new ZRBuilder().msg(msg);
     }
 
-
     public static ZRBuilder success() {
         return new ZRBuilder().success(true).status(ZStatusMsg.SUCCESS_STATUS);
+    }
+
+    public static <T> ZResp<T> successResp(T data) {
+        return new ZResp<>(data);
     }
 
     public static ZRBuilder failure() {

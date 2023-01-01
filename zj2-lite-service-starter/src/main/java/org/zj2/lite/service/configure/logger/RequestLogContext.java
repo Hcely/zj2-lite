@@ -22,6 +22,7 @@ class RequestLogContext extends BaseContext {
     static RequestLogContext setContext(String rpc, String method, String uri) {
         RequestLogContext context = getSubContext(IDX, RequestLogContext::new);
         context.startTime = System.currentTimeMillis();
+        context.executeStartTime = context.startTime;
         context.rpc = rpc;
         context.method = method;
         context.uri = uri;
@@ -45,6 +46,7 @@ class RequestLogContext extends BaseContext {
     private String uri;
     private int logState;
     //
+    boolean executed;
     private int responseStatus;
     private Object[] requestParams;
     private Object response;
@@ -54,6 +56,7 @@ class RequestLogContext extends BaseContext {
     public boolean request() {
         if (logState == STATE_INITIALIZED) {
             logState = STATE_REQUEST;
+            executed = true;
             executeStartTime = System.currentTimeMillis();
             return true;
         } else {

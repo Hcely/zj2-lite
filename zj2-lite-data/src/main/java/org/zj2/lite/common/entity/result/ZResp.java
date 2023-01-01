@@ -1,6 +1,7 @@
 package org.zj2.lite.common.entity.result;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -13,10 +14,17 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
+@NoArgsConstructor
 public class ZResp<T> extends ZResult {
     private static final long serialVersionUID = 7639134027154889479L;
     protected T data;//NOSONAR
 
+    public ZResp(T data) {
+        this.status = SUCCESS_STATUS;
+        this.success = true;
+        this.data = data;
+
+    }
 
     @Override
     public ZResp<T> setStatus(int status) {

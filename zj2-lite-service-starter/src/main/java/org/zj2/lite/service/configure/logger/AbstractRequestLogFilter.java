@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.zj2.lite.common.entity.result.ZStatusMsg;
 
@@ -25,27 +26,32 @@ public class AbstractRequestLogFilter {
         StringBuilder sb = new StringBuilder(192);
         sb.append(context.getRpc());
         if (StringUtils.isEmpty(context.getMethod())) {
-            sb.append(" REQUEST-");
+            sb.append(" REQ-");
         } else {
-            sb.append(" REQUEST[").append(context.getMethod()).append("]-");
+            sb.append(" REQ [").append(context.getMethod()).append("]-");
         }
         sb.append(context.getUri());
         String message = sb.toString();
         log.info(message);
     }
 
-    protected void logResponse(RequestLogContext context) {
+    protected void logResponse(RequestLogContext context) {//NOSONAR
         long take = context.getEndTime() - context.getStartTime();
         long executeTake = context.getExecuteEndTime() - context.getExecuteStartTime();
         TextStringBuilder sb = new TextStringBuilder(256);
         sb.append(context.getRpc());
         if (StringUtils.isEmpty(context.getMethod())) {
-            sb.append(" RESPONSE-");
+            sb.append(" RESP-");
         } else {
-            sb.append(" RESPONSE[").append(context.getMethod()).append("]-");
+            sb.append(" RESP [").append(context.getMethod()).append("]-");
         }
-        sb.append(context.getUri()).append('(').append(take).append('|').append(executeTake);
-        sb.append(executeTake > SHOW_RESPONSE_THRESHOLD ? "ms SLOW)" : "ms)");
+        sb.append(context.getUri()).append('(').append(take).append("ms");
+        if (context.isExecuted()) {
+            sb.append(",exe ").append(executeTake);
+            sb.append(executeTake > SHOW_RESPONSE_THRESHOLD ? "ms SLOW)" : "ms)");
+        } else {
+            sb.append(')');
+        }
         sb.append(",resp:").append(context.getResponseStatus());
         final Object result = context.getResponse();
         final Throwable error = context.getError();
@@ -64,6 +70,8 @@ public class AbstractRequestLogFilter {
             appendStatusMsg(sb, (ZStatusMsg) result);
         } else if (BeanUtils.isSimpleValueType(result.getClass())) {
             sb.append(",result:").append(result);
+        } else if (result instanceof ResponseEntity) {
+            sb.append(",result:ResponseEntity");
         } else {
             sb.append(",result:unknown(").append(result.getClass().getSimpleName()).append(')');
         }

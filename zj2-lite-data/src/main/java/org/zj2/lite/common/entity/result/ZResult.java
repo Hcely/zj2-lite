@@ -1,6 +1,7 @@
 package org.zj2.lite.common.entity.result;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.lite.common.util.StrUtil;
 
@@ -12,6 +13,7 @@ import org.zj2.lite.common.util.StrUtil;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class ZResult implements ZStatusMsg {
     private static final long serialVersionUID = 7639134027154889479L;
     protected boolean success;

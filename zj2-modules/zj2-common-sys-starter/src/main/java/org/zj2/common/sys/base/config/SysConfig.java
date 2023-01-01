@@ -1,6 +1,8 @@
 package org.zj2.common.sys.base.config;
 
 import lombok.Getter;
+import org.zj2.common.sys.base.dto.SysConfigDTO;
+import org.zj2.lite.common.util.NumUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -59,6 +61,10 @@ public abstract class SysConfig<T> {
         this.configCode = configCode;
     }
 
+    public SysConfigDTO data() {
+        return SysConfigUtil.config(configCode);
+    }
+
     public abstract T value();
 
     private static class IntConfig extends SysConfig<Integer> {
@@ -71,7 +77,7 @@ public abstract class SysConfig<T> {
 
         @Override
         public Integer value() {
-            return SysConfigUtil.config(configCode).valueInt(defaultValue);
+            return data().valueInt(defaultValue);
         }
     }
 
@@ -85,21 +91,21 @@ public abstract class SysConfig<T> {
 
         @Override
         public String value() {
-            return SysConfigUtil.config(configCode).valueStr(defaultValue);
+            return data().valueStr(defaultValue);
         }
     }
 
     private static class NumConfig extends SysConfig<BigDecimal> {
-        private final Number defaultValue;
+        private final BigDecimal defaultValue;
 
         private NumConfig(String configCode, Number defaultValue) {
             super(configCode);
-            this.defaultValue = defaultValue;
+            this.defaultValue = NumUtil.of(defaultValue, false);
         }
 
         @Override
         public BigDecimal value() {
-            return SysConfigUtil.config(configCode).valueNum(defaultValue);
+            return data().valueNum(defaultValue);
         }
     }
 
@@ -113,7 +119,7 @@ public abstract class SysConfig<T> {
 
         @Override
         public Boolean value() {
-            return SysConfigUtil.config(configCode).valueBoolean(defaultValue);
+            return data().valueBoolean(defaultValue);
         }
     }
 
@@ -127,7 +133,7 @@ public abstract class SysConfig<T> {
 
         @Override
         public LocalDateTime value() {
-            return SysConfigUtil.config(configCode).valueDate(defaultValue);
+            return data().valueDate(defaultValue);
         }
     }
 }

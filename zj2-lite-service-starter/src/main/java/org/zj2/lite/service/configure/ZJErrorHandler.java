@@ -3,9 +3,7 @@ package org.zj2.lite.service.configure;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zj2.lite.common.entity.result.ZError;
@@ -13,7 +11,6 @@ import org.zj2.lite.common.entity.result.ZResult;
 import org.zj2.lite.common.entity.result.ZStatusMsg;
 import org.zj2.lite.common.util.CollUtil;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,9 +39,9 @@ public class ZJErrorHandler {
                 .setMsg(StringUtils.join(messages, ';'));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseBody
-    public ZResult sysError(Exception error) {
+    public ZResult sysError(Throwable error) {
         log.error(error.toString(), error);
         return new ZResult().setSuccess(false).setStatus(ZStatusMsg.SYS_ERROR_STATUS).setMsg("系统异常");
     }
