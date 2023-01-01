@@ -1,7 +1,7 @@
 package org.zj2.common.uac.user.mapper;
 
-import org.zj2.common.uac.user.entity.UserPassword;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.zj2.common.uac.user.entity.UserPassword;
 
 /**
  * <p>

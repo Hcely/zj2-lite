@@ -5,7 +5,6 @@ import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.text.SlotFormatPart;
 import org.zj2.lite.common.text.StrFormatterManager;
 import org.zj2.lite.common.text.ValueSerializer;
-import org.zj2.lite.common.util.StrUtil;
 
 /**
  *  SequenceUtil

@@ -2,13 +2,13 @@ package org.zj2.lite.service.wrapper;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.zj2.lite.common.PropFunc;
+import org.zj2.lite.common.entity.result.ZListResp;
+import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.service.BaseInnerService;
 import org.zj2.lite.service.entity.request.PageRequest;
 import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
-import org.zj2.lite.common.entity.result.ZListResp;
-import org.zj2.lite.common.entity.result.ZRBuilder;
-import org.zj2.lite.common.PropFunc;
-import org.zj2.lite.common.util.CollUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -369,8 +369,8 @@ public class ServiceQueryWrapper<T> extends ZQueryWrapper<T> {
         } else {
             try {
                 pageNumber = pageNumber == null ? 1 : Math.max(pageNumber, 1);
-                Page<T> entities = PageHelper.startPage(pageNumber, pageSize).doSelectPage(this::list);
-                return ZRBuilder.success().buildListResp(entities, (int) entities.getTotal(), pageNumber, pageSize);
+                Page<T> page = PageHelper.startPage(pageNumber, pageSize).doSelectPage(this::list);
+                return ZRBuilder.success().buildListResp(page, (int) page.getTotal(), pageNumber, pageSize);
             } finally {
                 PageHelper.clearPage();
             }

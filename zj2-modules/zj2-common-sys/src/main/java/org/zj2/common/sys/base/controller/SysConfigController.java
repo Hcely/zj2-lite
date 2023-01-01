@@ -19,14 +19,14 @@ import org.zj2.lite.common.entity.result.ZResp;
  * @author peijie.ye
  * @date 2022/12/28 21:54
  */
-@Tag(name = "系统配置管理")
+@Tag(name = "系统配置模块")
 @RestController
 @RequestMapping("/api/sys/config")
 public class SysConfigController {
     @Autowired
     private SysConfigService sysConfigService;
 
-    @Operation(tags = "系统配置管理", summary = "编辑配置接口", description = "创建或编辑系统配置")
+    @Operation(tags = "系统配置模块", summary = "编辑配置接口", description = "创建或编辑系统配置")
     @PostMapping("/edit")
     public ZResp<SysConfigDTO> edit(@RequestBody SysConfigEditReq req) {
         SysConfigDTO config = sysConfigService.edit(req);

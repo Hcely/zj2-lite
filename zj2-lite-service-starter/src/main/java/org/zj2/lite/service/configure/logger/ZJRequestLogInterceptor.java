@@ -1,13 +1,10 @@
 package org.zj2.lite.service.configure.logger;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.text.TextStringBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Component;

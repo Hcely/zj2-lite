@@ -2,7 +2,6 @@ package org.zj2.common.uac.org.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.zj2.common.uac.org.constant.EmployeeStatusEnum;
 import org.zj2.common.uac.org.dto.OrgEmployeeDTO;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeAddReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeCreateReq;

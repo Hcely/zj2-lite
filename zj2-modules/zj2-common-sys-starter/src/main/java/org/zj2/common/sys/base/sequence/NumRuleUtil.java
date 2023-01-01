@@ -1,8 +1,8 @@
 package org.zj2.common.sys.base.sequence;
 
+import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.NumNextReq;
-import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.service.SysNumRuleApi;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.StrUtil;

@@ -5,8 +5,8 @@ import org.springframework.aop.support.AopUtils;
 import org.zj2.lite.common.Supportable;
 import org.zj2.lite.common.text.StrFormatter;
 import org.zj2.lite.common.util.StrUtil;
-import org.zj2.lite.helper.handler.BizFunc;
 import org.zj2.lite.helper.entity.BizInterceptorError;
+import org.zj2.lite.helper.handler.BizFunc;
 
 @SuppressWarnings("all")
 final class ChainBizFuncWrapper implements BizFunc {

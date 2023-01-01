@@ -1,7 +1,6 @@
 package org.zj2.common.uac.org.service.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.OrgEmployeeDTO;

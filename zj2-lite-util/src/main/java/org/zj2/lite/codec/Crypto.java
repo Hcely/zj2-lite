@@ -3,7 +3,6 @@ package org.zj2.lite.codec;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 /**
  *  Crypto

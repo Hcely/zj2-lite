@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.lite.common.context.BaseContext;
-import org.zj2.lite.common.context.ZContext;
 
 /**
  *  ServiceRequestConext

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
-import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.constant.ServiceConstants;
+import org.zj2.lite.service.context.AuthenticationContext;
 
 import java.time.LocalDateTime;
 

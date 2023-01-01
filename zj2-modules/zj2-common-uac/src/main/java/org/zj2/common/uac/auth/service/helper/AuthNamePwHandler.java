@@ -9,8 +9,8 @@ import org.zj2.common.uac.user.constant.UserValueTypeEnum;
 import org.zj2.common.uac.user.dto.UserDTO;
 import org.zj2.common.uac.user.service.UserService;
 import org.zj2.common.uac.user.service.helper.UserUtil;
-import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.helper.handler.BizVHandler;
 
 /**
  *  AuthUserNamePwHandler

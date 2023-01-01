@@ -7,7 +7,6 @@ import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
-import org.zj2.lite.common.context.ZContext;
 import org.zj2.lite.common.util.StrUtil;
 
 @Activate(group = CommonConstants.PROVIDER, order = -10000)

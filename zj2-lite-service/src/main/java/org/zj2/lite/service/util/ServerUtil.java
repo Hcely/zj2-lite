@@ -1,7 +1,5 @@
 package org.zj2.lite.service.util;
 
-import org.apache.commons.lang3.RandomUtils;
-import org.springframework.stereotype.Component;
 import org.zj2.lite.codec.CodecUtil;
 import org.zj2.lite.sign.Md5Sign;
 
@@ -9,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 

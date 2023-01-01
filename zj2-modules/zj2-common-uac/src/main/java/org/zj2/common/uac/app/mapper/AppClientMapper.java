@@ -2,7 +2,6 @@ package org.zj2.common.uac.app.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.app.entity.AppClient;
 
 /**

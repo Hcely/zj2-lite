@@ -2,12 +2,12 @@ package org.zj2.common.sys.base.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.zj2.common.sys.base.config.SysConfigUtil;
 import org.zj2.common.sys.base.dto.SysConfigDTO;
 import org.zj2.common.sys.base.dto.req.SysConfigEditReq;
 import org.zj2.common.sys.base.entity.SysConfig;
 import org.zj2.common.sys.base.mapper.SysConfigMapper;
 import org.zj2.common.sys.base.service.SysConfigService;
-import org.zj2.common.sys.base.config.SysConfigUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;

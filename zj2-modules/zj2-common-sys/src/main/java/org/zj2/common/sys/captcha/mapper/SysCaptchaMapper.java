@@ -1,8 +1,8 @@
 package org.zj2.common.sys.captcha.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.zj2.common.sys.captcha.entity.SysCaptcha;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>

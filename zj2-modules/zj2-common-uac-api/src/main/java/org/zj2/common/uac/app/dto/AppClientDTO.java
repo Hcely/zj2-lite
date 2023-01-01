@@ -1,6 +1,5 @@
 package org.zj2.common.uac.app.dto;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

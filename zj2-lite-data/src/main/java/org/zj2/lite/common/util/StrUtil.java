@@ -1,12 +1,9 @@
 package org.zj2.lite.common.util;
 
-import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.zj2.lite.common.text.StrFormatter;
 import org.zj2.lite.common.text.StrFormatterManager;
-
-import java.util.List;
 
 /**
  * StrUtil

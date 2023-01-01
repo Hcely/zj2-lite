@@ -8,21 +8,26 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.zj2.lite.common.entity.result.ZError;
+import org.zj2.lite.common.entity.result.ZListResp;
+import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BeanUtil;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
+import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.constant.ServiceConstants;
+import org.zj2.lite.service.entity.request.PageRequest;
 import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
 import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
-import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.service.util.SafeLogUtil;
 import org.zj2.lite.spring.SpringUtil;
-import org.zj2.lite.service.cache.CacheUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * BaseServiceImpl
@@ -307,5 +314,41 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
             ++i;
         }
         return count;
+    }
+
+    protected <R extends PageRequest, E> ZListResp<E> pageQuery(R request, Function<R, List<E>> query) {
+        Integer pageNumber = request.getPageNumber();
+        Integer pageSize = request.getPageSize();
+        if (pageSize == null || pageSize < 1) {
+            PageHelper.clearPage();
+            List<E> models = query.apply(request);
+            return ZRBuilder.success().buildListResp(models);
+        } else {
+            try {
+                pageNumber = pageNumber == null ? 1 : Math.max(pageNumber, 1);
+                Page<E> page = PageHelper.startPage(pageNumber, pageSize);
+                List<E> list = query.apply(request);
+                return ZRBuilder.success().buildListResp(page, (int) page.getTotal(), pageNumber, pageSize);
+            } finally {
+                PageHelper.clearPage();
+            }
+        }
+    }
+
+    protected <E> ZListResp<E> pageQuery(Integer pageNumber, Integer pageSize, Supplier<List<E>> query) {
+        if (pageSize == null || pageSize < 1) {
+            PageHelper.clearPage();
+            List<E> models = query.get();
+            return ZRBuilder.success().buildListResp(models);
+        } else {
+            try {
+                pageNumber = pageNumber == null ? 1 : Math.max(pageNumber, 1);
+                Page<E> page = PageHelper.startPage(pageNumber, pageSize);
+                List<E> list = query.get();
+                return ZRBuilder.success().buildListResp(list, (int) page.getTotal(), pageNumber, pageSize);
+            } finally {
+                PageHelper.clearPage();
+            }
+        }
     }
 }

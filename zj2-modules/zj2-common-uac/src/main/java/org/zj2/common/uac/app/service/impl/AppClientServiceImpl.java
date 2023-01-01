@@ -3,8 +3,6 @@ package org.zj2.common.uac.app.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppClientDTO;
-import org.zj2.common.uac.app.dto.AppDTO;
-import org.zj2.common.uac.app.dto.AppOrgDTO;
 import org.zj2.common.uac.app.dto.req.AppClientCreateEditReq;
 import org.zj2.common.uac.app.entity.AppClient;
 import org.zj2.common.uac.app.mapper.AppClientMapper;

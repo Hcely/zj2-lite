@@ -2,11 +2,11 @@ package org.zj2.common.uac.auth.util;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.common.uac.app.service.AppApi;
 import org.zj2.common.uac.app.dto.AppDTO;
+import org.zj2.common.uac.app.service.AppApi;
 import org.zj2.lite.common.util.StrUtil;
-import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.cache.CacheUtil;
+import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.spring.SpringBeanRef;
 
 /**

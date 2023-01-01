@@ -1,8 +1,8 @@
 package org.zj2.lite.service.wrapper;
 
+import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.service.BaseInnerService;
 import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
-import org.zj2.lite.common.PropFunc;
 
 import java.util.Collection;
 

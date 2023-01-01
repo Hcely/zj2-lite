@@ -2,10 +2,10 @@ package org.zj2.common.uac.auth.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.zj2.common.uac.auth.service.AuthenticationApi;
 import org.zj2.common.uac.auth.dto.AuthContext;
-import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
 import org.zj2.common.uac.auth.dto.AuthenticationJWT;
+import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
+import org.zj2.common.uac.auth.service.AuthenticationApi;
 import org.zj2.common.uac.auth.service.helper.AuthNamePwHelper;
 
 /**

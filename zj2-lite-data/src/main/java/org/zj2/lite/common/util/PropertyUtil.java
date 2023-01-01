@@ -6,8 +6,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ClassUtils;
-import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.PropFunc;
+import org.zj2.lite.common.constant.NoneConstants;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;

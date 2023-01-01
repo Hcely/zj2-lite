@@ -1,8 +1,8 @@
 package org.zj2.common.uac.org.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.zj2.common.uac.org.entity.OrgEmployeeLog;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>

@@ -1,6 +1,5 @@
 package org.zj2.lite.service.broadcast;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.zj2.lite.spring.SpringBeanRef;
 import org.zj2.lite.util.TransactionSyncUtil;
 

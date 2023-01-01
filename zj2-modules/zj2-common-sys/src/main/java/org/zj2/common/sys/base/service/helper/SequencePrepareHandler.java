@@ -3,8 +3,8 @@ package org.zj2.common.sys.base.service.helper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.zj2.common.sys.base.dto.NumNextContext;
-import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.helper.handler.BizVHandler;
+import org.zj2.lite.service.context.AuthenticationContext;
 
 /**
  *  SequenceBakHandler
