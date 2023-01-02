@@ -44,11 +44,15 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
     @Override
     @Transactional
     public void handle(OrgEmployeeContext context) {
+        // 加载机构信息
         loadOrg(context);
+        // 检查职员号是否唯一
         checkEmployeeNo(context);
         if (context.isAddMode()) {
+            // 加载用户信息
             loadUserForAdd(context);
         } else {
+            // 加载用户信息，如果不存在则创建用户
             loadUserForCreate(context);
         }
         checkUserEmployee(context);

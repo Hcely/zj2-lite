@@ -5,6 +5,8 @@ import org.zj2.common.uac.org.dto.req.OrgEmployeeAddReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeCreateReq;
 import org.zj2.lite.service.BaseInnerService;
 
+import java.time.LocalDateTime;
+
 /**
  *  OrgEmployeeService
  *
@@ -12,6 +14,8 @@ import org.zj2.lite.service.BaseInnerService;
  * @date 2022/11/28 11:37
  */
 public interface OrgEmployeeService extends BaseInnerService<OrgEmployeeDTO>, OrgEmployeeApi {
+
+    OrgEmployeeDTO getIfAbsentError(String employeeId);
 
     boolean existEmployeeNo(String orgCode, String employeeNo);
 
@@ -31,31 +35,30 @@ public interface OrgEmployeeService extends BaseInnerService<OrgEmployeeDTO>, Or
 
     /**
      * 可用
-     * @param orgEmployeeId
+     * @param employeeId
      */
-    void enable(String orgEmployeeId);
+    void enable(String employeeId);
 
     /**
      * 禁用
-     * @param orgEmployeeId
+     * @param employeeId
      */
-    void disable(String orgEmployeeId);
+    void disable(String employeeId);
 
     /**
      * 可见
-     * @param orgEmployeeId
+     * @param employeeId
      */
-    void visible(String orgEmployeeId);
+    void visible(String employeeId);
 
     /**
      * 隐藏
-     * @param orgEmployeeId
+     * @param employeeId
      */
-    void divisible(String orgEmployeeId);
+    void divisible(String employeeId);
 
     /**
      * 离职
-     * @param orgEmployeeId
      */
-    void quit(String orgEmployeeId);
+    void quit(String employeeId, LocalDateTime quitTime);
 }

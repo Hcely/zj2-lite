@@ -9,8 +9,14 @@ import org.zj2.common.uac.org.entity.OrgEmployee;
 import org.zj2.common.uac.org.mapper.OrgEmployeeMapper;
 import org.zj2.common.uac.org.service.OrgEmployeeService;
 import org.zj2.common.uac.org.service.dto.OrgEmployeeContext;
+import org.zj2.common.uac.org.service.helper.OrgEmployeeEnableHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeHelper;
+import org.zj2.common.uac.org.service.helper.OrgEmployeeQuitHelper;
+import org.zj2.common.uac.org.service.helper.OrgEmployeeVisibleHelper;
+import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.BaseServiceImpl;
+
+import java.time.LocalDateTime;
 
 /**
  *  OrgEmployeeServiceImpl
@@ -23,11 +29,24 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
         implements OrgEmployeeService {
     @Autowired
     private OrgEmployeeHelper orgEmployeeHelper;
+    @Autowired
+    private OrgEmployeeVisibleHelper orgEmployeeVisibleHelper;
+    @Autowired
+    private OrgEmployeeEnableHelper orgEmployeeEnableHelper;
+    @Autowired
+    private OrgEmployeeQuitHelper orgEmployeeQuitHelper;
 
     @Override
     public OrgEmployeeDTO getEmployee(String orgCode, String userId) {
         return getOne(wrapper().eq(OrgEmployeeDTO::getOrgCode, orgCode).eq(OrgEmployeeDTO::getUserId, userId)
                 .orderByAsc(OrgEmployeeDTO::getEmployeeStatus));
+    }
+
+    @Override
+    public OrgEmployeeDTO getIfAbsentError(String employeeId) {
+        OrgEmployeeDTO employee = get(employeeId);
+        if (employee == null) {throw ZRBuilder.failureErr("职员不存在");}
+        return employee;
     }
 
     @Override
@@ -50,27 +69,27 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     }
 
     @Override
-    public void enable(String orgEmployeeId) {
-
+    public void enable(String employeeId) {
+        orgEmployeeEnableHelper.handle(employeeId, true);
     }
 
     @Override
-    public void disable(String orgEmployeeId) {
-
+    public void disable(String employeeId) {
+        orgEmployeeEnableHelper.handle(employeeId, false);
     }
 
     @Override
-    public void visible(String orgEmployeeId) {
-
+    public void visible(String employeeId) {
+        orgEmployeeVisibleHelper.handle(employeeId, true);
     }
 
     @Override
-    public void divisible(String orgEmployeeId) {
-
+    public void divisible(String employeeId) {
+        orgEmployeeVisibleHelper.handle(employeeId, false);
     }
 
     @Override
-    public void quit(String orgEmployeeId) {
-
+    public void quit(String employeeId, LocalDateTime quitTime) {
+        orgEmployeeQuitHelper.handle(employeeId, quitTime);
     }
 }

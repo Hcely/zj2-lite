@@ -30,68 +30,48 @@ public class ZRBuilder implements Serializable {
         return new ZRBuilder().success(true).status(ZStatusMsg.SUCCESS_STATUS);
     }
 
-    public static <T> ZResp<T> successResp(T data) {
-        return new ZResp<>(data);
-    }
-
     public static ZRBuilder failure() {
         return new ZRBuilder().success(false).status(ZStatusMsg.FAILURE_STATUS);
     }
 
-    public static ZRBuilder failure(String msg) {
-        return failure().msg(msg);
+    public static ZResult successResult() {
+        return new ZResult().setSuccess(true).setStatus(ZStatusMsg.SUCCESS_STATUS);
     }
 
-    public static ZRBuilder failure(String msgFormat, Object arg0) {
-        return new ZRBuilder().msg(msgFormat, arg0);
-    }
-
-    public static ZRBuilder failure(String msgFormat, Object arg0, Object arg1) {
-        return failure().msg(msgFormat, arg0, arg1);
-    }
-
-    public static ZRBuilder failure(String msgFormat, Object arg0, Object arg1, Object arg2) {
-        return failure().msg(msgFormat, arg0, arg1, arg2);
-    }
-
-    public static ZRBuilder failure(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
-        return failure().msg(msgFormat, arg0, arg1, arg2, arg3);
-    }
-
-    public static ZRBuilder failure(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        return failure().msg(msgFormat, arg0, arg1, arg2, arg3, arg4);
-    }
-
-    public static ZRBuilder failure(String msgFormat, Object... args) {
-        return failure().msg(msgFormat, args);
+    public static <T> ZResp<T> successResp(T data) {
+        return new ZResp<>(data);
     }
 
     public static ZError failureErr(String msg) {
-        return failure().msg(msg).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS).setMsg(msg);
     }
 
     public static ZError failureErr(String msgFormat, Object arg0) {
-        return new ZRBuilder().msg(msgFormat, arg0).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS).setMsg(msgFormat, arg0);
     }
 
     public static ZError failureErr(String msgFormat, Object arg0, Object arg1) {
-        return failure().msg(msgFormat, arg0, arg1).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS)
+                .setMsg(msgFormat, arg0, arg1);
     }
 
     public static ZError failureErr(String msgFormat, Object arg0, Object arg1, Object arg2) {
-        return failure().msg(msgFormat, arg0, arg1, arg2).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS)
+                .setMsg(msgFormat, arg0, arg1, arg2);
     }
 
     public static ZError failureErr(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
-        return failure().msg(msgFormat, arg0, arg1, arg2, arg3).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS)
+                .setMsg(msgFormat, arg0, arg1, arg2, arg3);
     }
 
     public static ZError failureErr(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        return failure().msg(msgFormat, arg0, arg1, arg2, arg3, arg4).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS)
+                .setMsg(msgFormat, arg0, arg1, arg2, arg3, arg4);
     }
 
     public static ZError failureErr(String msgFormat, Object... args) {
-        return failure().msg(msgFormat, args).buildError();
+        return ZError.cloneInstance().setSuccess(false).setStatus(ZStatusMsg.FAILURE_STATUS).setMsg(msgFormat, args);
     }
 
 
