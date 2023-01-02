@@ -2,7 +2,7 @@ package org.zj2.common.uac.auth.fliter;
 
 import org.zj2.common.uac.auth.dto.AuthenticationJWT;
 import org.zj2.common.uac.auth.dto.AuthenticationSign;
-import org.zj2.common.uac.auth.util.JWTUtil;
+import org.zj2.common.uac.auth.util.JWTValidUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.constant.ServiceConstants;
@@ -22,7 +22,7 @@ public abstract class AbsContextFilter<T> {
         final String token = getValue(request, ServiceConstants.REQUEST_AUTHORIZATION);
         final String attrIp = getAttrIp(request);
         final String device = getDevice(request);
-        if (JWTUtil.isJWT(token)) {
+        if (JWTValidUtil.isJWT(token)) {
             handleJWT(request, token, method, uri, attrIp, device);
         } else if (ServerSignUtil.isDigest(token)) {
             handleSign(request, token, method, uri, attrIp, device);
@@ -32,7 +32,7 @@ public abstract class AbsContextFilter<T> {
     }
 
     private void handleJWT(T request, String token, String method, String uri, String attrIp, String device) {
-        AuthenticationJWT jwt = JWTUtil.parse(token);
+        AuthenticationJWT jwt = JWTValidUtil.parse(token);
         if (jwt == null) {throw ZRBuilder.failureErr("无效token格式").setStatus(403);}
         AuthenticationContext.setContext(jwt.getUserId(), jwt.getUserName(), jwt.getAppCode(), jwt.getOrgCode());
         ServiceRequestContext requestContext = new ServiceRequestContext();

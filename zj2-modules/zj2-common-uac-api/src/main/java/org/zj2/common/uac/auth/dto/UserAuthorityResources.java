@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Map;
 
 /**
  *  UserResources
@@ -19,5 +19,5 @@ import java.util.Set;
 public class UserAuthorityResources implements Serializable {
     private static final long serialVersionUID = 3292141917083713905L;
     private String userId;
-    private Set<String> authorityResources;
+    private Map<String, UserAuthorityResource> authorityResources;
 }

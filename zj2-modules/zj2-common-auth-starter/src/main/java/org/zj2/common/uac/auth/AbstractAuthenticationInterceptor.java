@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.service.JWTokenApi;
 import org.zj2.common.uac.auth.util.AppUtil;
-import org.zj2.common.uac.auth.util.JWTUtil;
+import org.zj2.common.uac.auth.util.JWTValidUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
 import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.entity.result.ZRBuilder;
@@ -28,7 +28,7 @@ public class AbstractAuthenticationInterceptor {
             throw unAuthenticationErr("Token过期");
         }
         AppDTO app = getApp();
-        if (!JWTUtil.valid(app.getAppSecret(), context.getToken())) {
+        if (!JWTValidUtil.valid(app.getAppSecret(), context.getToken())) {
             throw unAuthenticationErr("Token无效");
         }
         if (StringUtils.isNotEmpty(context.getNamespace())) {// 单点登录，检查token

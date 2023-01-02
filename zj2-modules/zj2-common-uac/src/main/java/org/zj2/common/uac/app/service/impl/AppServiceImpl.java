@@ -1,6 +1,7 @@
 package org.zj2.common.uac.app.service.impl;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
 import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.app.mapper.AppMapper;
 import org.zj2.common.uac.app.service.AppService;
-import org.zj2.common.uac.auth.util.AppUtil;
 import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
@@ -65,7 +65,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
         AppDTO app = new AppDTO();
         app.setAppCode(req.getAppCode());
         app.setAppName(req.getAppName());
-        app.setAppSecret(AppUtil.randomAppSecret());
+        app.setAppSecret(randomAppSecret());
         app.setAllowAllUser(ObjectUtils.defaultIfNull(req.getAllowAllUser(), 0));
         app.setSingleSignOn(ObjectUtils.defaultIfNull(req.getSingleSignOn(), 1));
         app.setTokenTimeout(ObjectUtils.defaultIfNull(req.getTokenTimeout(), 3600000L * 4));
@@ -92,7 +92,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     public void editSecret(String appCode, String appSecret) {
         AppDTO app = getByCode0(appCode);
         if (app == null) {throw ZRBuilder.failureErr("应用不存在");}
-        if (!AppUtil.validSecret(appSecret)) {throw ZRBuilder.failureErr("应用密钥不合法");}
+        if (!validSecret(appSecret)) {throw ZRBuilder.failureErr("应用密钥不合法");}
         //
         AppDTO update = new AppDTO();
         update.setAppId(app.getAppId());
@@ -123,5 +123,31 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
             update.setDisabledTime(DateUtil.now());
             updateById(update);
         }
+    }
+
+    private static final String SECRET_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+
+    public static String randomAppSecret() {
+        StringBuilder sb = new StringBuilder(32);
+        final int bound = SECRET_CHARS.length();
+        for (int i = 0; i < 32; ++i) {
+            sb.append(SECRET_CHARS.charAt(RandomUtils.nextInt(0, bound)));
+        }
+        return sb.toString();
+    }
+
+    public static boolean validSecret(String value) {
+        if (StringUtils.length(value) < 20) {return false;}
+        for (int i = 0, len = value.length(); i < len; ++i) {
+            if (!validSecretChar(value.charAt(i))) {return false;}
+        }
+        return true;
+    }
+
+    private static boolean validSecretChar(char ch) {
+        if (ch >= 'a' && ch <= 'z') {return true;}
+        if (ch >= 'A' && ch <= 'Z') {return true;}
+        if (ch >= '0' && ch <= '9') {return true;}
+        return ch == '_' || ch == '-';
     }
 }

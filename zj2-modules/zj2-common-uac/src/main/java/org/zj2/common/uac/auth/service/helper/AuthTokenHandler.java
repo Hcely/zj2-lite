@@ -8,7 +8,6 @@ import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.dto.AuthenticationJWT;
 import org.zj2.common.uac.auth.service.JWTokenService;
-import org.zj2.common.uac.auth.util.JWTUtil;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.user.constant.UserEventEnum;
 import org.zj2.common.uac.user.dto.UserDTO;
@@ -29,7 +28,6 @@ import java.time.LocalDateTime;
  */
 @Component
 public class AuthTokenHandler implements BizVHandler<AuthContext> {
-
     @Autowired
     private UserService userService;
     @Autowired
@@ -41,17 +39,13 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
     public void handle(AuthContext context) {
         AuthenticationJWT token = buildToken(context);
         context.setToken(token);
-        //
         if (StringUtils.isNotEmpty(token.getNamespace())) {
             jwtokenService.setToken(token.getAppCode(), token.getUserId(), token.getNamespace(), token.getToken(),
                     token.getExpireAt());
         }
-        //
         updateLoginTime(context);
-        //
-        addLog(context);
+        addLoginLog(context);
     }
-
 
     private AuthenticationJWT buildToken(AuthContext context) {
         UserDTO user = context.getUser();
@@ -76,7 +70,7 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         token.setExpireAt(System.currentTimeMillis() + timeout);
         token.setNamespace(namespace);
         if (org != null) {token.setOrgCode(org.getOrgCode());}
-        token.setToken(JWTUtil.build(app == null ? null : app.getAppSecret(), token));
+        token.setToken(JWTBuildUtil.build(app == null ? null : app.getAppSecret(), token));
         return token;
     }
 
@@ -90,7 +84,7 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         userService.updateById(update);
     }
 
-    private void addLog(AuthContext context) {
+    private void addLoginLog(AuthContext context) {
         UserDTO user = context.getUser();
         AppDTO app = context.getApp();
         AppClientDTO client = context.getClient();

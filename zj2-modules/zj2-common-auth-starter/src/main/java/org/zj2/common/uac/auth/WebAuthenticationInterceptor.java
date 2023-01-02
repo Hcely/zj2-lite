@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;
+import org.zj2.common.uac.auth.dto.UserAuthorityResource;
 import org.zj2.common.uac.auth.dto.UserAuthorityResources;
 import org.zj2.common.uac.auth.service.AuthorityApi;
 import org.zj2.common.uac.auth.util.HidePropertyUtil;
@@ -27,7 +28,6 @@ import org.zj2.lite.spring.SpringBeanRef;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *  AuthenticationInterceptor
@@ -50,15 +50,15 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
     @Around("pointcut()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {// NOSONAR
         final ServiceRequestContext context = ServiceRequestContext.current();
-        final boolean b = !context.isFiltered();
-        if (b) {
+        final boolean filtered = !context.isFiltered();
+        if (filtered) {
             context.setFiltered(true);
             final Method method = getMethod(joinPoint);
             authenticate(context, method);// 认证
             authoriseMethod(context, method);// 授权
         }
         Object result = joinPoint.proceed();
-        if (b) {authoriseData(context, result);}
+        if (filtered) {authoriseProperties(context, result);}
         return result;
     }
 
@@ -107,23 +107,23 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
         }
         AuthenticationContext authenticationContext = AuthenticationContext.current();
         final String authorityResource = StrUtil.formatObj(resource.value(), getPathParams(context));
-        final Set<String> authorities = getUserAuthorityResources(authenticationContext);
-        if (!authorities.contains(authorityResource)) {
+        final Map<String, UserAuthorityResource> authorities = getUserAuthorityResources(authenticationContext);
+        if (!authorities.containsKey(authorityResource)) {
             throw unAuthenticationErr("没有功能权限");
         }
     }
 
-    protected void authoriseData(ServiceRequestContext context, Object data) {
+    protected void authoriseProperties(ServiceRequestContext context, Object data) {
         if (!context.isAuthenticated()) {return;}
         if (context.getTokenType() != TokenType.JWT) {return;}
         AuthenticationContext authenticationContext = AuthenticationContext.current();
-        final Set<String> authorities = getUserAuthorityResources(authenticationContext);
+        final Map<String, UserAuthorityResource> authorities = getUserAuthorityResources(authenticationContext);
         PropertyUtil.scanProperties(data, cxt -> {
             AuthorityResource resource;
             Object value;
             if (cxt.isPropertyOfBean() && cxt.isSimplePropertyType() && (value = cxt.propertyValue()) != null
                     && (resource = cxt.propertyAnnotation(AuthorityResource.class)) != null) {
-                if (!authorities.contains(resource.value())) {
+                if (!authorities.containsKey(resource.value())) {
                     Object newValue = HidePropertyUtil.hideProperty(cxt.propertyName(), value);
                     cxt.propertyValue(newValue);
                 }
@@ -132,22 +132,19 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
         });
     }
 
-
-    private Set<String> getUserAuthorityResources(AuthenticationContext cxt) {
+    private Map<String, UserAuthorityResource> getUserAuthorityResources(AuthenticationContext cxt) {
         final String userId = cxt.getUserId();
-        if (StringUtils.isEmpty(userId)) {return CollUtil.emptySet();}
+        if (StringUtils.isEmpty(userId)) {return CollUtil.emptyMap();}
         AuthorityApi authorityApi = authorityApiRef.get();
-        if (authorityApi == null) {return CollUtil.emptySet();}
+        if (authorityApi == null) {return CollUtil.emptyMap();}
         final String appCode = cxt.getAppCode();
         final String orgCode = cxt.getOrgCode();
-        String cacheKey = StrUtil.concat("USER_AUTHORITY:", appCode, orgCode, userId);
-        UserAuthorityResources authorityResources = CacheUtil.DEF_CACHE.getCache(cacheKey, userId,
+        String key = StrUtil.concat("USER_AUTHORITY:", appCode, orgCode, userId);
+        UserAuthorityResources authorityResources = CacheUtil.DEF_CACHE.getCache(key, userId,
                 e -> authorityApi.getUserAuthorities(appCode, orgCode, userId));
-        if (authorityResources == null) {
-            return CollUtil.emptySet();
-        }
-        Set<String> authorities = authorityResources.getAuthorityResources();
-        return authorities == null ? CollUtil.emptySet() : authorities;
+        Map<String, UserAuthorityResource> authorities =
+                authorityResources == null ? null : authorityResources.getAuthorityResources();
+        return authorities == null ? CollUtil.emptyMap() : authorities;
     }
 
     private static Map<String, String> getPathParams(ServiceRequestContext requestContext) {

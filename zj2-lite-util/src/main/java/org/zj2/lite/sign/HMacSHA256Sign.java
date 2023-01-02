@@ -55,5 +55,18 @@ public class HMacSHA256Sign implements Sign {
             return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
     }
+
+    public static byte[] signISO(String secret, CharSequence value, int length) {
+        try {
+            Mac sha256 = Mac.getInstance(HMacSHA256Sign.ALGORITHM);
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.ISO_8859_1),
+                    HMacSHA256Sign.ALGORITHM);
+            sha256.init(secretKey);
+            for (int i = 0; i < length; ++i) {sha256.update((byte) value.charAt(i));}
+            return sha256.doFinal();
+        } catch (Exception e) {
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
+        }
+    }
 }
 

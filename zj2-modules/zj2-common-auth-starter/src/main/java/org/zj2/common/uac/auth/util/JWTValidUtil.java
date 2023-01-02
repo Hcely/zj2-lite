@@ -2,7 +2,6 @@ package org.zj2.common.uac.auth.util;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.uac.auth.dto.AuthenticationJWT;
 import org.zj2.lite.codec.Base64Util;
@@ -11,8 +10,6 @@ import org.zj2.lite.codec.CodecUtil;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.sign.HMacSHA256Sign;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -22,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @date 2022/12/4 14:32
  */
 @Slf4j
-public class JWTUtil {
+public class JWTValidUtil {
     private static final int JWT_SIGN_LENGTH = 44;
     private static final int JWT_HEADER_LENGTH = 37;
     private static final int AUTH_HEADER_LENGTH = 44;
@@ -34,24 +31,6 @@ public class JWTUtil {
         int length = StringUtils.length(token);
         return length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3 && token.charAt(length - JWT_SIGN_LENGTH) == '.' && (
                 token.startsWith(JWT_HEADER) || token.startsWith(AUTH_HEADER));
-    }
-
-    public static String getSignPart(String token) {
-        int length = StringUtils.length(token);
-        if (length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) {
-            return token.substring(length - JWT_SIGN_LENGTH + 1);
-        } else {
-            return "";
-        }
-    }
-
-    public static String build(String secret, AuthenticationJWT token) {
-        StringBuilder sb = new StringBuilder(256);
-        sb.append(JWT_HEADER);
-        URL_ENCODER.encode(sb, JSON.toJSONBytes(token));
-        byte[] signData = sign(secret, sb, sb.length());
-        sb.append('.');
-        return URL_ENCODER.encode(sb, signData).toString();
     }
 
     public static AuthenticationJWT parse(String token) {
@@ -81,23 +60,7 @@ public class JWTUtil {
     }
 
     public static boolean valid(String secret, String token) {
-        byte[] signData = sign(secret, token, token.length() - JWT_SIGN_LENGTH);
+        byte[] signData = HMacSHA256Sign.signISO(secret, token, token.length() - JWT_SIGN_LENGTH);
         return StringUtils.endsWithIgnoreCase(token, URL_ENCODER.encode(signData));
-    }
-
-
-    private static byte[] sign(String secret, CharSequence value, int length) {
-        try {
-            Mac sha256 = Mac.getInstance(HMacSHA256Sign.ALGORITHM);
-            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.ISO_8859_1),
-                    HMacSHA256Sign.ALGORITHM);
-            sha256.init(secretKey);
-            for (int i = 0; i < length; ++i) {
-                sha256.update((byte) value.charAt(i));
-            }
-            return sha256.doFinal();
-        } catch (Exception e) {
-            return ArrayUtils.EMPTY_BYTE_ARRAY;
-        }
     }
 }

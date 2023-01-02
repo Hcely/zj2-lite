@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.auth.service.JWTokenService;
-import org.zj2.common.uac.auth.util.JWTUtil;
+import org.zj2.common.uac.auth.service.helper.JWTBuildUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +25,7 @@ public class JWTokenServiceImpl implements JWTokenService {
         final String namespaceKey = getNamespaceKey(appCode, userId, namespace);
         String tokenSign = stringRedisTemplate.opsForValue().get(namespaceKey);
         if (StringUtils.isEmpty(tokenSign) || !StringUtils.endsWith(token, tokenSign)) {
-            String tokenKey = getTokenKey(JWTUtil.getSignPart(token));
+            String tokenKey = getTokenKey(JWTBuildUtil.getSignPart(token));
             String remark = stringRedisTemplate.opsForValue().get(tokenKey);
             return StringUtils.defaultIfEmpty(remark, "Token过期");
         }
@@ -35,11 +35,12 @@ public class JWTokenServiceImpl implements JWTokenService {
     @Override
     public void setToken(String appCode, String userId, String namespace, String token, long expireTime) {
         final String namespaceKey = getNamespaceKey(appCode, userId, namespace);
-        String oldTokenSign = stringRedisTemplate.opsForValue().getAndSet(namespaceKey, JWTUtil.getSignPart(token));
+        String oldTokenSign = stringRedisTemplate.opsForValue()
+                .getAndSet(namespaceKey, JWTBuildUtil.getSignPart(token));
         stringRedisTemplate.expire(namespaceKey, expireTime - System.currentTimeMillis() + 30000,
                 TimeUnit.MILLISECONDS);
         if (StringUtils.isNotEmpty(oldTokenSign)) {
-            setTokenMessage(oldTokenSign, "账号在其他地方登录");
+            setTokenErrorMsg(oldTokenSign, "账号在其他地方登录");
         }
     }
 
@@ -50,10 +51,10 @@ public class JWTokenServiceImpl implements JWTokenService {
         if (StringUtils.isNotEmpty(tokenSign) && StringUtils.endsWith(token, tokenSign)) {
             stringRedisTemplate.delete(namespaceKey);
         }
-        setTokenMessage(JWTUtil.getSignPart(token), remark);
+        setTokenErrorMsg(JWTBuildUtil.getSignPart(token), remark);
     }
 
-    private void setTokenMessage(String tokenSign, String remark) {
+    private void setTokenErrorMsg(String tokenSign, String remark) {
         String tokenKey = getTokenKey(tokenSign);
         stringRedisTemplate.opsForValue().set(tokenKey, remark, 60000L * 5, TimeUnit.MILLISECONDS);
     }
