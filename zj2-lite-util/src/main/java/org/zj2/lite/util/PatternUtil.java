@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @date 2022/12/1 11:39
  */
 public class PatternUtil {
-    private static final Pattern WORD_PATTERN = Pattern.compile("^[0-9a-zA-Z]+$");
+    private static final Pattern WORD_PATTERN = Pattern.compile("^[0-9a-zA-Z_-]+$");
     private static final Pattern ASCII_PATTERN = Pattern.compile("^[\\x00-\\x7F]+$");
     private static final Pattern INT_NUM_PATTERN = Pattern.compile("^\\d+$");
 

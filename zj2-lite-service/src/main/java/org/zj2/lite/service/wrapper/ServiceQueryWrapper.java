@@ -37,6 +37,11 @@ public class ServiceQueryWrapper<T> extends ZQueryWrapper<T> {
     }
 
     @Override
+    public ServiceQueryWrapper<T> ignoreEmpty() {
+        return (ServiceQueryWrapper<T>) super.ignoreEmpty();
+    }
+
+    @Override
     public ServiceQueryWrapper<T> ignoreEmpty(boolean ignoreEmpty) {
         return (ServiceQueryWrapper<T>) super.ignoreEmpty(ignoreEmpty);
     }
@@ -362,6 +367,7 @@ public class ServiceQueryWrapper<T> extends ZQueryWrapper<T> {
     }
 
     public ZListResp<T> page(Integer pageNumber, Integer pageSize) {
+        limit(-1);
         if (pageSize == null || pageSize < 1) {
             PageHelper.clearPage();
             List<T> models = list();

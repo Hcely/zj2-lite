@@ -67,6 +67,10 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
         return new ZQueryWrapper<>();
     }
 
+    protected final ZQueryWrapper<DTO> wrapper(boolean ignoreEmpty) {
+        return new ZQueryWrapper<DTO>().ignoreEmpty(ignoreEmpty);
+    }
+
     protected final ZUpdateWrapper<DTO> updateWrapper() {
         return new ZUpdateWrapper<>();
     }

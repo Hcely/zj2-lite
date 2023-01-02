@@ -25,6 +25,11 @@ public class ServiceUpdateWrapper<T> extends ZUpdateWrapper<T> {
     }
 
     @Override
+    public ServiceUpdateWrapper<T> ignoreEmpty() {
+        return (ServiceUpdateWrapper<T>) super.ignoreEmpty();
+    }
+
+    @Override
     public ServiceUpdateWrapper<T> ignoreEmpty(boolean ignoreEmpty) {
         return (ServiceUpdateWrapper<T>) super.ignoreEmpty(ignoreEmpty);
     }

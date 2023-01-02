@@ -33,6 +33,10 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
     @JsonProperty("iemy")
     private boolean ignoreEmpty;
 
+    public W ignoreEmpty() {
+        return ignoreEmpty(true);
+    }
+
     public W ignoreEmpty(boolean ignoreEmpty) {
         this.ignoreEmpty = ignoreEmpty;
         return (W) this;

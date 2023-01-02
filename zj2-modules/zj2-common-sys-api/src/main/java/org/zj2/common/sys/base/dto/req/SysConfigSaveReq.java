@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SysConfigEditReq implements Serializable {
+public class SysConfigSaveReq implements Serializable {
     private static final long serialVersionUID = 20221212145654L;
     /**
      *
