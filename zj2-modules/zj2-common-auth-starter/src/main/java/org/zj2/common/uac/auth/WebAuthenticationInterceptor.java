@@ -7,20 +7,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.annotation.AuthenticationIgnored;
 import org.zj2.common.uac.auth.annotation.AuthenticationRequired;
-import org.zj2.common.uac.auth.service.JWTokenApi;
-import org.zj2.common.uac.auth.util.AppUtil;
-import org.zj2.common.uac.auth.util.JWTUtil;
-import org.zj2.common.uac.auth.util.ServerSignUtil;
-import org.zj2.lite.common.entity.result.ZError;
-import org.zj2.lite.common.entity.result.ZRBuilder;
-import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.CollUtil;
-import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
 
@@ -34,12 +24,9 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Component
-public class WebAuthenticationInterceptor {
+public class WebAuthenticationInterceptor extends AbstractAuthenticationInterceptor {
     private static final String ZJ2_PACKAGE = "org.zj2";
-    private static final long SIGN_TIMEOUT = 60000L * 5;
     private static final TokenType[] DEFAULT_TOKEN_TYPE = {TokenType.CLIENT};
-    @Autowired
-    private JWTokenApi jwtokenApi;
 
     @Pointcut("@within(org.springframework.web.bind.annotation.RestController)||@within(org.springframework.stereotype.Controller)")
     private void pointcut() {
@@ -94,45 +81,9 @@ public class WebAuthenticationInterceptor {
         context.setAuthenticated(true);
     }
 
-    protected void authenticateJWT(ServiceRequestContext context) {
-        if (context.getTokenTime() < System.currentTimeMillis() - 1000) {
-            throw unAuthenticationErr("Token过期");
-        }
-        AppDTO app = getApp();
-        if (!JWTUtil.valid(app.getAppSecret(), context.getToken())) {
-            throw unAuthenticationErr("Token无效");
-        }
-        if (StringUtils.isNotEmpty(context.getNamespace())) {
-            String errMsg = jwtokenApi.validToken(app.getAppCode(), AuthenticationContext.currentUserId(),
-                    context.getNamespace(), context.getToken());
-            if (StringUtils.isNotEmpty(errMsg)) {throw unAuthenticationErr(errMsg);}
-        }
-    }
-
-    protected void authenticateSign(ServiceRequestContext context) {
-        long timestamp = context.getTokenTime();
-        long now = System.currentTimeMillis();
-        if (timestamp > now - 1000 || timestamp < now - SIGN_TIMEOUT) {throw unAuthenticationErr("请求过期");}
-        AppDTO app = getApp();
-        String sign = ServerSignUtil.buildSign(app.getAppCode(), app.getAppSecret(), context.getTokenTime(),
-                context.getMethod(), context.getUri());
-        if (!StringUtils.equalsIgnoreCase(sign, context.getToken())) {throw unAuthenticationErr("非法请求");}
-    }
-
-    protected AppDTO getApp() {
-        AppDTO app = AppUtil.getApp();
-        if (app == null || BooleanUtil.isFalse(app.getEnableFlag())) {throw unAuthenticationErr("请求应用无效");}
-        return app;
-    }
-
     private Method getMethod(ProceedingJoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         return signature instanceof MethodSignature ? ((MethodSignature) signature).getMethod() : null;
     }
-
-    private ZError unAuthenticationErr(String msg) {
-        return ZRBuilder.failureErr(msg).setStatus(401);
-    }
-
 }
 

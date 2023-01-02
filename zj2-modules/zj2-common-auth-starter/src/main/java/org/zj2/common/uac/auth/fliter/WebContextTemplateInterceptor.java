@@ -1,10 +1,12 @@
-package org.zj2.common.uac.auth.request;
+package org.zj2.common.uac.auth.fliter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ import java.io.IOException;
  * @author peijie.ye
  * @date 2022/12/9 1:57
  */
+@Component
+@Order(-2000)
 public class WebContextTemplateInterceptor extends AbsContextInterceptor<HttpRequest>
         implements ClientHttpRequestInterceptor {
     @SuppressWarnings("NullableProblems")

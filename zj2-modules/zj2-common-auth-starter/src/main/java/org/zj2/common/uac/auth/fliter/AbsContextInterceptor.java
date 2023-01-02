@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.request;
+package org.zj2.common.uac.auth.fliter;
 
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.util.AppUtil;

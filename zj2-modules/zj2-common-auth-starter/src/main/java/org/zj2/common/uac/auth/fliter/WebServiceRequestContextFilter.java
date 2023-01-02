@@ -1,6 +1,7 @@
-package org.zj2.common.uac.auth.request;
+package org.zj2.common.uac.auth.fliter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.zj2.lite.service.context.ServiceRequestContext;
@@ -20,6 +21,7 @@ import java.io.IOException;
  * @date 2022/12/4 14:25
  */
 @Component
+@Order(-2000)
 public class WebServiceRequestContextFilter extends AbsContextFilter<HttpServletRequest> implements Filter {
     private static final String[] IP_HEADERS = {"x-forwarded-for", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP",
             "HTTP_X_FORWARDED_FOR"};
