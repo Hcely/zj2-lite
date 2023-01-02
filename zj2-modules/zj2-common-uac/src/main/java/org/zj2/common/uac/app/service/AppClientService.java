@@ -1,7 +1,7 @@
 package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppClientDTO;
-import org.zj2.common.uac.app.dto.req.AppClientCreateEditReq;
+import org.zj2.common.uac.app.dto.req.AppClientSaveReq;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -16,7 +16,7 @@ public interface AppClientService extends BaseInnerService<AppClientDTO>, AppCli
      * @param req
      * @return
      */
-    AppClientDTO createEditClient(AppClientCreateEditReq req);
+    AppClientDTO saveClient(AppClientSaveReq req);
 
     /**
      * 启用

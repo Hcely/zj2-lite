@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.zj2.lite.common.annotation.CryptProperty;
 import org.zj2.lite.common.annotation.SensitiveProperty;
 import org.zj2.lite.common.util.PropertyUtil;
+import org.zj2.lite.service.auth.AuthorityResource;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,7 +57,8 @@ public class SafeLogUtil {
     }
 
     private static boolean isSensitiveProperty(PropertyUtil.BeanPropertyDescriptor pd) {
-        return pd.annotation(CryptProperty.class) != null || pd.annotation(SensitiveProperty.class) != null;
+        return pd.annotation(CryptProperty.class) != null || pd.annotation(SensitiveProperty.class) != null
+                || pd.annotation(AuthorityResource.class) != null;
     }
 
     public static void addSensitiveProperty(String name) {

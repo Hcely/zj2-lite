@@ -21,7 +21,7 @@ public class StrFormatterManager {
     public StrFormatterManager(boolean useCache) {
         this.useCache = useCache;
         this.nullAsEmpty = false;
-        this.formatterCache = useCache ? new HashMap<>(512) : new HashMap<>();
+        this.formatterCache = useCache ? new HashMap<>(1024) : new HashMap<>();
         this.serializers = new CopyOnWriteArrayList<>();
     }
 

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.zj2.lite.service.context.ServiceRequestContext;
+import org.zj2.lite.service.constant.ServiceConstants;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -41,7 +41,7 @@ public class WebServiceRequestContextFilter extends AbsContextFilter<HttpServlet
     @Override
     protected String getValue(HttpServletRequest request, String key) {
         String value = request.getHeader(key);
-        if (StringUtils.isEmpty(value) && ServiceRequestContext.AUTHORIZATION.equalsIgnoreCase(key)
+        if (StringUtils.isEmpty(value) && ServiceConstants.REQUEST_AUTHORIZATION.equalsIgnoreCase(key)
                 && HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())) {
             value = request.getParameter(key);
             if (StringUtils.isEmpty(value)) {value = request.getParameter(StringUtils.lowerCase(key));}

@@ -12,12 +12,10 @@ import org.zj2.lite.common.context.BaseContext;
  * @date 2022/11/28 3:05
  */
 @Setter
+@Getter
 @NoArgsConstructor
 public class ServiceRequestContext extends BaseContext {
     private static final int IDX = nextIdx();
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String ATTR_IP = "attrIp";
-    public static final String DEVICE = "device";
 
     public static String currentAttrIp() {
         ServiceRequestContext requestContext = getSubContext(IDX, null);
@@ -38,20 +36,18 @@ public class ServiceRequestContext extends BaseContext {
         return setSubContext(IDX, context);
     }
 
-    public static ServiceRequestContext currentContext() {
+    public static ServiceRequestContext current() {
         return getSubContext(IDX, ServiceRequestContext::new);
     }
 
-    @Getter
+    private Object request;
     private TokenType tokenType;
     private String token;
-    @Getter
     private long tokenTime;
-    @Getter
     private String namespace;
     private String method;
     private String uri;
-    @Getter
+    private boolean filtered;
     private boolean authenticated;
     //
     private String attrIp;
@@ -75,5 +71,12 @@ public class ServiceRequestContext extends BaseContext {
 
     public String getDevice() {
         return device == null ? "" : device;
+    }
+
+    @Override
+    public BaseContext clone() {//NOSONAR
+        ServiceRequestContext context = (ServiceRequestContext) super.clone();
+        context.request = null;
+        return context;
     }
 }

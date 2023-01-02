@@ -3,7 +3,7 @@ package org.zj2.common.sys.base.service;
 import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.NumNextReq;
-import org.zj2.lite.service.annotation.ApiReference;
+import org.zj2.lite.service.ApiReference;
 
 /**
  *  SysSequenceApi

@@ -8,7 +8,7 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
-import org.zj2.lite.service.context.ServiceRequestContext;
+import org.zj2.lite.service.constant.ServiceConstants;
 
 /**
  *  DubboContextFilter
@@ -35,11 +35,11 @@ public class DubboProviderRequestContextFilter extends AbsContextFilter<Invocati
 
     @Override
     protected String getAttrIp(Invocation request) {
-        return request.getAttachment(ServiceRequestContext.ATTR_IP);
+        return request.getAttachment(ServiceConstants.REQUEST_ATTR_IP);
     }
 
     @Override
     protected String getDevice(Invocation request) {
-        return request.getAttachment(ServiceRequestContext.DEVICE);
+        return request.getAttachment(ServiceConstants.REQUEST_DEVICE);
     }
 }

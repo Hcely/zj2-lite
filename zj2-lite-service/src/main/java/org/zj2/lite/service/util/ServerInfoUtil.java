@@ -16,7 +16,7 @@ import java.util.List;
  * @author peijie.ye
  * @date 2022/12/12 16:14
  */
-public class ServerUtil {
+public class ServerInfoUtil {
     private static final String SERVER_ID;
     private static final String MACHINE_CODE;
 

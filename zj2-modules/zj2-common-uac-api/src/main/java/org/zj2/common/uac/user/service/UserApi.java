@@ -2,8 +2,8 @@ package org.zj2.common.uac.user.service;
 
 import org.zj2.common.uac.user.constant.UserValueTypeEnum;
 import org.zj2.common.uac.user.dto.UserDTO;
+import org.zj2.lite.service.ApiReference;
 import org.zj2.lite.service.BaseApi;
-import org.zj2.lite.service.annotation.ApiReference;
 
 /**
  *  UserApi

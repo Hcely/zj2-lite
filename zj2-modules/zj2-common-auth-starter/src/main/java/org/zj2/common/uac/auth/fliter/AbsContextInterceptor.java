@@ -3,6 +3,7 @@ package org.zj2.common.uac.auth.fliter;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.util.AppUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
+import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 
@@ -14,13 +15,13 @@ import org.zj2.lite.service.context.ServiceRequestContext;
  */
 public abstract class AbsContextInterceptor<T> {
     protected void setContext(T request, String method, String uri) {
-        setValue(request, AuthenticationContext.USER_ID, AuthenticationContext.currentUserId());
-        setValue(request, AuthenticationContext.USERNAME, AuthenticationContext.currentUserName());
-        setValue(request, AuthenticationContext.APP_CODE, AuthenticationContext.currentAppCode());
-        setValue(request, AuthenticationContext.ORG_CODE, AuthenticationContext.currentOrgCode());
+        setValue(request, ServiceConstants.JWT_USER_ID, AuthenticationContext.currentUserId());
+        setValue(request, ServiceConstants.JWT_USERNAME, AuthenticationContext.currentUserName());
+        setValue(request, ServiceConstants.JWT_APP_CODE, AuthenticationContext.currentAppCode());
+        setValue(request, ServiceConstants.JWT_ORG_CODE, AuthenticationContext.currentOrgCode());
         //
-        setValue(request, ServiceRequestContext.ATTR_IP, ServiceRequestContext.currentAttrIp());
-        setValue(request, ServiceRequestContext.DEVICE, ServiceRequestContext.currentDevice());
+        setValue(request, ServiceConstants.REQUEST_ATTR_IP, ServiceRequestContext.currentAttrIp());
+        setValue(request, ServiceConstants.REQUEST_DEVICE, ServiceRequestContext.currentDevice());
         //
         setAuthentication(request, method, uri);
     }
@@ -29,7 +30,7 @@ public abstract class AbsContextInterceptor<T> {
         AppDTO app = AppUtil.getApp();
         if (app == null) {return;}
         String authentication = ServerSignUtil.buildAuthentication(app.getAppCode(), app.getAppSecret(), method, uri);
-        setValue(request, ServiceRequestContext.AUTHORIZATION, authentication);
+        setValue(request, ServiceConstants.REQUEST_AUTHORIZATION, authentication);
     }
 
     protected abstract void setValue(T request, String key, String value);

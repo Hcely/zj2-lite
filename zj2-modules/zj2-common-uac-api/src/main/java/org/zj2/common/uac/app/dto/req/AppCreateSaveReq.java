@@ -15,11 +15,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AppClientCreateEditReq implements Serializable {
+public class AppCreateSaveReq implements Serializable {
     private static final long serialVersionUID = 779083549736628009L;
     private String appCode;
-    private String clientCode;
-    private String clientName;
-    private String namespace;
+    private String appName;
+    private Integer allowAllUser;
+    private Integer singleSignOn;
     private Long tokenTimeout;
 }

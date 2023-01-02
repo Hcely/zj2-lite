@@ -23,7 +23,6 @@ public class AbstractAuthenticationInterceptor {
     private static final long SIGN_TIMEOUT = 60000L * 5;
     private static final SpringBeanRef<JWTokenApi> TOKEN_API_REF = new SpringBeanRef<>(JWTokenApi.class);
 
-
     protected void authenticateJWT(ServiceRequestContext context) {
         if (context.getTokenTime() < System.currentTimeMillis() - 1000) {
             throw unAuthenticationErr("Token过期");
@@ -32,14 +31,18 @@ public class AbstractAuthenticationInterceptor {
         if (!JWTUtil.valid(app.getAppSecret(), context.getToken())) {
             throw unAuthenticationErr("Token无效");
         }
-        if (StringUtils.isNotEmpty(context.getNamespace())) {
-            JWTokenApi jwtokenApi = TOKEN_API_REF.get();
-            String errMsg = jwtokenApi == null ?
-                    null :
-                    jwtokenApi.validToken(app.getAppCode(), AuthenticationContext.currentUserId(),
-                            context.getNamespace(), context.getToken());
-            if (StringUtils.isNotEmpty(errMsg)) {throw unAuthenticationErr(errMsg);}
+        if (StringUtils.isNotEmpty(context.getNamespace())) {// 单点登录，检查token
+            validJWT(app, context);
         }
+    }
+
+    private void validJWT(AppDTO app, ServiceRequestContext context) {
+        JWTokenApi jwtokenApi = TOKEN_API_REF.get();
+        String errMsg = jwtokenApi == null ?
+                null :
+                jwtokenApi.validToken(app.getAppCode(), AuthenticationContext.currentUserId(), context.getNamespace(),
+                        context.getToken());
+        if (StringUtils.isNotEmpty(errMsg)) {throw unAuthenticationErr(errMsg);}
     }
 
     protected void authenticateSign(ServiceRequestContext context) {

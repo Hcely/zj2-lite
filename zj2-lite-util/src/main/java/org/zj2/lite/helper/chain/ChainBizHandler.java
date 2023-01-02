@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zj2.lite.helper.handler.BizFunc;
 import org.zj2.lite.helper.handler.BizHandler;
-import org.zj2.lite.helper.handler.BizMultiFunc;
+import org.zj2.lite.helper.handler.BizMulti;
 import org.zj2.lite.helper.handler.BizVHandler;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
         }
 
         public Builder<T> addHandler(Class<? extends BizFunc> handlerType) {
-            if (BizMultiFunc.class.isAssignableFrom(handlerType)) {
+            if (handlerType.getAnnotation(BizMulti.class) != null) {
                 Collection<? extends BizFunc> funcs = ChainBizHandlerUtil.getHandlers(handlerType);
                 if (funcs != null && !funcs.isEmpty()) {
                     for (BizFunc func : funcs) {addHandler(func);}

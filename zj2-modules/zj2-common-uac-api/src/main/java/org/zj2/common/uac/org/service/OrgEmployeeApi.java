@@ -1,8 +1,8 @@
 package org.zj2.common.uac.org.service;
 
 import org.zj2.common.uac.org.dto.OrgEmployeeDTO;
+import org.zj2.lite.service.ApiReference;
 import org.zj2.lite.service.BaseApi;
-import org.zj2.lite.service.annotation.ApiReference;
 
 /**
  *  OrgEmployeeApi

@@ -1,6 +1,6 @@
 package org.zj2.common.uac.auth.service;
 
-import org.zj2.lite.service.annotation.ApiReference;
+import org.zj2.lite.service.ApiReference;
 
 /**
  *  TokenApi

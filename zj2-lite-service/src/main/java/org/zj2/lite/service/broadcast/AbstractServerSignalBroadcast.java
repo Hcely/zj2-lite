@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zj2.lite.service.util.ServerUtil;
+import org.zj2.lite.service.util.ServerInfoUtil;
 import org.zj2.lite.util.AsyncUtil;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,7 +30,7 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
             logger.warn("系统信号广播:signal[{}]不能超过250字符", signal);
             return false;
         }
-        final ServerSignal serverSignal = new ServerSignal(ServerUtil.getServerId(), System.currentTimeMillis(), tag,
+        final ServerSignal serverSignal = new ServerSignal(ServerInfoUtil.getServerId(), System.currentTimeMillis(), tag,
                 signal);
         AsyncUtil.execute(() -> {
             onMsg0(serverSignal);
@@ -53,7 +53,7 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
 
     @Override
     public void onMsg(ServerSignal signal) {
-        if (signal != null && !StringUtils.equalsIgnoreCase(ServerUtil.getServerId(), signal.getServerId())) {
+        if (signal != null && !StringUtils.equalsIgnoreCase(ServerInfoUtil.getServerId(), signal.getServerId())) {
             onMsg0(signal);
         }
     }

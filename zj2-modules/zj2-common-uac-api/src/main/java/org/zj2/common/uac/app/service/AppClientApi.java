@@ -1,8 +1,8 @@
 package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppClientDTO;
+import org.zj2.lite.service.ApiReference;
 import org.zj2.lite.service.BaseApi;
-import org.zj2.lite.service.annotation.ApiReference;
 
 import java.util.List;
 

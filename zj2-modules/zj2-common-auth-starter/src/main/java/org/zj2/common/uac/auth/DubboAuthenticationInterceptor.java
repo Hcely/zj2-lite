@@ -26,10 +26,10 @@ public class DubboAuthenticationInterceptor extends AbstractAuthenticationInterc
     }
 
     protected void authenticate() {
-        ServiceRequestContext context = ServiceRequestContext.currentContext();
+        ServiceRequestContext context = ServiceRequestContext.current();
         if (StringUtils.isEmpty(context.getToken())) {throw unAuthenticationErr("缺失认证信息");}
         TokenType type = context.getTokenType();
-        if (type == TokenType.CLIENT) {
+        if (type == TokenType.JWT) {
             throw unAuthenticationErr("无效签名");
         }
         authenticateSign(context);

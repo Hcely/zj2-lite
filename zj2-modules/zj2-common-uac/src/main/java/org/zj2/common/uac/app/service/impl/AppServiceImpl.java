@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppDTO;
-import org.zj2.common.uac.app.dto.req.AppCreateEditReq;
+import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
 import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.app.mapper.AppMapper;
 import org.zj2.common.uac.app.service.AppService;
@@ -48,7 +48,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     }
 
     @Override
-    public AppDTO create(AppCreateEditReq req) {
+    public AppDTO createApp(AppCreateSaveReq req) {
         // 处理参数
         req.setAppCode(StringUtils.trimToEmpty(req.getAppCode()));
         req.setAppName(StringUtils.trimToEmpty(req.getAppName()));
@@ -76,7 +76,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
 
 
     @Override
-    public void editApp(AppCreateEditReq req) {
+    public void editApp(AppCreateSaveReq req) {
         AppDTO app = getByCode0(req.getAppCode());
         if (app == null) {throw ZRBuilder.failureErr("应用不存在");}
         AppDTO update = new AppDTO();

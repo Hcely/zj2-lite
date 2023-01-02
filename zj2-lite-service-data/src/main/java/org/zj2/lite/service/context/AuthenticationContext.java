@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.context.BaseContext;
+import org.zj2.lite.service.constant.ServiceConstants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,10 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthenticationContext extends BaseContext {
     private static final int IDX = nextIdx();
-    public static final String USER_ID = "uid";
-    public static final String USERNAME = "uname";
-    public static final String APP_CODE = "app";
-    public static final String ORG_CODE = "org";
+
 
     public static AuthenticationContext current() {
         return getSubContext(IDX, AuthenticationContext::new);
@@ -74,10 +72,10 @@ public class AuthenticationContext extends BaseContext {
 
     public Map<String, String> buildHeaders() {
         Map<String, String> result = new LinkedHashMap<>();
-        if (StringUtils.isNotEmpty(userId)) {result.put(USER_ID, userId);}
-        if (StringUtils.isNotEmpty(userName)) {result.put(USERNAME, userName);}
-        if (StringUtils.isNotEmpty(appCode)) {result.put(APP_CODE, appCode);}
-        if (StringUtils.isNotEmpty(orgCode)) {result.put(ORG_CODE, orgCode);}
+        if (StringUtils.isNotEmpty(userId)) {result.put(ServiceConstants.JWT_USER_ID, userId);}
+        if (StringUtils.isNotEmpty(userName)) {result.put(ServiceConstants.JWT_USERNAME, userName);}
+        if (StringUtils.isNotEmpty(appCode)) {result.put(ServiceConstants.JWT_APP_CODE, appCode);}
+        if (StringUtils.isNotEmpty(orgCode)) {result.put(ServiceConstants.JWT_ORG_CODE, orgCode);}
         return result;
     }
 

@@ -1,4 +1,6 @@
-package org.zj2.common.uac.auth.annotation;
+package org.zj2.lite.service.auth;
+
+import org.zj2.lite.service.context.TokenType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,5 +11,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface AuthenticationIgnored {
+public @interface AuthenticationRequired {
+    TokenType[] allowToken() default {TokenType.JWT};
 }

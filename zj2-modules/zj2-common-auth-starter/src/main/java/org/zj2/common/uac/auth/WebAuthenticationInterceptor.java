@@ -8,13 +8,26 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.auth.annotation.AuthenticationIgnored;
-import org.zj2.common.uac.auth.annotation.AuthenticationRequired;
+import org.springframework.web.servlet.HandlerMapping;
+import org.zj2.common.uac.auth.dto.UserAuthorityResources;
+import org.zj2.common.uac.auth.service.AuthorityApi;
+import org.zj2.common.uac.auth.util.HidePropertyUtil;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.PropertyUtil;
+import org.zj2.lite.common.util.StrUtil;
+import org.zj2.lite.service.auth.AuthenticationIgnored;
+import org.zj2.lite.service.auth.AuthenticationRequired;
+import org.zj2.lite.service.auth.AuthorityResource;
+import org.zj2.lite.service.cache.CacheUtil;
+import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
+import org.zj2.lite.spring.SpringBeanRef;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *  AuthenticationInterceptor
@@ -26,7 +39,8 @@ import java.lang.reflect.Method;
 @Component
 public class WebAuthenticationInterceptor extends AbstractAuthenticationInterceptor {
     private static final String ZJ2_PACKAGE = "org.zj2";
-    private static final TokenType[] DEFAULT_TOKEN_TYPE = {TokenType.CLIENT};
+    private static final TokenType[] DEFAULT_TOKEN_TYPE = {TokenType.JWT};
+    private static final SpringBeanRef<AuthorityApi> authorityApiRef = new SpringBeanRef<>(AuthorityApi.class);
 
     @Pointcut("@within(org.springframework.web.bind.annotation.RestController)||@within(org.springframework.stereotype.Controller)")
     private void pointcut() {
@@ -35,22 +49,24 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
 
     @Around("pointcut()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {// NOSONAR
-        authenticate(joinPoint);
-        return joinPoint.proceed();
+        final ServiceRequestContext context = ServiceRequestContext.current();
+        final boolean b = !context.isFiltered();
+        if (b) {
+            context.setFiltered(true);
+            final Method method = getMethod(joinPoint);
+            authenticate(context, method);// 认证
+            authoriseMethod(context, method);// 授权
+        }
+        Object result = joinPoint.proceed();
+        if (b) {authoriseData(context, result);}
+        return result;
     }
 
-    private void authenticate(ProceedingJoinPoint joinPoint) {
-        // 已认证，无效处理
-        if (ServiceRequestContext.currentAuthenticated()) {return;}
-        Method method = getMethod(joinPoint);
-        // 没找到方法忽略
+    private void authenticate(ServiceRequestContext context, Method method) {
         if (method == null) {return;}
-        //
         Class<?> type = method.getDeclaringClass();
         // 无需认证
-        if (method.getAnnotation(AuthenticationIgnored.class) != null) {
-            return;
-        }
+        if (method.getAnnotation(AuthenticationIgnored.class) != null) {return;}
         AuthenticationRequired required = method.getAnnotation(AuthenticationRequired.class);
         if (required == null) {
             // 没指定认证，父级指定无需认证
@@ -64,16 +80,15 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
             // 非本身服务，无需处理
             if (!StringUtils.startsWithIgnoreCase(type.getName(), ZJ2_PACKAGE)) {return;}
         }
-        TokenType[] types = required == null ? DEFAULT_TOKEN_TYPE : required.required();
-        authenticate(types.length == 0 ? DEFAULT_TOKEN_TYPE : types);
+        TokenType[] types = required == null ? DEFAULT_TOKEN_TYPE : required.allowToken();
+        authenticate(context, types.length == 0 ? DEFAULT_TOKEN_TYPE : types);
     }
 
-    protected void authenticate(TokenType[] types) {
-        ServiceRequestContext context = ServiceRequestContext.currentContext();
+    protected void authenticate(ServiceRequestContext context, TokenType[] types) {
         if (StringUtils.isEmpty(context.getToken())) {throw unAuthenticationErr("缺失认证信息");}
         TokenType type = context.getTokenType();
         if (!CollUtil.contains(types, type)) {throw unAuthenticationErr("非法认证信息");}
-        if (type == TokenType.CLIENT) {
+        if (type == TokenType.JWT) {
             authenticateJWT(context);
         } else {
             authenticateSign(context);
@@ -81,7 +96,72 @@ public class WebAuthenticationInterceptor extends AbstractAuthenticationIntercep
         context.setAuthenticated(true);
     }
 
-    private Method getMethod(ProceedingJoinPoint joinPoint) {
+    protected void authoriseMethod(ServiceRequestContext context, Method method) {
+        if (method == null) {return;}
+        if (!context.isAuthenticated()) {return;}
+        if (context.getTokenType() != TokenType.JWT) {return;}
+        AuthorityResource resource = method.getAnnotation(AuthorityResource.class);
+        if (resource == null) {
+            resource = method.getDeclaringClass().getAnnotation(AuthorityResource.class);
+            if (resource == null) {return;}
+        }
+        AuthenticationContext authenticationContext = AuthenticationContext.current();
+        final String authorityResource = StrUtil.formatObj(resource.value(), getPathParams(context));
+        final Set<String> authorities = getUserAuthorityResources(authenticationContext);
+        if (!authorities.contains(authorityResource)) {
+            throw unAuthenticationErr("没有功能权限");
+        }
+    }
+
+    protected void authoriseData(ServiceRequestContext context, Object data) {
+        if (!context.isAuthenticated()) {return;}
+        if (context.getTokenType() != TokenType.JWT) {return;}
+        AuthenticationContext authenticationContext = AuthenticationContext.current();
+        final Set<String> authorities = getUserAuthorityResources(authenticationContext);
+        PropertyUtil.scanProperties(data, cxt -> {
+            AuthorityResource resource;
+            Object value;
+            if (cxt.isPropertyOfBean() && cxt.isSimplePropertyType() && (value = cxt.propertyValue()) != null
+                    && (resource = cxt.propertyAnnotation(AuthorityResource.class)) != null) {
+                if (!authorities.contains(resource.value())) {
+                    Object newValue = HidePropertyUtil.hideProperty(cxt.propertyName(), value);
+                    cxt.propertyValue(newValue);
+                }
+            }
+            return PropertyUtil.PropScanMode.DEEP;
+        });
+    }
+
+
+    private Set<String> getUserAuthorityResources(AuthenticationContext cxt) {
+        final String userId = cxt.getUserId();
+        if (StringUtils.isEmpty(userId)) {return CollUtil.emptySet();}
+        AuthorityApi authorityApi = authorityApiRef.get();
+        if (authorityApi == null) {return CollUtil.emptySet();}
+        final String appCode = cxt.getAppCode();
+        final String orgCode = cxt.getOrgCode();
+        String cacheKey = StrUtil.concat("USER_AUTHORITY:", appCode, orgCode, userId);
+        UserAuthorityResources authorityResources = CacheUtil.DEF_CACHE.getCache(cacheKey, userId,
+                e -> authorityApi.getUserAuthorities(appCode, orgCode, userId));
+        if (authorityResources == null) {
+            return CollUtil.emptySet();
+        }
+        Set<String> authorities = authorityResources.getAuthorityResources();
+        return authorities == null ? CollUtil.emptySet() : authorities;
+    }
+
+    private static Map<String, String> getPathParams(ServiceRequestContext requestContext) {
+        Object request = requestContext.getRequest();
+        if (request instanceof HttpServletRequest) {
+            Object pathParams = ((HttpServletRequest) request).getAttribute(
+                    HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+            //noinspection unchecked
+            return pathParams instanceof Map ? (Map<String, String>) pathParams : CollUtil.emptyMap();
+        }
+        return CollUtil.emptyMap();
+    }
+
+    private static Method getMethod(ProceedingJoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         return signature instanceof MethodSignature ? ((MethodSignature) signature).getMethod() : null;
     }

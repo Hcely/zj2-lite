@@ -1,18 +1,16 @@
-package org.zj2.lite.service.annotation;
+package org.zj2.lite.helper.handler;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
- * <br>CreateDate 三月 21,2022
+ * 多业务处理器标识
+ * <br>CreateDate 三月 27,2022
  * @author peijie.ye
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface ApiReference {
+public @interface BizMulti {
 }

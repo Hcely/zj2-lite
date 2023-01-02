@@ -1,6 +1,4 @@
-package org.zj2.common.uac.auth.annotation;
-
-import org.zj2.lite.service.context.TokenType;
+package org.zj2.lite.service.auth;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,9 +6,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+/**
+ *  AuthorityRequired
+ *
+ * @author peijie.ye
+ * @date 2023/1/2 18:22
+ */
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface AuthenticationRequired {
-    TokenType[] required() default {TokenType.CLIENT};
+public @interface AuthorityResource {
+    String value();
 }

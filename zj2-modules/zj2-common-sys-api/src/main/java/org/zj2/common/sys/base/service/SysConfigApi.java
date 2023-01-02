@@ -1,7 +1,7 @@
 package org.zj2.common.sys.base.service;
 
 import org.zj2.common.sys.base.dto.SysConfigDTO;
-import org.zj2.lite.service.annotation.ApiReference;
+import org.zj2.lite.service.ApiReference;
 
 /**
  *  SysConfigApi

@@ -3,7 +3,7 @@ package org.zj2.common.uac.app.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppClientDTO;
-import org.zj2.common.uac.app.dto.req.AppClientCreateEditReq;
+import org.zj2.common.uac.app.dto.req.AppClientSaveReq;
 import org.zj2.common.uac.app.entity.AppClient;
 import org.zj2.common.uac.app.mapper.AppClientMapper;
 import org.zj2.common.uac.app.service.AppClientService;
@@ -40,7 +40,7 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
     }
 
     @Override
-    public AppClientDTO createEditClient(AppClientCreateEditReq req) {
+    public AppClientDTO saveClient(AppClientSaveReq req) {
         AppClientDTO appClient = getByCode(req.getAppCode(), req.getClientCode());
         if (appClient == null) {
             appClient = new AppClientDTO();
