@@ -1,7 +1,7 @@
 package org.zj2.common.uac.auth.fliter;
 
 import org.zj2.common.uac.app.dto.AppDTO;
-import org.zj2.common.uac.auth.util.AppUtil;
+import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthenticationContext;
@@ -27,7 +27,7 @@ public abstract class AbsContextInterceptor<T> {
     }
 
     private void setAuthentication(T request, String method, String uri) {
-        AppDTO app = AppUtil.getApp();
+        AppDTO app = AuthUtil.getApp();
         if (app == null) {return;}
         String authentication = ServerSignUtil.buildAuthentication(app.getAppCode(), app.getAppSecret(), method, uri);
         setValue(request, ServiceConstants.REQUEST_AUTHORIZATION, authentication);

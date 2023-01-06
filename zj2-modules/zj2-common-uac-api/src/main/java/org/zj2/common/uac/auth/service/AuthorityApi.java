@@ -12,6 +12,4 @@ import org.zj2.lite.service.ApiReference;
 @ApiReference
 public interface AuthorityApi {
     UserAuthorityResources getUserAuthorities(String appCode, String orgCode, String userId);
-
-    UserAuthorityResources getTempAuthorities(String appCode, String orgCode, String userId);
 }

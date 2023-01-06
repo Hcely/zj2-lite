@@ -51,7 +51,11 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     public void clear() {
         for (Iterator<CacheObjRef> it = cacheObjMap.values().iterator(); it.hasNext(); ) {
             CacheObjRef ref = it.next();
-            it.remove();
+            try {
+                it.remove();
+            } catch (IllegalStateException ignored) {
+                // NOTHING
+            }
             ref.clear();
         }
     }
@@ -62,13 +66,23 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
 
     @Override
     public void removeCache(String cacheKey) {
-        CacheObjRef ref = cacheObjMap.remove(cacheKey);
-        if (ref != null) {ref.clear();}
+        try {
+            CacheObjRef ref = cacheObjMap.remove(cacheKey);
+            if (ref != null) {ref.clear();}
+        } catch (IllegalStateException ignored) {
+            // NOTHING
+        }
     }
 
     @Override
     public <T> void setCache(String cacheKey, T value, long timeout) {
-        cacheObjMap.put(cacheKey, new CacheObjRef(value, timeout));
+        for (int i = 0; i < RETRY_COUNT; ++i) {
+            try {
+                cacheObjMap.put(cacheKey, new CacheObjRef(value, timeout));
+            } catch (IllegalStateException ignored) {
+                if (i < RETRY_COUNT - 1) {LockSupport.parkNanos(1000000);}
+            }
+        }
     }
 
     @Override
@@ -79,13 +93,12 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
         if (getter == null || StringUtils.isEmpty(dataKey)) {return null;}
         final CacheHandler handler = new CacheHandler(dataKey, getter, getTimeout(timeout), ignoreErr);
         for (int i = 0; i < RETRY_COUNT; ++i) {
-            handler.result = null;
             try {
+                handler.result = null;
                 cacheObjMap.compute(cacheKey, handler);
                 return (T) handler.result;
             } catch (IllegalStateException e) {
-                // 对象发生并发，再取一次
-                LockSupport.parkNanos(1000000);
+                if (i < RETRY_COUNT - 1) {LockSupport.parkNanos(1000000);}
             }
         }
         // 缓存失效，直接读取数据

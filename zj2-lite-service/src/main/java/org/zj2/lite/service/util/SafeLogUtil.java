@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zj2.lite.common.annotation.CryptProperty;
 import org.zj2.lite.common.annotation.SensitiveProperty;
+import org.zj2.lite.common.bean.BeanDescriptor;
+import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.service.auth.AuthorityResource;
 
@@ -31,7 +33,7 @@ public class SafeLogUtil {
     private static final Set<String> SENSITIVE_PROPERTIES = ConcurrentHashMap.newKeySet(1024);
 
     private static boolean isNotEmpty(Object value) {
-        if (value == null) {return false;}
+        if (value == null) { return false; }
         if (value instanceof CharSequence) {
             return ((CharSequence) value).length() > 0;
         } else {
@@ -48,15 +50,15 @@ public class SafeLogUtil {
     }
 
     public static void addSensitiveProperty(Class<?> type) {
-        PropertyUtil.BeanDescriptor bd = PropertyUtil.getBeanDescriptor(type);
-        if (bd == null) {return;}
+        BeanDescriptor bd = PropertyUtil.getBeanDescriptor(type);
+        if (bd == null) { return; }
         for (int idx = 0, size = bd.propertySize(); idx < size; ++idx) {
-            PropertyUtil.BeanPropertyDescriptor pd = bd.propertyDescriptor(idx);
-            if (isSensitiveProperty(pd)) {addSensitiveProperty(pd.propertyName());}
+            BeanPropertyDescriptor pd = bd.propertyDescriptor(idx);
+            if (isSensitiveProperty(pd)) { addSensitiveProperty(pd.propertyName()); }
         }
     }
 
-    private static boolean isSensitiveProperty(PropertyUtil.BeanPropertyDescriptor pd) {
+    private static boolean isSensitiveProperty(BeanPropertyDescriptor pd) {
         return pd.annotation(CryptProperty.class) != null || pd.annotation(SensitiveProperty.class) != null
                 || pd.annotation(AuthorityResource.class) != null;
     }
@@ -66,9 +68,9 @@ public class SafeLogUtil {
     }
 
     public static boolean isSensitiveProperty(String name) {
-        if (StringUtils.isEmpty(name)) {return false;}
+        if (StringUtils.isEmpty(name)) { return false; }
         for (String suffix : SENSITIVE_SUFFIX_WORDS) {
-            if (StringUtils.endsWithIgnoreCase(name, suffix)) {return true;}
+            if (StringUtils.endsWithIgnoreCase(name, suffix)) { return true; }
         }
         return SENSITIVE_PROPERTIES.contains(name);
     }

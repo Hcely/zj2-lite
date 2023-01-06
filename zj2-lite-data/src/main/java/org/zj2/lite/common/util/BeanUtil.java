@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.zj2.lite.common.annotation.JProperty;
+import org.zj2.lite.common.bean.BeanDescriptor;
+import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -61,22 +63,22 @@ public class BeanUtil {
     }
 
     public static <T> T copyProperties(Object source, T target, Set<String> ignoredProperties) {
-        if (source == null || target == null) {return target;}
-        if (ignoredProperties == null) {ignoredProperties = Collections.emptySet();}
-        PropertyUtil.BeanDescriptor sd = PropertyUtil.getBeanDescriptor(source.getClass());
-        PropertyUtil.BeanDescriptor td = PropertyUtil.getBeanDescriptor(target.getClass());
+        if (source == null || target == null) { return target; }
+        if (ignoredProperties == null) { ignoredProperties = Collections.emptySet(); }
+        BeanDescriptor sd = PropertyUtil.getBeanDescriptor(source.getClass());
+        BeanDescriptor td = PropertyUtil.getBeanDescriptor(target.getClass());
         copyProperties(sd, source, td, target, ignoredProperties);
         copyJSONProperties(sd, source, td, target, ignoredProperties);
         return target;
     }
 
-    private static void copyProperties(PropertyUtil.BeanDescriptor sd, Object source, PropertyUtil.BeanDescriptor td,
-            Object target, Set<String> ignoredProperties) {
+    private static void copyProperties(BeanDescriptor sd, Object source, BeanDescriptor td, Object target,
+            Set<String> ignoredProperties) {
         JProperty property;
         for (int idx = 0, size = td.propertySize(); idx < size; ++idx) {
-            PropertyUtil.BeanPropertyDescriptor tpd = td.propertyDescriptor(idx);
-            if (tpd.writeMethod() == null || ignoredProperties.contains(tpd.propertyName())) {continue;}
-            PropertyUtil.BeanPropertyDescriptor spd = sd.propertyDescriptor(tpd.propertyName());
+            BeanPropertyDescriptor tpd = td.propertyDescriptor(idx);
+            if (tpd.writeMethod() == null || ignoredProperties.contains(tpd.propertyName())) { continue; }
+            BeanPropertyDescriptor spd = sd.propertyDescriptor(tpd.propertyName());
             if (spd != null) {
                 if (spd.readMethod() != null) {
                     tpd.writeByMethod(target, spd.readByMethod(source));
@@ -89,12 +91,12 @@ public class BeanUtil {
         }
     }
 
-    private static void copyJSONProperties(PropertyUtil.BeanDescriptor sd, Object source,
-            PropertyUtil.BeanDescriptor td, Object target, Set<String> ignoredProperties) {
+    private static void copyJSONProperties(BeanDescriptor sd, Object source, BeanDescriptor td, Object target,
+            Set<String> ignoredProperties) {
         Map<String, JSONObject> jsonMap = readSrcJSONProperties(sd, source, ignoredProperties);
         if (jsonMap != null) {
             for (Map.Entry<String, JSONObject> e : jsonMap.entrySet()) {
-                PropertyUtil.BeanPropertyDescriptor tpd = td.propertyDescriptor(e.getKey());
+                BeanPropertyDescriptor tpd = td.propertyDescriptor(e.getKey());
                 if (tpd != null && tpd.propertyType() == JSONObject.class) {
                     JSONObject targetJSON = (JSONObject) tpd.read(target);
                     if (targetJSON == null) {
@@ -107,28 +109,28 @@ public class BeanUtil {
         }
     }
 
-    private static Map<String, JSONObject> readSrcJSONProperties(PropertyUtil.BeanDescriptor sd, Object source,
+    private static Map<String, JSONObject> readSrcJSONProperties(BeanDescriptor sd, Object source,
             Set<String> ignoredProperties) {
         Map<String, JSONObject> jsonMap = null;
         for (int idx = 0, size = sd.propertySize(); idx < size; ++idx) {
-            PropertyUtil.BeanPropertyDescriptor spd = sd.propertyDescriptor(idx);
-            if (ignoredProperties.contains(spd.propertyName())) {continue;}
+            BeanPropertyDescriptor spd = sd.propertyDescriptor(idx);
+            if (ignoredProperties.contains(spd.propertyName())) { continue; }
             JProperty property = spd.annotation(JProperty.class);
             if (property != null) {
                 String key = StringUtils.defaultIfEmpty(property.property(), spd.propertyName());
                 Object value = spd.read(source);
-                if (jsonMap == null) {jsonMap = new HashMap<>(8);}
+                if (jsonMap == null) { jsonMap = new HashMap<>(8); }
                 JSONObject json = jsonMap.computeIfAbsent(property.json(), k -> new JSONObject(true));
-                if (value != null) {json.put(key, value);}
+                if (value != null) { json.put(key, value); }
             }
         }
         return jsonMap;
     }
 
     private static Object getJsonProperty(Object jsonProperty, String keyName,//NOSONAR
-            PropertyUtil.BeanPropertyDescriptor pd) {
-        if (!(jsonProperty instanceof JSONObject)) {return null;}
-        if (StringUtils.isEmpty(keyName)) {keyName = pd.propertyName();}
+            BeanPropertyDescriptor pd) {
+        if (!(jsonProperty instanceof JSONObject)) { return null; }
+        if (StringUtils.isEmpty(keyName)) { keyName = pd.propertyName(); }
         Class<?> type = pd.propertyType();
         if (type == String.class) {
             return ((JSONObject) jsonProperty).getString(keyName);

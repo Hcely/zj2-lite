@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth;
+package org.zj2.common.uac.auth.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.common.constants.CommonConstants;
@@ -8,6 +8,7 @@ import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
+import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
 
@@ -18,7 +19,7 @@ import org.zj2.lite.service.context.TokenType;
  * @date 2022/12/9 2:19
  */
 @Activate(group = CommonConstants.PROVIDER, order = -1999)
-public class DubboAuthenticationInterceptor extends AbstractAuthenticationInterceptor implements Filter {
+public class AuthDubboInterceptor extends AbstractAuthInterceptor implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         authenticate();
@@ -27,12 +28,12 @@ public class DubboAuthenticationInterceptor extends AbstractAuthenticationInterc
 
     protected void authenticate() {
         ServiceRequestContext context = ServiceRequestContext.current();
-        if (context.isFiltered()) {return;}
+        if (context.isFiltered()) { return; }
         context.setFiltered(true);
         //
-        if (StringUtils.isEmpty(context.getToken())) {throw unAuthenticationErr("缺失认证信息");}
+        if (StringUtils.isEmpty(context.getToken())) { throw AuthUtil.unAuthenticationErr("缺失认证信息"); }
         TokenType type = context.getTokenType();
-        if (type == TokenType.JWT) {throw unAuthenticationErr("无效签名");}
+        if (type == TokenType.JWT) { throw AuthUtil.unAuthenticationErr("无效签名"); }
         authenticateSign(context);
         context.setAuthenticated(true);
     }

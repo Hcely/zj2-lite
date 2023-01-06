@@ -367,7 +367,7 @@ public class ServiceQueryWrapper<T> extends ZQueryWrapper<T> {
     }
 
     public ZListResp<T> page(Integer pageNumber, Integer pageSize) {
-        limit(-1);
+        limit(-1).forUpdate(false);// 分页查询不允许配置该数据
         if (pageSize == null || pageSize < 1) {
             PageHelper.clearPage();
             List<T> models = list();

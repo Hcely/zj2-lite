@@ -14,10 +14,11 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 import org.zj2.lite.common.annotation.CryptProperty;
+import org.zj2.lite.common.bean.BeanPropertyContext;
+import org.zj2.lite.common.bean.BeanPropertyScanHandler;
+import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.util.CryptUtil;
-
-import java.util.function.Function;
 
 /**
  *  MybatisCryptIn
@@ -63,8 +64,7 @@ public class MybatisCryptInterceptor implements Interceptor {
         return target;
     }
 
-    private static final class PropertyCryptHandler
-            implements Function<PropertyUtil.BeanPropertyContext, PropertyUtil.PropScanMode> {
+    private static final class PropertyCryptHandler implements BeanPropertyScanHandler {
         private final boolean isEncrypt;
 
         private PropertyCryptHandler(boolean isEncrypt) {
@@ -72,15 +72,15 @@ public class MybatisCryptInterceptor implements Interceptor {
         }
 
         @Override
-        public PropertyUtil.PropScanMode apply(PropertyUtil.BeanPropertyContext context) {
+        public PropScanMode apply(BeanPropertyContext context) {
             if (!context.isSimplePropertyType()) {
-                return PropertyUtil.PropScanMode.DEEP;
+                return PropScanMode.DEEP;
             }
             Object propValue = context.propertyValue();
             if (propValue instanceof String && context.propertyAnnotation(CryptProperty.class) != null) {
                 context.propertyValue(CryptUtil.crypt(isEncrypt, propValue.toString()));
             }
-            return PropertyUtil.PropScanMode.NOT_DEEP;
+            return PropScanMode.NOT_DEEP;
         }
     }
 }
