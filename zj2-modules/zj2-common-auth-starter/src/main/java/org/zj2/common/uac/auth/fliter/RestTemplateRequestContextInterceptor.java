@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 @Component
 @Order(-2000)
-public class WebContextTemplateInterceptor extends AbsContextInterceptor<HttpRequest>
+public class RestTemplateRequestContextInterceptor extends AbsRequestContextClientInterceptor<HttpRequest>
         implements ClientHttpRequestInterceptor {
     @SuppressWarnings("NullableProblems")
     @Override

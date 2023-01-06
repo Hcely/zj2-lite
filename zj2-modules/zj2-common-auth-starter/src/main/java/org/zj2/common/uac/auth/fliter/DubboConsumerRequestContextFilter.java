@@ -16,7 +16,7 @@ import org.zj2.common.uac.auth.util.ServerSignUtil;
  * @date 2022/12/9 0:43
  */
 @Activate(group = CommonConstants.CONSUMER, order = -2000)
-public class DubboConsumerRequestContextFilter extends AbsContextInterceptor<Invocation> implements Filter {
+public class DubboConsumerRequestContextFilter extends AbsRequestContextClientInterceptor<Invocation> implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String uri = ServerSignUtil.getUri(invoker.getInterface(), invocation.getMethodName(),

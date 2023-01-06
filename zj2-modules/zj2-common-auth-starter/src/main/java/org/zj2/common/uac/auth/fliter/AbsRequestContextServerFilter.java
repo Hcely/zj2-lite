@@ -16,7 +16,7 @@ import org.zj2.lite.service.context.TokenType;
  * @author peijie.ye
  * @date 2022/12/4 14:25
  */
-public abstract class AbsContextFilter<T> {
+public abstract class AbsRequestContextServerFilter<T> {
 
     protected void setContext(T request, String method, String uri) {
         final String token = getValue(request, ServiceConstants.REQUEST_AUTHORIZATION);

@@ -17,7 +17,7 @@ import org.zj2.lite.service.constant.ServiceConstants;
  * @date 2022/12/9 0:43
  */
 @Activate(group = CommonConstants.PROVIDER, order = -2000)
-public class DubboProviderRequestContextFilter extends AbsContextFilter<Invocation> implements Filter {
+public class DubboProviderRequestContextFilter extends AbsRequestContextServerFilter<Invocation> implements Filter {
     static final String DUBBO_METHOD = "DUBBO";
 
     @Override

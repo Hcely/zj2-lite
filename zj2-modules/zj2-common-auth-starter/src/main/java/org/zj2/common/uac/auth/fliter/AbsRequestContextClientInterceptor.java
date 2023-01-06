@@ -13,7 +13,7 @@ import org.zj2.lite.service.context.ServiceRequestContext;
  * @author peijie.ye
  * @date 2022/12/9 0:43
  */
-public abstract class AbsContextInterceptor<T> {
+public abstract class AbsRequestContextClientInterceptor<T> {
     protected void setContext(T request, String method, String uri) {
         setValue(request, ServiceConstants.JWT_USER_ID, AuthenticationContext.currentUserId());
         setValue(request, ServiceConstants.JWT_USERNAME, AuthenticationContext.currentUserName());

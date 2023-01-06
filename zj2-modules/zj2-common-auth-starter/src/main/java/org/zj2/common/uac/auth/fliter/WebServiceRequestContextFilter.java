@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 @Component
 @Order(-2000)
-public class WebServiceRequestContextFilter extends AbsContextFilter<HttpServletRequest> implements Filter {
+public class WebServiceRequestContextFilter extends AbsRequestContextServerFilter<HttpServletRequest> implements Filter {
     private static final String[] IP_HEADERS = {"x-forwarded-for", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP",
             "HTTP_X_FORWARDED_FOR"};
 
