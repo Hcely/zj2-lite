@@ -33,7 +33,7 @@ public abstract class AbsRequestContextServerFilter<T> {
 
     private void handleJWT(T request, String token, String method, String uri, String attrIp, String device) {
         AuthenticationJWT jwt = JWTValidUtil.parse(token);
-        if (jwt == null) {throw ZRBuilder.failureErr("无效token格式").setStatus(403);}
+        if (jwt == null) { throw ZRBuilder.failureErr("无效token格式").setStatus(403); }
         AuthenticationContext.setContext(jwt.getUserId(), jwt.getUserName(), jwt.getAppCode(), jwt.getOrgCode());
         ServiceRequestContext requestContext = new ServiceRequestContext();
         requestContext.setRequest(request);
@@ -50,7 +50,7 @@ public abstract class AbsRequestContextServerFilter<T> {
 
     private void handleSign(T request, String token, String method, String uri, String attrIp, String device) {
         AuthenticationSign sign = ServerSignUtil.parse(token);
-        if (sign == null) {throw ZRBuilder.failureErr("无效签名格式").setStatus(403);}
+        if (sign == null) { throw ZRBuilder.failureErr("无效签名格式").setStatus(403); }
         String userId = getValue(request, ServiceConstants.JWT_USER_ID);
         String username = getValue(request, ServiceConstants.JWT_USERNAME);
         String orgCode = getValue(request, ServiceConstants.JWT_ORG_CODE);

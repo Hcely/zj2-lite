@@ -81,7 +81,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
      * @param command
      */
     public static void executeAfterCommit(final Runnable command) {
-        if (command == null) {return;}
+        if (command == null) { return; }
         if (TransactionSyncUtil.isActualTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), AsyncUtil::execute);
         } else {
@@ -99,11 +99,11 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     @SneakyThrows
     private static void join0(boolean ignoreError, Runnable[] commands) {//NOSONAR
-        if (CollUtil.isEmpty(commands)) {return;}
+        if (CollUtil.isEmpty(commands)) { return; }
         List<Future<?>> futures = new ArrayList<>(commands.length);
         Throwable ex = null;
         for (Runnable cmd : commands) {
-            if (cmd != null) {futures.add(EXECUTOR.submit(of(cmd)));}
+            if (cmd != null) { futures.add(EXECUTOR.submit(of(cmd))); }
         }
         for (Future<?> f : futures) {
             if (ex != null) {
@@ -120,7 +120,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
                 }
             }
         }
-        if (ex != null) {throw ex;}
+        if (ex != null) { throw ex; }
     }
 
     /**
@@ -167,7 +167,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         }
 
         protected void run0() throws Throwable {
-            if (command != null) {command.run();}
+            if (command != null) { command.run(); }
         }
     }
 
@@ -185,8 +185,8 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
         public Thread newThread(Runnable r) {
             Thread t = new AsyncTaskThread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            if (t.isDaemon()) {t.setDaemon(false);}
-            if (t.getPriority() != Thread.NORM_PRIORITY) {t.setPriority(Thread.NORM_PRIORITY);}
+            if (t.isDaemon()) { t.setDaemon(false); }
+            if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;
         }
     }

@@ -51,7 +51,7 @@ interface ChainBizFuncExecutors {
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
             ZRBuilder hr = new ZRBuilder();
             ((BizValidator) handler).valid(context, hr);
-            if (hr.hasError()) {throw hr.buildError();}
+            if (hr.hasError()) { throw hr.buildError(); }
             return true;
         }
 
@@ -64,7 +64,7 @@ interface ChainBizFuncExecutors {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
             Object newContext = ((BizContextConverter) handler).convert(chainContext);
-            if (newContext != null) {chainContext.setCurrentContext(newContext);}
+            if (newContext != null) { chainContext.setCurrentContext(newContext); }
             return true;
         }
 

@@ -35,14 +35,14 @@ public class JWTValidUtil {
 
     public static AuthenticationJWT parse(String token) {
         int length = StringUtils.length(token);
-        if (length < JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) {return null;}
-        if (token.charAt(length - JWT_SIGN_LENGTH) == '.') {return null;}
+        if (length < JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) { return null; }
+        if (token.charAt(length - JWT_SIGN_LENGTH) == '.') { return null; }
         int headerLength;
         if (token.startsWith(AUTH_HEADER)) {
             headerLength = AUTH_HEADER_LENGTH;
         } else if (token.startsWith(JWT_HEADER)) {
             headerLength = JWT_HEADER_LENGTH;
-        } else {return null;}
+        } else { return null; }
         try {
             int payloadLength = length - JWT_SIGN_LENGTH - headerLength;
             if (CodecUtil.isAllowFastMode(payloadLength)) {

@@ -49,7 +49,7 @@ public class App implements Serializable {
      */
     @CryptProperty
     private String appSecret;
-    
+
     /**
      * 应用配置
      */

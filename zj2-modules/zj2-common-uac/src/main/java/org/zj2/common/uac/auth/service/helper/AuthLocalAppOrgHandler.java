@@ -39,30 +39,30 @@ public class AuthLocalAppOrgHandler implements BizVHandler<AuthContext> {
     }
 
     private void loadApp(AuthContext context, AuthReq req) {
-        if (StringUtils.isEmpty(req.getAppCode())) {return;}
+        if (StringUtils.isEmpty(req.getAppCode())) { return; }
         AppDTO app = appService.getByCode(req.getAppCode());
-        if (app == null) {throw ZRBuilder.failureErr("应用不存在");}
-        if (BooleanUtil.isFalse(app.getEnableFlag())) {throw ZRBuilder.failureErr("应用被禁用");}
+        if (app == null) { throw ZRBuilder.failureErr("应用不存在"); }
+        if (BooleanUtil.isFalse(app.getEnableFlag())) { throw ZRBuilder.failureErr("应用被禁用"); }
         context.setApp(app);
     }
 
     private void loadAppClient(AuthContext context, AuthReq req) {
-        if (StringUtils.isEmpty(req.getAppCode())) {return;}
+        if (StringUtils.isEmpty(req.getAppCode())) { return; }
         if (StringUtils.isEmpty(req.getClientCode())) {
-            if (appClientService.hasClient(req.getAppCode())) {throw ZRBuilder.failureErr("没有客户端");}
+            if (appClientService.hasClient(req.getAppCode())) { throw ZRBuilder.failureErr("没有客户端"); }
             return;
         }
         AppClientDTO client = appClientService.getByCode(req.getAppCode(), req.getClientCode());
-        if (client == null) {throw ZRBuilder.failureErr("客户端不存在");}
-        if (BooleanUtil.isFalse(client.getEnableFlag())) {throw ZRBuilder.failureErr("客户端被禁用");}
+        if (client == null) { throw ZRBuilder.failureErr("客户端不存在"); }
+        if (BooleanUtil.isFalse(client.getEnableFlag())) { throw ZRBuilder.failureErr("客户端被禁用"); }
         context.setClient(client);
     }
 
     private void loadOrg(AuthContext context, AuthReq req) {
-        if (StringUtils.isEmpty(req.getOrgCode())) {return;}
+        if (StringUtils.isEmpty(req.getOrgCode())) { return; }
         OrgDTO org = orgService.get(req.getOrgCode());
-        if (org == null) {throw ZRBuilder.failureErr("机构不存在");}
-        if (BooleanUtil.isFalse(org.getEnableFlag())) {throw ZRBuilder.failureErr("机构被禁用");}
+        if (org == null) { throw ZRBuilder.failureErr("机构不存在"); }
+        if (BooleanUtil.isFalse(org.getEnableFlag())) { throw ZRBuilder.failureErr("机构被禁用"); }
         context.setOrg(org);
     }
 }

@@ -16,5 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AuthorityResource {
-    String value();
+    String SUPPER_AUTHORITY = "_$SUPPER$_";
+
+    String value() default "";
 }

@@ -41,7 +41,7 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     @Override
     public void removeOrg(String appOrgId) {
         AppOrgDTO appOrg = get(appOrgId);
-        if (appOrg != null) {delete(appOrgId);}
+        if (appOrg != null) { delete(appOrgId); }
     }
 
     @Override

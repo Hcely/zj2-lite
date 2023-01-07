@@ -23,7 +23,7 @@ public class ZJDubboRequestLogFilter extends AbstractRequestLogFilter implements
             throw e;
         } finally {
             if (context.getLogState() != RequestLogContext.STATE_COMPLETED) {
-                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) {context.response(null, null, error);}
+                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
                 context.completed(error == null ? 200 : 500);
                 logResponse(context);
             }

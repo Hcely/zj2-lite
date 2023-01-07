@@ -1,9 +1,9 @@
 package org.zj2.common.uac.user.service.helper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.sign.Md5Sign;
-import org.zj2.lite.util.PatternUtil;
 
 import java.util.regex.Pattern;
 
@@ -37,7 +37,7 @@ public class UserUtil {
     }
 
     public static String buildPassword(String password, String suffix) {
-        if (StringUtils.isEmpty(password)) {return "";}
+        if (StringUtils.isEmpty(password)) { return ""; }
         String value = StrUtil.concat(password, StringUtils.defaultIfEmpty(suffix, PASSWORD_SUFFIX));
         return Md5Sign.INSTANCE.sign(value);
     }

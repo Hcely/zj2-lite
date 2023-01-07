@@ -18,14 +18,14 @@ class CacheHelperLink implements CacheHelper {
 
     @Override
     public void removeCache(String cacheKey) {
-        if (next != null) {next.removeCache(cacheKey);}
+        if (next != null) { next.removeCache(cacheKey); }
         helper.removeCache(cacheKey);
     }
 
     @Override
     public <T> void setCache(String cacheKey, T value, long timeout) {
         helper.setCache(cacheKey, value, timeout);
-        if (next != null) {next.setCache(cacheKey, value, timeout << 1);}
+        if (next != null) { next.setCache(cacheKey, value, timeout << 1); }
     }
 
     @Override

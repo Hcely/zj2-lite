@@ -30,7 +30,7 @@ public class UserActivateHelper implements BizVHandler<UserOperationReq> {
     @Transactional
     public void handle(UserOperationReq req) {
         UserDTO user = userService.getIfAbsentError(req.getUserId());
-        if (BooleanUtil.isTrue(user.getActivateFlag())) {return;}
+        if (BooleanUtil.isTrue(user.getActivateFlag())) { return; }
         //
         updateActivate(req.getUserId());
         //

@@ -22,7 +22,7 @@ public class UserLogServiceImpl extends BaseServiceImpl<UserLogMapper, UserLog, 
     @Override
     public void addLogAfterCommit(UserLogDTO log) {
         // 初始化参数
-        if (log.getLogTime() == null) {log.setLogTime(DateUtil.now());}
+        if (log.getLogTime() == null) { log.setLogTime(DateUtil.now()); }
         log.setLogRemark(StringUtils.abbreviate(log.getLogRemark(), 250));
         log.setLogAddrIp(StringUtils.abbreviate(ServiceRequestContext.currentAttrIp(), 100));
         log.setLogDevice(StringUtils.abbreviate(ServiceRequestContext.currentDevice(), 250));

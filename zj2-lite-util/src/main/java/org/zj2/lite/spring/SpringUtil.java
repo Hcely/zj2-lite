@@ -47,7 +47,7 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     private static Object self0(Object instance) {
-        if (AopUtils.isAopProxy(instance)) {return instance;}
+        if (AopUtils.isAopProxy(instance)) { return instance; }
         try {
             Map<String, ?> beans = SpringUtil.getBeansOfType(instance.getClass());
             if (CollUtil.isEmpty(beans)) {
@@ -56,7 +56,7 @@ public class SpringUtil implements ApplicationContextAware {
                 return CollUtil.getFirst(beans);
             } else {
                 for (Object bean : beans.values()) {
-                    if (getAopTargetObject(bean) == instance) {return bean;}
+                    if (getAopTargetObject(bean) == instance) { return bean; }
                 }
             }
         } catch (Throwable e) {//NOSONAR
@@ -81,13 +81,13 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     public static Class<?> getAopTargetClass(Object proxy) {
-        if (!AopUtils.isAopProxy(proxy)) {return proxy.getClass();}
+        if (!AopUtils.isAopProxy(proxy)) { return proxy.getClass(); }
         return AopUtils.getTargetClass(proxy);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T getAopTargetObject(T proxy) {
-        if (!AopUtils.isAopProxy(proxy)) {return proxy;}
+        if (!AopUtils.isAopProxy(proxy)) { return proxy; }
         try {
             if (AopUtils.isJdkDynamicProxy(proxy)) {
                 return (T) getJdkDynamicProxyTargetObject(proxy);

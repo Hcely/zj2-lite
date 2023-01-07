@@ -68,7 +68,7 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     public void removeCache(String cacheKey) {
         try {
             CacheObjRef ref = cacheObjMap.remove(cacheKey);
-            if (ref != null) {ref.clear();}
+            if (ref != null) { ref.clear(); }
         } catch (IllegalStateException ignored) {
             // NOTHING
         }
@@ -80,7 +80,7 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
             try {
                 cacheObjMap.put(cacheKey, new CacheObjRef(value, timeout));
             } catch (IllegalStateException ignored) {
-                if (i < RETRY_COUNT - 1) {LockSupport.parkNanos(1000000);}
+                if (i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
             }
         }
     }
@@ -89,8 +89,8 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout,
             boolean ignoreErr) {
         CacheObjRef cacheObj = cacheObjMap.get(cacheKey);
-        if (cacheObj != null && !cacheObj.isTimeout()) {return (T) cacheObj.get();}
-        if (getter == null || StringUtils.isEmpty(dataKey)) {return null;}
+        if (cacheObj != null && !cacheObj.isTimeout()) { return (T) cacheObj.get(); }
+        if (getter == null || StringUtils.isEmpty(dataKey)) { return null; }
         final CacheHandler handler = new CacheHandler(dataKey, getter, getTimeout(timeout), ignoreErr);
         for (int i = 0; i < RETRY_COUNT; ++i) {
             try {
@@ -98,7 +98,7 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
                 cacheObjMap.compute(cacheKey, handler);
                 return (T) handler.result;
             } catch (IllegalStateException e) {
-                if (i < RETRY_COUNT - 1) {LockSupport.parkNanos(1000000);}
+                if (i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
             }
         }
         // 缓存失效，直接读取数据

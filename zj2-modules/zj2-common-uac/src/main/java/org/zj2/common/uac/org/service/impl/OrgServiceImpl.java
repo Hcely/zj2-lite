@@ -11,9 +11,9 @@ import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.context.AuthenticationContext;
-import org.zj2.lite.util.PatternUtil;
 
 /**
  *  OrgServiceImpl
@@ -34,11 +34,11 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
         req.setOrgCode(StringUtils.trimToEmpty(req.getOrgCode()));
         req.setOrgName(StringUtils.trimToEmpty(req.getOrgName()));
         // 检验参数
-        if (StringUtils.length(req.getOrgCode()) > 60) {throw ZRBuilder.failureErr("机构编码超过60个字");}
-        if (!PatternUtil.isWord(req.getOrgCode())) {throw ZRBuilder.failureErr("机构编码格式不合法");}
+        if (StringUtils.length(req.getOrgCode()) > 60) { throw ZRBuilder.failureErr("机构编码超过60个字"); }
+        if (!PatternUtil.isWord(req.getOrgCode())) { throw ZRBuilder.failureErr("机构编码格式不合法"); }
         // 检查编码唯一性
         boolean exist = exists(wrapper().eq(OrgDTO::getOrgCode, req.getOrgCode()));
-        if (exist) {throw ZRBuilder.failureErr("机构已存在");}
+        if (exist) { throw ZRBuilder.failureErr("机构已存在"); }
         // 插入机构
         AuthenticationContext.current().setOrgCode(req.getOrgCode());
         OrgDTO org = new OrgDTO();

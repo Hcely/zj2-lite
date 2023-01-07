@@ -14,9 +14,10 @@ import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
+import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;
-import org.zj2.lite.util.PatternUtil;
 
 /**
  *  AppServiceImpl
@@ -53,13 +54,13 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
         req.setAppCode(StringUtils.trimToEmpty(req.getAppCode()));
         req.setAppName(StringUtils.trimToEmpty(req.getAppName()));
         // 检验参数
-        if (StringUtils.length(req.getAppCode()) > 60) {throw ZRBuilder.failureErr("应用编码超过60个字");}
+        if (StringUtils.length(req.getAppCode()) > 60) { throw ZRBuilder.failureErr("应用编码超过60个字"); }
         if (AppDTO.COMMON_APP_CODE.equalsIgnoreCase(req.getAppCode()) || !PatternUtil.isWord(req.getAppCode())) {
             throw ZRBuilder.failureErr("应用编码格式不合法");
         }
         //
         boolean exist = exists(wrapper().eq(AppDTO::getAppCode, req.getAppCode()));
-        if (exist) {throw ZRBuilder.failureErr("应用编码已存在");}
+        if (exist) { throw ZRBuilder.failureErr("应用编码已存在"); }
         //
         AuthenticationContext.current().setAppCode(req.getAppCode());
         AppDTO app = new AppDTO();
@@ -78,26 +79,27 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     @Override
     public void editApp(AppCreateSaveReq req) {
         AppDTO app = getByCode0(req.getAppCode());
-        if (app == null) {throw ZRBuilder.failureErr("应用不存在");}
+        if (app == null) { throw ZRBuilder.failureErr("应用不存在"); }
         AppDTO update = new AppDTO();
         update.setAppId(app.getAppId());
-        if (StringUtils.isNotEmpty(req.getAppName())) {update.setAppName(req.getAppName());}
-        if (req.getAllowAllUser() != null) {update.setAllowAllUser(req.getAllowAllUser());}
-        if (req.getSingleSignOn() != null) {update.setSingleSignOn(req.getSingleSignOn());}
-        if (req.getTokenTimeout() != null) {update.setTokenTimeout(req.getTokenTimeout());}
+        if (StringUtils.isNotEmpty(req.getAppName())) { update.setAppName(req.getAppName()); }
+        if (req.getAllowAllUser() != null) { update.setAllowAllUser(req.getAllowAllUser()); }
+        if (req.getSingleSignOn() != null) { update.setSingleSignOn(req.getSingleSignOn()); }
+        if (req.getTokenTimeout() != null) { update.setTokenTimeout(req.getTokenTimeout()); }
         updateById(update);
     }
 
     @Override
     public void editSecret(String appCode, String appSecret) {
         AppDTO app = getByCode0(appCode);
-        if (app == null) {throw ZRBuilder.failureErr("应用不存在");}
-        if (!validSecret(appSecret)) {throw ZRBuilder.failureErr("应用密钥不合法");}
+        if (app == null) { throw ZRBuilder.failureErr("应用不存在"); }
+        if (!validSecret(appSecret)) { throw ZRBuilder.failureErr("应用密钥不合法"); }
         //
         AppDTO update = new AppDTO();
         update.setAppId(app.getAppId());
         update.setAppSecret(appSecret);
         updateById(update);
+        CacheUtil.sendCacheSign(AppDTO.getCacheKey(appCode));
     }
 
     @Override
@@ -137,17 +139,17 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     }
 
     public static boolean validSecret(String value) {
-        if (StringUtils.length(value) < 20) {return false;}
+        if (StringUtils.length(value) < 20) { return false; }
         for (int i = 0, len = value.length(); i < len; ++i) {
-            if (!validSecretChar(value.charAt(i))) {return false;}
+            if (!validSecretChar(value.charAt(i))) { return false; }
         }
         return true;
     }
 
     private static boolean validSecretChar(char ch) {
-        if (ch >= 'a' && ch <= 'z') {return true;}
-        if (ch >= 'A' && ch <= 'Z') {return true;}
-        if (ch >= '0' && ch <= '9') {return true;}
+        if (ch >= 'a' && ch <= 'z') { return true; }
+        if (ch >= 'A' && ch <= 'Z') { return true; }
+        if (ch >= '0' && ch <= '9') { return true; }
         return ch == '_' || ch == '-';
     }
 }

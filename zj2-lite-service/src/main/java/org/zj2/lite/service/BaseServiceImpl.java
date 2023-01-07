@@ -93,7 +93,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     }
 
     protected String getPrimaryId(DTO dto) {
-        if (dto == null) {return null;}
+        if (dto == null) { return null; }
         Object idVal = PropertyUtil.getProperty(dto, tableInfo.getKeyProperty());
         return idVal == null ? null : idVal.toString();
     }
@@ -148,7 +148,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Transactional
     public boolean delete(String id) {
         log.info("[delete]-id:" + id);
-        if (StringUtils.isEmpty(id)) {return false;}
+        if (StringUtils.isEmpty(id)) { return false; }
         return mapper.deleteById(id) > 0;
     }
 
@@ -156,7 +156,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Transactional
     public int delete(Collection<String> ids) {
         log.info("[delete]-ids:" + ids);
-        if (CollUtil.isEmpty(ids)) {return 0;}
+        if (CollUtil.isEmpty(ids)) { return 0; }
         return mapper.deleteBatchIds(ids);
     }
 
@@ -164,28 +164,28 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Transactional
     public int delete(ZQueryWrapper<DTO> wrapper) {
         log.info("[delete]-wrapper:" + SafeLogUtil.toJSONStr(wrapper));
-        if (CollUtil.isEmpty(wrapper.getConditions())) {throw new ZError(entityType + ":禁止全表删除");}
+        if (CollUtil.isEmpty(wrapper.getConditions())) { throw new ZError(entityType + ":禁止全表删除"); }
         return mapper.delete(WrapperUtil.buildCondition(tableFieldMap, wrapper));
     }
 
     @Override
     @Transactional
     public boolean updateById(DTO dto) {
-        if (dto == null) {return false;}
+        if (dto == null) { return false; }
         String primaryId = getPrimaryId(dto);
         DO entity = BeanUtil.copyProperties(dto, tableInfo.newInstance(), UPDATE_IGNORED_FIELDS);
         log.info("[updateById]-entity:" + SafeLogUtil.toJSONStr(entity));
-        if (StringUtils.isEmpty(primaryId)) {return false;}
+        if (StringUtils.isEmpty(primaryId)) { return false; }
         boolean b = mapper.updateById(entity) > 0;
-        if (b) {BeanUtil.copyProperties(entity, dto, UPDATE_IGNORED_FIELDS);}
+        if (b) { BeanUtil.copyProperties(entity, dto, UPDATE_IGNORED_FIELDS); }
         return b;
     }
 
     @Override
     @Transactional
     public int update(DTO updateDTO, ZQueryWrapper<DTO> wrapper) {
-        if (updateDTO == null) {return 0;}
-        if (CollUtil.isEmpty(wrapper.getConditions())) {throw new ZError(entityType + ":禁止全表更新");}
+        if (updateDTO == null) { return 0; }
+        if (CollUtil.isEmpty(wrapper.getConditions())) { throw new ZError(entityType + ":禁止全表更新"); }
         DO entity = BeanUtil.copyProperties(updateDTO, tableInfo.newInstance(), UPDATE_IGNORED_FIELDS);
         log.info("[update]-entity:" + SafeLogUtil.toJSONStr(entity) + ",wrapper:" + SafeLogUtil.toJSONStr(wrapper));
         return mapper.update(entity, WrapperUtil.buildCondition(tableFieldMap, wrapper));
@@ -195,7 +195,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Transactional
     public int update(ZUpdateWrapper<DTO> wrapper) {
         log.info("[update]-wrapper:" + JSON.toJSONString(wrapper));
-        if (CollUtil.isEmpty(wrapper.getConditions())) {throw new ZError(entityType + ":禁止全表更新");}
+        if (CollUtil.isEmpty(wrapper.getConditions())) { throw new ZError(entityType + ":禁止全表更新"); }
         UpdateWrapper<DO> updateWrapper = WrapperUtil.buildUpdate(tableFieldMap, wrapper);
         return mapper.update(null, updateWrapper);
     }
@@ -203,7 +203,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Override
     @Transactional
     public DTO add(DTO dto) {
-        if (dto == null) {return dto;}
+        if (dto == null) { return dto; }
         try {
             DO entity = BeanUtil.copyProperties(dto, tableInfo.newInstance());
             mapper.insert(entity);
@@ -219,7 +219,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Override
     @Transactional
     public <C extends Collection<? extends DTO>> int batchAdd(C dtos) {
-        if (CollUtil.isEmpty(dtos)) {return 0;}
+        if (CollUtil.isEmpty(dtos)) { return 0; }
         int i = 0;
         int count = 0;
         for (DTO dto : dtos) {
@@ -228,7 +228,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
                 boolean b = mapper.insert(entity) > 0;
                 log.info("[batchAdd]-entity[" + i + "]:" + SafeLogUtil.toJSONStr(entity));
                 BeanUtil.copyProperties(entity, dto);
-                if (b) {++count;}
+                if (b) { ++count; }
             } catch (Throwable e) {
                 log.error("[batchAdd]-dto[" + i + "]:" + SafeLogUtil.toJSONStr(dto), e);
                 throw e;
@@ -241,7 +241,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Override
     @Transactional
     public boolean save(DTO dto) {
-        if (dto == null) {return false;}
+        if (dto == null) { return false; }
         final String primaryId = getPrimaryId(dto);
         try {
             boolean b;
@@ -266,7 +266,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Override
     @Transactional
     public boolean tryUpdateInsert(DTO dto) {
-        if (dto == null) {return false;}
+        if (dto == null) { return false; }
         final String primaryId = getPrimaryId(dto);
         try {
             if (StringUtils.isNotEmpty(primaryId)) {
@@ -292,7 +292,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
     @Override
     @Transactional
     public <C extends Collection<? extends DTO>> int batchSave(C dtos) {
-        if (CollUtil.isEmpty(dtos)) {return 0;}
+        if (CollUtil.isEmpty(dtos)) { return 0; }
         int i = 0;
         int count = 0;
         for (DTO dto : dtos) {
@@ -310,7 +310,7 @@ public class BaseServiceImpl<M extends BaseMapper<DO>, DO, DTO> //NOSONAR
                     BeanUtil.copyProperties(entity, dto);
                     log.info("[batchSave(i)]-entity[" + i + "]:" + SafeLogUtil.toJSONStr(entity));
                 }
-                if (b) {++count;}
+                if (b) { ++count; }
             } catch (Throwable e) {
                 log.error("[batchSave]-dto[" + i + "]:" + SafeLogUtil.toJSONStr(dto), e);
                 throw e;

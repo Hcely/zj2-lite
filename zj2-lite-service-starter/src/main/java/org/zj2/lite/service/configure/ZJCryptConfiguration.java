@@ -20,6 +20,6 @@ public class ZJCryptConfiguration {
 
     @PostConstruct
     public void init() {
-        if (StringUtils.isNotEmpty(cryptSecret)) {CryptUtil.setDefCryptProvider(cryptSecret);}
+        if (StringUtils.isNotEmpty(cryptSecret)) { CryptUtil.setDefCryptProvider(cryptSecret); }
     }
 }

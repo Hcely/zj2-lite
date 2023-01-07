@@ -63,9 +63,9 @@ public class JWTokenServiceImpl implements JWTokenService {
         StringBuilder sb = new StringBuilder(
                 StringUtils.length(appCode) + StringUtils.length(userId) + StringUtils.length(namespace) + 20);
         sb.append("TOKEN");
-        if (StringUtils.isNotEmpty(appCode)) {sb.append(':').append(appCode);}
-        if (StringUtils.isNotEmpty(userId)) {sb.append(':').append(appCode);}
-        if (StringUtils.isNotEmpty(namespace)) {sb.append(':').append(appCode);}
+        if (StringUtils.isNotEmpty(appCode)) { sb.append(':').append(appCode); }
+        if (StringUtils.isNotEmpty(userId)) { sb.append(':').append(appCode); }
+        if (StringUtils.isNotEmpty(namespace)) { sb.append(':').append(appCode); }
         return sb.toString();
     }
 

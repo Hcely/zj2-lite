@@ -95,7 +95,7 @@ public class AbstractRequestLogFilter {
             int i = 0;
             sb.ensureCapacity(1024 * 4);
             for (Object arg : params) {
-                if (++i > 1) {sb.append(',');}
+                if (++i > 1) { sb.append(','); }
                 sb.append(arg);
             }
         }

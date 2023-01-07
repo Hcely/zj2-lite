@@ -29,7 +29,7 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
             appCode = AuthenticationContext.currentAppCode();
             context.setAppCode(appCode);
         }
-        if (StringUtils.isEmpty(appCode)) {return;}
+        if (StringUtils.isEmpty(appCode)) { return; }
         context.putParam("app", appCode);
         context.putParam("appCode", appCode);
     }
@@ -40,8 +40,8 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
             orgCode = AuthenticationContext.currentOrgCode();
             context.setOrgCode(orgCode);
         }
-        if (StringUtils.isEmpty(orgCode)) {return;}
-        if (!context.hasParam("org")) {context.putParam("org", orgCode);}
-        if (!context.hasParam("orgCode")) {context.putParam("orgCode", orgCode);}
+        if (StringUtils.isEmpty(orgCode)) { return; }
+        if (!context.hasParam("org")) { context.putParam("org", orgCode); }
+        if (!context.hasParam("orgCode")) { context.putParam("orgCode", orgCode); }
     }
 }

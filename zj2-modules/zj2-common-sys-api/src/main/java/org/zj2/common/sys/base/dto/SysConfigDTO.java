@@ -1,7 +1,8 @@
 package org.zj2.common.sys.base.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.util.BooleanUtil;
@@ -20,8 +21,9 @@ import java.time.LocalDateTime;
  * @author peijie.ye
  * @since 2022-12-10
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Setter
+@Getter
+@NoArgsConstructor
 @Accessors(chain = true)
 public class SysConfigDTO implements Serializable {
     public static final String COMMON_APP_CODE = "COMMON";
@@ -130,7 +132,7 @@ public class SysConfigDTO implements Serializable {
 
     public LocalDateTime valueDate(String defaultValue) {
         LocalDateTime time = DateUtil.parse(configValue);
-        if (time == null) {time = DateUtil.parse(defaultValue);}
+        if (time == null) { time = DateUtil.parse(defaultValue); }
         return time;
     }
 }

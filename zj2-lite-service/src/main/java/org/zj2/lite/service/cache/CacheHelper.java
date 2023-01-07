@@ -8,12 +8,12 @@ public interface CacheHelper {
     long getExpireIn();
 
     default void remove(final Class<?> type, final String key) {
-        if (StringUtils.isEmpty(key)) {return;}
+        if (StringUtils.isEmpty(key)) { return; }
         removeCache(CacheUtil.getFullKey(type, key));
     }
 
     default void remove(final String prefix, final String key) {
-        if (StringUtils.isEmpty(key)) {return;}
+        if (StringUtils.isEmpty(key)) { return; }
         removeCache(CacheUtil.getFullKey(prefix, key));
     }
 
@@ -26,12 +26,12 @@ public interface CacheHelper {
     }
 
     default <T> void set(final Class<T> type, final String key, T value, long timeout) {
-        if (StringUtils.isEmpty(key)) {return;}
+        if (StringUtils.isEmpty(key)) { return; }
         setCache(CacheUtil.getFullKey(type, key), value, timeout);
     }
 
     default <T> void set(final String prefix, final String key, T value, long timeout) {
-        if (StringUtils.isEmpty(key)) {return;}
+        if (StringUtils.isEmpty(key)) { return; }
         setCache(CacheUtil.getFullKey(prefix, key), value, timeout);
     }
 
@@ -69,13 +69,13 @@ public interface CacheHelper {
 
     default <T> T get(final Class<T> type, final String key, Function<String, T> getter, long timeout,
             boolean ignoreErr) {
-        if (StringUtils.isEmpty(key)) {return null;}
+        if (StringUtils.isEmpty(key)) { return null; }
         return getCache(CacheUtil.getFullKey(type, key), key, getter, timeout, ignoreErr);
     }
 
     default <T> T get(final String prefix, final String key, Function<String, T> getter, long timeout,
             boolean ignoreErr) {
-        if (StringUtils.isEmpty(key)) {return null;}
+        if (StringUtils.isEmpty(key)) { return null; }
         return getCache(CacheUtil.getFullKey(prefix, key), key, getter, timeout, ignoreErr);
     }
 
@@ -95,8 +95,7 @@ public interface CacheHelper {
         return getCache(cacheKey, dataKey, getter, timeout, false);
     }
 
-    default <T> T getCache(final String cacheKey, final String dataKey, Function<String, T> getter,
-            boolean ignoreErr) {
+    default <T> T getCache(final String cacheKey, final String dataKey, Function<String, T> getter, boolean ignoreErr) {
         return getCache(cacheKey, dataKey, getter, 0, ignoreErr);
     }
 

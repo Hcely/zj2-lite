@@ -31,7 +31,7 @@ public class StrFormatterManager {
 
     public void setUseCache(boolean useCache) {
         this.useCache = useCache;
-        if (!useCache) {clearCache();}
+        if (!useCache) { clearCache(); }
     }
 
     public boolean isNullAsEmpty() {
@@ -43,11 +43,11 @@ public class StrFormatterManager {
     }
 
     public void clearCache() {
-        synchronized (formatterCache) {formatterCache.clear();}
+        synchronized (formatterCache) { formatterCache.clear(); }
     }
 
     public StrFormatter getFormatter(String format) {
-        if (!useCache || StringUtils.length(format) > MAX_FORMATTER_LENGTH) {return new StrFormatter(this, format);}
+        if (!useCache || StringUtils.length(format) > MAX_FORMATTER_LENGTH) { return new StrFormatter(this, format); }
         StrFormatter formatter = formatterCache.get(format);//NOSONAR
         if (formatter == null) {
             synchronized (formatterCache) {
@@ -61,6 +61,6 @@ public class StrFormatterManager {
     }
 
     public void addValueSerializer(ValueSerializer serializer) {
-        if (serializer != null) {serializers.add(serializer);}
+        if (serializer != null) { serializers.add(serializer); }
     }
 }

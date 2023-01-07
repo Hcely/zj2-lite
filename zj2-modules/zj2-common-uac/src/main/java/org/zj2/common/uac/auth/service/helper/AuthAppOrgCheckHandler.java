@@ -33,7 +33,7 @@ public class AuthAppOrgCheckHandler implements Supportable<AuthContext>, BizVHan
         AppDTO app = context.getApp();
         OrgDTO org = context.getOrg();
         AppOrgDTO appOrg = appOrgService.getAppOrg(app.getAppCode(), org.getOrgCode());
-        if (appOrg == null) {throw ZRBuilder.failureErr("机构应用不能使用");}
-        if (BooleanUtil.isFalse(appOrg.getEnableFlag())) {throw ZRBuilder.failureErr("机构应用停用");}
+        if (appOrg == null) { throw ZRBuilder.failureErr("机构应用不能使用"); }
+        if (BooleanUtil.isFalse(appOrg.getEnableFlag())) { throw ZRBuilder.failureErr("机构应用停用"); }
     }
 }

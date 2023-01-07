@@ -25,9 +25,9 @@ public class StrFormatter {
     private static final String SPECIAL_CHARS = "sdbtSDBT";
 
     private static FormatPart[] buildParts(StrFormatter strFormatter, String formatter) { //NOSONAR
-        if (StringUtils.isBlank(formatter)) {return EMPTY_PARTS;}
+        if (StringUtils.isBlank(formatter)) { return EMPTY_PARTS; }
         final int len = formatter.length();
-        if (len == 1) {return EMPTY_PARTS;}
+        if (len == 1) { return EMPTY_PARTS; }
         List<FormatPart> parts = new LinkedList<>();
         int start = 0, argCount = 0, i = 0, safeLen = len - 1;//NOSONAR
         char ch, nextCh;//NOSONAR
@@ -35,32 +35,32 @@ public class StrFormatter {
             if ((ch = formatter.charAt(i)) == '%') {
                 if ((nextCh = formatter.charAt(i + 1)) == '%') {
                     ++i;
-                    if (start < i) {parts.add(new ConstantFormatPart(formatter, start, i));}
+                    if (start < i) { parts.add(new ConstantFormatPart(formatter, start, i)); }
                     start = i + 1;
                 } else if (SPECIAL_CHARS.indexOf(nextCh) != -1) {
-                    if (start < i) {parts.add(new ConstantFormatPart(formatter, start, i));}
+                    if (start < i) { parts.add(new ConstantFormatPart(formatter, start, i)); }
                     ++i;
                     parts.add(new SlotFormatPart(strFormatter, argCount++));
                     start = i + 1;
                 }
             } else if (ch == '{') {
                 int end = formatter.indexOf('}', i + 1);
-                if (end == -1) {break;}
+                if (end == -1) { break; }
                 if (i + 1 == end) {
-                    if (start < i) {parts.add(new ConstantFormatPart(formatter, start, i));}
+                    if (start < i) { parts.add(new ConstantFormatPart(formatter, start, i)); }
                     ++i;
                     parts.add(new SlotFormatPart(strFormatter, argCount++));
                     start = i + 1;
                 } else {
-                    if (start < i) {parts.add(new ConstantFormatPart(formatter, start, i));}
+                    if (start < i) { parts.add(new ConstantFormatPart(formatter, start, i)); }
                     parts.add(new SlotFormatPart(strFormatter, formatter, i + 1, end));
                     i = end;
                     start = i + 1;
                 }
             }
         }
-        if (start == 0) {return EMPTY_PARTS;}
-        if (start < len) {parts.add(new ConstantFormatPart(formatter, start, len));}
+        if (start == 0) { return EMPTY_PARTS; }
+        if (start < len) { parts.add(new ConstantFormatPart(formatter, start, len)); }
         return parts.toArray(EMPTY_PARTS);
     }
 
@@ -87,32 +87,32 @@ public class StrFormatter {
     }
 
     public String format(Object arg0) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), arg0));
     }
 
     public String format(Object arg0, Object arg1) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), arg0, arg1));
     }
 
     public String format(Object arg0, Object arg1, Object arg2) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), arg0, arg1, arg2));
     }
 
     public String format(Object arg0, Object arg1, Object arg2, Object arg3) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), arg0, arg1, arg2, arg3));
     }
 
     public String format(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), arg0, arg1, arg2, arg3, arg4));
     }
 
     public String format(Object... args) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         return toStr(appendArgsImpl(new TextStringBuilder(initCapacity), args));
     }
 
@@ -166,9 +166,9 @@ public class StrFormatter {
     }
 
     public String formatObj(Object obj) {
-        if (parts.length == 0) {return formatter;}
+        if (parts.length == 0) { return formatter; }
         TextStringBuilder sb = new TextStringBuilder(initCapacity);
-        for (FormatPart part : parts) {part.appendObj(sb, obj);}
+        for (FormatPart part : parts) { part.appendObj(sb, obj); }
         return toStr(sb);
     }
 
@@ -177,7 +177,7 @@ public class StrFormatter {
         if (parts.length == 0) {
             return sb.append(formatter);
         } else {
-            for (FormatPart part : parts) {part.appendObj(sb, obj);}
+            for (FormatPart part : parts) { part.appendObj(sb, obj); }
             return sb;
         }
     }
@@ -301,13 +301,13 @@ public class StrFormatter {
     }
 
     private TextStringBuilder appendArgsImpl(TextStringBuilder sb, Object... args) {
-        for (FormatPart part : parts) {part.append(sb, args);}
+        for (FormatPart part : parts) { part.append(sb, args); }
         return sb;
     }
 
     protected void appendValue(TextStringBuilder sb, SlotFormatPart part, Object value) {
         if (value == null) {
-            if (!formatterManager.isNullAsEmpty()) {sb.append("null");}
+            if (!formatterManager.isNullAsEmpty()) { sb.append("null"); }
         } else {
             try {// 严防错误
                 String valueStr = serializeValue(part, value);
@@ -316,14 +316,14 @@ public class StrFormatter {
                 } else {
                     appendValue(true, sb, part, value); // 默认处理
                 }
-            } catch (Throwable ignored) {}//NOSONAR
+            } catch (Throwable ignored) { }//NOSONAR
         }
     }
 
     private String serializeValue(SlotFormatPart part, Object value) {
         CopyOnWriteArrayList<ValueSerializer> serializers = formatterManager.serializers;
         int len = serializers.size();
-        if (len == 0) {return null;}
+        if (len == 0) { return null; }
         String valueStr;
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < len; ++i) {// 减少不必的对象产生
@@ -349,7 +349,7 @@ public class StrFormatter {
         } else if (root && value instanceof Iterable) {
             int i = 0;
             for (Object v : (Iterable<?>) value) {
-                if (++i > 1) {sb.append(',');}
+                if (++i > 1) { sb.append(','); }
                 appendValue(false, sb, part, v);
             }
         } else {

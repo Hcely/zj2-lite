@@ -68,14 +68,14 @@ public class AesCrypto implements Crypto {
     @SneakyThrows
     @Override
     public byte[] encrypt(byte[] value, int offset, int length) {
-        if (length == 0) {return ArrayUtils.EMPTY_BYTE_ARRAY;}
+        if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
         return encrypt.doFinal(value, offset, length);
     }
 
     @SneakyThrows
     @Override
     public byte[] decrypt(byte[] value, int offset, int length) {
-        if (length == 0) {return ArrayUtils.EMPTY_BYTE_ARRAY;}
+        if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
         return decrypt.doFinal(value, offset, length);
     }
 }

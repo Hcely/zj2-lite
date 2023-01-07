@@ -15,7 +15,7 @@ public class AuthorizeUriHandler extends AbstractAuthorizeHandler<String> {
     @Override
     public void authorize(String authorityResource) {
         final UserAuthorityResources authorities = getAuthorityResources();
-        if (!authorities.containsAuthority(authorityResource)) {
+        if (authorities.notContainsAuthority(authorityResource)) {
             throw AuthUtil.unAuthenticationErr("没有功能权限");
         }
     }

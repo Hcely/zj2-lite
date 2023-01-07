@@ -49,9 +49,9 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
             appClient.setEnableFlag(1);
             appClient.setEnabledTime(DateUtil.now());
         }
-        if (StringUtils.isNotEmpty(req.getClientName())) {appClient.setClientName(req.getClientName());}
-        if (StringUtils.isNotEmpty(req.getNamespace())) {appClient.setNamespace(req.getNamespace());}
-        if (req.getTokenTimeout() != null) {appClient.setTokenTimeout(req.getTokenTimeout());}
+        if (StringUtils.isNotEmpty(req.getClientName())) { appClient.setClientName(req.getClientName()); }
+        if (StringUtils.isNotEmpty(req.getNamespace())) { appClient.setNamespace(req.getNamespace()); }
+        if (req.getTokenTimeout() != null) { appClient.setTokenTimeout(req.getTokenTimeout()); }
         save(appClient);
         return appClient;
     }

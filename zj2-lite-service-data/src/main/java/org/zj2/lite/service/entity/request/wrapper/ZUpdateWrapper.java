@@ -77,9 +77,9 @@ public class ZUpdateWrapper<T> extends AbstractWrapper<T, ZUpdateWrapper<T>> {
     }
 
     protected final ZUpdateWrapper<T> addUpdateField(boolean b, PropFunc<T, ?> prop, UpdateMode mode, Object value) {
-        if (!b) {return this;}
+        if (!b) { return this; }
         String name = getFieldName(prop);
-        if (updateFields == null) {updateFields = new LinkedHashMap<>(5);}
+        if (updateFields == null) { updateFields = new LinkedHashMap<>(5); }
         updateFields.put(name, new UpdateField(mode, value));
         return this;
     }

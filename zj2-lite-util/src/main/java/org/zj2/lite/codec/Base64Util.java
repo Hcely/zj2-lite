@@ -23,7 +23,7 @@ public class Base64Util {
 
     static {
         byte i = 0;
-        for (char c : BASE64_ENCODE_CHARS) {BASE64_DECODE_BYTES[c] = i++;}
+        for (char c : BASE64_ENCODE_CHARS) { BASE64_DECODE_BYTES[c] = i++; }
         BASE64_DECODE_BYTES['-'] = 62;//url
         BASE64_DECODE_BYTES['_'] = 63;//url
     }
@@ -52,7 +52,7 @@ public class Base64Util {
         }
 
         public int decode(CharSequence base64Value, int srcOffset, int srcLength, byte[] buf, int bufOffset) {
-            if (srcLength == 0 || (srcLength = base64BufLength(base64Value, srcOffset, srcLength)) == 0) {return 0;}
+            if (srcLength == 0 || (srcLength = base64BufLength(base64Value, srcOffset, srcLength)) == 0) { return 0; }
             return decode0(base64Value, srcOffset, srcLength, buf, bufOffset);
         }
 
@@ -94,7 +94,7 @@ public class Base64Util {
 
         private static int base64BufLength(CharSequence base64Value, int offset, int length) {
             for (; length > 0; --length) {
-                if (base64Value.charAt(offset + length - 1) != '=') {break;}
+                if (base64Value.charAt(offset + length - 1) != '=') { break; }
             }
             return length;
         }
@@ -140,7 +140,7 @@ public class Base64Util {
         }
 
         public StringBuilder encode(StringBuilder sb, byte[] srcBuf, int srcOffset, int srcLength) {
-            if (srcLength == 0) {return initSB(sb, 0);}
+            if (srcLength == 0) { return initSB(sb, 0); }
             int capacity = base64StrCapacity(srcLength);
             sb = initSB(sb, capacity);
             int b;
@@ -153,7 +153,7 @@ public class Base64Util {
                     b |= (0xFF & srcBuf[srcOffset]) << 8;
                 } else {
                     sb.append(encodeChars[(b >>> 18) & 63]).append(encodeChars[(b >>> 12) & 63]);
-                    if (padding) {sb.append('=').append('=');}
+                    if (padding) { sb.append('=').append('='); }
                     return sb;
                 }
                 // 3
@@ -162,7 +162,7 @@ public class Base64Util {
                 } else {
                     sb.append(encodeChars[(b >>> 18) & 63]).append(encodeChars[(b >>> 12) & 63])
                             .append(encodeChars[(b >>> 6) & 63]);
-                    if (padding) {sb.append('=');}
+                    if (padding) { sb.append('='); }
                     return sb;
                 }
                 sb.append(encodeChars[(b >>> 18) & 63]).append(encodeChars[(b >>> 12) & 63])
@@ -182,7 +182,7 @@ public class Base64Util {
 
         private static int base64StrCapacity(int bufLength) {
             int capacity = bufLength / 3;
-            if (capacity * 3 < bufLength) {++capacity;}
+            if (capacity * 3 < bufLength) { ++capacity; }
             return capacity << 1;
         }
 

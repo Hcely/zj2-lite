@@ -47,7 +47,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
     public void start() {
         if (casStatus(INIT, STARTING)) {
             lock = sessionManager.getLock(this);
-            if (lock == null) {lock = SessionLock.EMPTY_LOCK;}
+            if (lock == null) { lock = SessionLock.EMPTY_LOCK; }
             boolean b;
             try {
                 b = lock.lock();
@@ -71,7 +71,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
             try {
                 return onSubmitted();
             } finally {
-                if (lock != null) {lock.unlock();}
+                if (lock != null) { lock.unlock(); }
             }
         } else {
             return null;
@@ -84,7 +84,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
             try {
                 onClosed();
             } finally {
-                if (lock != null) {lock.unlock();}
+                if (lock != null) { lock.unlock(); }
             }
         }
     }
@@ -96,7 +96,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public void addSessionLog(SessionLog log) {
-        if (sessionLogs == null) {sessionLogs = new LinkedHashMap<>();}
+        if (sessionLogs == null) { sessionLogs = new LinkedHashMap<>(); }
         sessionLogs.compute(log.logKey(), (key, l) -> l == null ? log : l.addModify(log));
     }
 
@@ -114,7 +114,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
     }
 
     protected final void checkStatus() {
-        if (state != STARTED) {throw ZRBuilder.builder().msg0("session未启动!").buildError();}
+        if (state != STARTED) { throw ZRBuilder.builder().msg0("session未启动!").buildError(); }
     }
 
     private boolean casStatus(int oldValue, int newValue) {
@@ -135,7 +135,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
     public <T> T attr(String key) {
         if (attrs != null && StringUtils.isNotEmpty(key)) {
             for (SessionAttr e : attrs) {
-                if (key.equals(e.getKey())) {return (T) e.getValue();}
+                if (key.equals(e.getKey())) { return (T) e.getValue(); }
             }
         }
         return null;
@@ -156,7 +156,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
                 Map.Entry<String, Object> e = it.next();
                 if (key.equals(e.getKey())) {
                     Object tmp = e.getValue();
-                    if (value == null) {it.remove();} else {e.setValue(value);}
+                    if (value == null) { it.remove(); } else { e.setValue(value); }
                     return tmp;
                 }
             }

@@ -46,16 +46,16 @@ public class SequenceUtil {
                 char ch = (char) ('0' + (value % 10));
                 sb.setCharAt(idx, ch);
             }
-            if (value > 0) {throw ZRBuilder.failureErr("系统自增序号超出最大值");}
+            if (value > 0) { throw ZRBuilder.failureErr("系统自增序号超出最大值"); }
             return sb.toString();
         }
     }
 
     public static int getFormatterBizSize(String formatter) {
-        if (StringUtils.isEmpty(formatter)) {return 0;}
+        if (StringUtils.isEmpty(formatter)) { return 0; }
         int bitSize = 0;
         for (int i = 0, len = formatter.length(); i < len; ++i) {
-            if (formatter.charAt(i) == '#') {++bitSize;}
+            if (formatter.charAt(i) == '#') { ++bitSize; }
         }
         return bitSize;
     }

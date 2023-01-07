@@ -30,7 +30,7 @@ public class UserDisableHelper implements BizVHandler<UserOperationReq> {
     @Transactional
     public void handle(UserOperationReq req) {
         UserDTO user = userService.getIfAbsentError(req.getUserId());
-        if (BooleanUtil.isFalse(user.getEnableFlag())) {return;}
+        if (BooleanUtil.isFalse(user.getEnableFlag())) { return; }
         //
         updateStatus(req.getUserId());
         //

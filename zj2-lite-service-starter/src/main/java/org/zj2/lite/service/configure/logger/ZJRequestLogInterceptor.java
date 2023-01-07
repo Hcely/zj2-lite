@@ -63,7 +63,7 @@ public class ZJRequestLogInterceptor {
     }
 
     private Object[] buildArgs(Object[] args) {
-        if (args == null || args.length == 0) {return ArrayUtils.EMPTY_OBJECT_ARRAY;}
+        if (args == null || args.length == 0) { return ArrayUtils.EMPTY_OBJECT_ARRAY; }
         int i = 0;
         Object[] params = new Object[args.length];
         for (Object arg : args) {

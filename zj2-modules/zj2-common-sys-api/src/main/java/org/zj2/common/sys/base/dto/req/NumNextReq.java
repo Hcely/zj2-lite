@@ -43,7 +43,7 @@ public class NumNextReq implements Serializable {
     }
 
     public <T extends Serializable> void putParam(String key, T value) {
-        if (params == null) {params = new JSONObject();}
+        if (params == null) { params = new JSONObject(); }
         params.put(key, value);
     }
 }

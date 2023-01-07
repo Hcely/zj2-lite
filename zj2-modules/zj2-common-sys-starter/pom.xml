@@ -11,15 +11,15 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>zj2-common-sys-starter</artifactId>
 
- <dependencies>
-     <dependency>
-         <groupId>org.zj2.lite</groupId>
-         <artifactId>zj2-lite-service</artifactId>
-     </dependency>
-     <dependency>
-         <groupId>org.zj2.lite.module</groupId>
-         <artifactId>zj2-common-sys-api</artifactId>
-     </dependency>
- </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.zj2.lite</groupId>
+            <artifactId>zj2-lite-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zj2.lite.module</groupId>
+            <artifactId>zj2-common-sys-api</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

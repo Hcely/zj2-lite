@@ -88,7 +88,7 @@ public class UserDTO implements Serializable {
      * 激活时间
      */
     private LocalDateTime activatedTime;
-    
+
     /**
      * 用户状态
      */

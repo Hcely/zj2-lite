@@ -28,7 +28,7 @@ public abstract class AbsRequestContextClientInterceptor<T> {
 
     private void setAuthentication(T request, String method, String uri) {
         AppDTO app = AuthUtil.getApp();
-        if (app == null) {return;}
+        if (app == null) { return; }
         String authentication = ServerSignUtil.buildAuthentication(app.getAppCode(), app.getAppSecret(), method, uri);
         setValue(request, ServiceConstants.REQUEST_AUTHORIZATION, authentication);
     }

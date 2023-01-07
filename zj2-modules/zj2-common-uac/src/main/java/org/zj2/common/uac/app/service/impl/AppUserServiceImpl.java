@@ -42,7 +42,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     @Override
     public void removeUser(String appUserId) {
         AppUserDTO appUser = get(appUserId);
-        if (appUser != null) {delete(appUserId);}
+        if (appUser != null) { delete(appUserId); }
     }
 
     @Override

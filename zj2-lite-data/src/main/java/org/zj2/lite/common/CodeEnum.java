@@ -30,13 +30,13 @@ public interface CodeEnum<T> {
     }
 
     default boolean eq(Object code) {
-        if (code == null) {return false;}
-        if (code == this) {return true;}
+        if (code == null) { return false; }
+        if (code == this) { return true; }
         if (code instanceof CodeEnum) {
             code = ((CodeEnum<?>) code).getCode();
         }
         T selfCode = getCode();
-        if (selfCode == code) {return true;}
+        if (selfCode == code) { return true; }
         if (selfCode instanceof Number && code instanceof Number) {
             return ((Number) selfCode).intValue() == ((Number) code).intValue();
         }
@@ -49,7 +49,7 @@ public interface CodeEnum<T> {
         private static final Map<String, Object> enums = new HashMap<>(512);
 
         public static <E extends CodeEnum<?>> E get(Class<?> enumType, Object code) {
-            if (code == null) {return null;}
+            if (code == null) { return null; }
             tryInitialize(enumType);
             return (E) enums.get(getKey(enumType, code));
         }
@@ -60,8 +60,8 @@ public interface CodeEnum<T> {
         }
 
         private static void tryInitialize(Class<?> enumType) {
-            if (enumTypes.contains(enumType)) {return;}
-            synchronized (enumTypes) {if (enumTypes.add(enumType)) {initEnums(enumType);}}
+            if (enumTypes.contains(enumType)) { return; }
+            synchronized (enumTypes) { if (enumTypes.add(enumType)) { initEnums(enumType); } }
         }
 
         private static String getKey(Class<?> enumType, Object code) {
@@ -85,9 +85,9 @@ public interface CodeEnum<T> {
                     }
                 }
             } else {
-                for (Field f : FieldUtils.getAllFieldsList(enumType)) {addEnum(enumType, f);}
+                for (Field f : FieldUtils.getAllFieldsList(enumType)) { addEnum(enumType, f); }
                 // 处理interface的
-                for (Field f : enumType.getFields()) {addEnum(enumType, f);}
+                for (Field f : enumType.getFields()) { addEnum(enumType, f); }
             }
         }
 
@@ -106,7 +106,7 @@ public interface CodeEnum<T> {
         }
 
         private static void addEnum(Class<?> enumType, CodeEnum<Object> e) {
-            if (e != null) {enums.put(getKey(enumType, e.getCode()), e);}
+            if (e != null) { enums.put(getKey(enumType, e.getCode()), e); }
         }
     }
 

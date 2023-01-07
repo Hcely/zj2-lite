@@ -100,13 +100,13 @@ public class TransactionSyncUtil {
     private static <T> void transSync(Runnable cmd, T value, Consumer<T> consumer, boolean afterCommit) {
         Boolean committedflag = COMMITTED_FLAG_TL.get();
         if (committedflag != null) {
-            if (committedflag == afterCommit) {executeCmd(cmd, value, consumer);}
+            if (committedflag == afterCommit) { executeCmd(cmd, value, consumer); }
         } else if (TransactionSynchronizationManager.isActualTransactionActive()) {
             // 本地事务或全局事务起始
             TransactionSynchronizationManager.registerSynchronization(
                     new AfterCommitRunner(getSyncIdx(), cmd, value, consumer, afterCommit));
         } else {
-            if (afterCommit) {executeCmd(cmd, value, consumer);}
+            if (afterCommit) { executeCmd(cmd, value, consumer); }
         }
     }
 
@@ -150,12 +150,12 @@ public class TransactionSyncUtil {
 
         @Override
         public void afterCommit() {
-            if (afterCommit) {doExecute(Boolean.TRUE);}
+            if (afterCommit) { doExecute(Boolean.TRUE); }
         }
 
         @Override
         public void afterCompletion(int status) {
-            if (status == STATUS_ROLLED_BACK && !afterCommit) {doExecute(Boolean.FALSE);}
+            if (status == STATUS_ROLLED_BACK && !afterCommit) { doExecute(Boolean.FALSE); }
         }
 
         private void doExecute(Boolean commited) {
@@ -182,7 +182,6 @@ public class TransactionSyncUtil {
         }
         return IDX_TL.get().getAndIncrement() & Integer.MAX_VALUE;
     }
-
 
     @Component
     public static class TransactionExecutor {
@@ -216,7 +215,5 @@ public class TransactionSyncUtil {
             consumer.accept(value);
         }
     }
-
-
 }
 

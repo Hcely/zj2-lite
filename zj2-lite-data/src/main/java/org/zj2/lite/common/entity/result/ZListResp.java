@@ -33,7 +33,7 @@ public class ZListResp<T> extends ZResp<List<? extends T>> {
     }
 
     public ZListResp<T> putSumValue(String key, BigDecimal value) {
-        if (sumValues == null) {sumValues = new LinkedHashMap<>();}
+        if (sumValues == null) { sumValues = new LinkedHashMap<>(); }
         sumValues.put(key, value);
         return this;
     }

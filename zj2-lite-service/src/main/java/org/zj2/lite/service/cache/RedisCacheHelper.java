@@ -53,7 +53,7 @@ class RedisCacheHelper extends AbsCacheHelper {
             return value;
         } catch (Throwable e) {// NOSONAR
             log.error("缓存获取异常", e);
-            if (ignoreErr) {return null;} else {throw e;}
+            if (ignoreErr) { return null; } else { throw e; }
         }
     }
 }

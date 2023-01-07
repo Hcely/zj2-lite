@@ -75,7 +75,7 @@ public class JSONKey<T> implements CodeEnum<String> {
     }
 
     public T getValue(JSONObject jsonConfig, T defaultValue) {
-        if (jsonConfig == null) {return defaultValue;}
+        if (jsonConfig == null) { return defaultValue; }
         T value;
         if (paramType == Boolean.class) {
             //noinspection unchecked

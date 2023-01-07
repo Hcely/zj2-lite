@@ -26,7 +26,7 @@ public class SequenceSeqKeyHandler implements BizVHandler<NumNextContext> {
         sb.append(context.getNumRuleCode()).append(':');//
         //
         String appCode = context.getAppCode();
-        if (StringUtils.isNotEmpty(appCode)) {sb.append(appCode).append(':');}
+        if (StringUtils.isNotEmpty(appCode)) { sb.append(appCode).append(':'); }
         //
         for (FormatPart part : formatter.getParts()) {
             if (part instanceof SlotFormatPart) {

@@ -76,7 +76,7 @@ public class UserLogDTO implements Serializable {
      * 设备
      */
     private String logDevice;
-    
+
     /**
      * 客户端
      */

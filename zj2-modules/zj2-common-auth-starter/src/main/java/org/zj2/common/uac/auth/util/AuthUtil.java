@@ -21,8 +21,9 @@ public class AuthUtil {
     public static AppDTO getApp() {
         String appCode = StringUtils.defaultIfEmpty(AuthenticationContext.currentAppCode(), AppDTO.COMMON_APP_CODE);
         AppApi api = appApiRef.get();
-        if (api == null) {return null;}
-        return CacheUtil.DEF_CACHE.get(AppDTO.class, appCode, api::getByCode);
+        if (api == null) { return null; }
+        String key = AppDTO.getCacheKey(appCode);
+        return CacheUtil.DEF_CACHE.getCache(key, appCode, api::getByCode);
     }
 
     public static ZError unAuthenticationErr(String msg) {

@@ -46,7 +46,7 @@ public class AuthorizeBeanPropertyHandler extends AbstractAuthorizeHandler<Objec
             Object value;
             if (cxt.isPropertyOfBean() && cxt.isSimplePropertyType() && (value = cxt.propertyValue()) != null
                     && (resource = cxt.propertyAnnotation(AuthorityResource.class)) != null) {
-                if (!authorities.containsAuthority(resource.value())) {
+                if (authorities.notContainsAuthority(resource.value())) {
                     Object newValue = propertyHandler.hidePropertyValue(cxt.propertyName(), value);
                     cxt.propertyValue(newValue);
                 }

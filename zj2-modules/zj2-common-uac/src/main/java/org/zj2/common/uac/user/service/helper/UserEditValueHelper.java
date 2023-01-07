@@ -70,13 +70,13 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
 
     private void checkParams(UserEditValueReq req) {
         UserValueTypeEnum valueType = req.getValueType();
-        if (valueType == null) {throw ZRBuilder.failureErr("未知用户值类型");}
+        if (valueType == null) { throw ZRBuilder.failureErr("未知用户值类型"); }
         String userValue = req.getUserValue();
-        if (StringUtils.isEmpty(userValue)) {return;}
+        if (StringUtils.isEmpty(userValue)) { return; }
         if (UserValueTypeEnum.MOBILE.eq(valueType)) {
-            if (!UserUtil.isMobile(userValue)) {throw ZRBuilder.failureErr("不合法手机号");}
+            if (!UserUtil.isMobile(userValue)) { throw ZRBuilder.failureErr("不合法手机号"); }
         } else if (UserValueTypeEnum.EMAIL.eq(valueType)) {
-            if (!UserUtil.isEmail(userValue)) {throw ZRBuilder.failureErr("不合法邮箱");}
+            if (!UserUtil.isEmail(userValue)) { throw ZRBuilder.failureErr("不合法邮箱"); }
         }
     }
 

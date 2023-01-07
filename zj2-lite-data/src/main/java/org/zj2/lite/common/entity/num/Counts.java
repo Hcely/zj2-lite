@@ -7,7 +7,7 @@ public class Counts {
     private Map<String, IntHolder> countMap;
 
     private IntHolder get0(String key) {
-        if (countMap == null) {countMap = new HashMap<>(256);}
+        if (countMap == null) { countMap = new HashMap<>(256); }
         return countMap.computeIfAbsent(key, k -> new IntHolder());
     }
 

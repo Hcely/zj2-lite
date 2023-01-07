@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 public class CollUtil {
 
     public static <T> List<T> page(List<T> list, Integer pageNo, Integer pageSize) {
-        if (pageSize == null || pageSize < 1) {return list == null ? new ArrayList<>() : list;}
+        if (pageSize == null || pageSize < 1) { return list == null ? new ArrayList<>() : list; }
         pageNo = pageNo == null || pageNo < 1 ? 1 : pageNo;
         int startIdx = (pageNo - 1) * pageSize;
         int endIdx = startIdx + pageSize;
@@ -45,7 +45,7 @@ public class CollUtil {
     }
 
     public static <T> List<T> subList(List<T> list, int startIdx, int endIdx) {
-        if (isEmpty(list)) {return new ArrayList<>();}
+        if (isEmpty(list)) { return new ArrayList<>(); }
         endIdx = Math.min(endIdx, size(list));
         return startIdx < endIdx ? list.subList(startIdx, endIdx) : new ArrayList<>();
     }
@@ -89,7 +89,7 @@ public class CollUtil {
     public static <T> void foreach(Collection<T> coll, Consumer<? super T> action) {
         if (isNotEmpty(coll) && action != null) {
             for (T e : coll) {
-                if (e != null) {action.accept(e);}
+                if (e != null) { action.accept(e); }
             }
         }
     }
@@ -98,7 +98,7 @@ public class CollUtil {
         if (isNotEmpty(coll) && action != null) {
             int idx = 0;
             for (T e : coll) {
-                if (e != null) {action.accept(idx, e);}
+                if (e != null) { action.accept(idx, e); }
                 ++idx;
             }
         }
@@ -120,7 +120,7 @@ public class CollUtil {
             int idx = 0;
             for (Map.Entry<K, V> e : map.entrySet()) {
                 V value = e.getValue();
-                if (value != null) {consumer.accept(idx, e.getKey(), value);}
+                if (value != null) { consumer.accept(idx, e.getKey(), value); }
                 ++idx;
             }
         }
@@ -128,7 +128,7 @@ public class CollUtil {
 
     public static <T> void foreach(T[] array, Consumer<? super T> action) {
         if (array != null && action != null) {
-            for (T e : array) {if (e != null) {action.accept(e);}}
+            for (T e : array) { if (e != null) { action.accept(e); } }
         }
     }
 
@@ -136,37 +136,37 @@ public class CollUtil {
         if (array != null && action != null) {
             for (int i = 0, len = array.length; i < len; ++i) {
                 T e = array[i];
-                if (e != null) {action.accept(i, e);}
+                if (e != null) { action.accept(i, e); }
             }
         }
     }
 
     public static <T> void descForeach(Collection<T> coll, Consumer<? super T> action) {//NOSONAR
-        if (action == null) {return;}
+        if (action == null) { return; }
         int size = size(coll);
-        if (size == 0) {return;}
+        if (size == 0) { return; }
         if (size == 1) {
             foreach(coll, action);
         } else if (coll instanceof Deque) {
             Deque<T> list = (Deque<T>) coll;
             for (Iterator<T> it = list.descendingIterator(); it.hasNext(); ) {
                 T e = it.next();
-                if (e != null) {action.accept(e);}
+                if (e != null) { action.accept(e); }
             }
         } else {
             List<T> list = coll instanceof List ? ((List<T>) coll) : new ArrayList<>(coll);
             ListIterator<T> it = list.listIterator(size);
             while (it.hasPrevious()) {
                 T e = it.previous();
-                if (e != null) {action.accept(e);}
+                if (e != null) { action.accept(e); }
             }
         }
     }
 
     public static <T> void descForeach(Collection<T> coll, CollForeachConsumer<? super T> action) {//NOSONAR
-        if (action == null) {return;}
+        if (action == null) { return; }
         int size = size(coll);
-        if (size == 0) {return;}
+        if (size == 0) { return; }
         if (size == 1) {
             foreach(coll, action);
         } else if (coll instanceof Deque) {
@@ -174,7 +174,7 @@ public class CollUtil {
             int idx = 0;
             for (Iterator<T> it = list.descendingIterator(); it.hasNext(); ) {
                 T e = it.next();
-                if (e != null) {action.accept(idx, e);}
+                if (e != null) { action.accept(idx, e); }
                 ++idx;
             }
         } else {
@@ -183,7 +183,7 @@ public class CollUtil {
             int idx = 0;
             while (it.hasPrevious()) {
                 T e = it.previous();
-                if (e != null) {action.accept(idx, e);}
+                if (e != null) { action.accept(idx, e); }
                 ++idx;
             }
         }
@@ -264,18 +264,18 @@ public class CollUtil {
     }
 
     public static <K, V> List<K> toDistinctList(Collection<V> coll, Function<V, K> func) {
-        if (isEmpty(coll)) {return new ArrayList<>();}
+        if (isEmpty(coll)) { return new ArrayList<>(); }
         Set<K> result = transToTarget(coll, new LinkedHashSet<>(coll.size()), func, true);
         return new ArrayList<>(result);
     }
 
     public static <K, V> List<K> toList(V[] array, Function<V, K> func) {
-        if (isEmpty(array)) {return new ArrayList<>();}
+        if (isEmpty(array)) { return new ArrayList<>(); }
         return transToTarget(array, new ArrayList<>(array.length), func, false);
     }
 
     public static <K, V> Set<K> toSet(V[] array, Function<V, K> func) {
-        if (isEmpty(array)) {return new LinkedHashSet<>();}
+        if (isEmpty(array)) { return new LinkedHashSet<>(); }
         return transToTarget(array, new LinkedHashSet<>(array.length), func, false);
     }
 
@@ -284,7 +284,7 @@ public class CollUtil {
     }
 
     public static <K, V> List<K> toList(Collection<V> coll, Function<V, K> func, boolean ignoreEmpty) {
-        if (isEmpty(coll)) {return new ArrayList<>();}
+        if (isEmpty(coll)) { return new ArrayList<>(); }
         return transToTarget(coll, new ArrayList<>(coll.size()), func, ignoreEmpty);
     }
 
@@ -293,25 +293,25 @@ public class CollUtil {
     }
 
     public static <K, V> Set<K> toSet(Collection<V> coll, Function<V, K> func, boolean ignoreEmpty) {
-        if (isEmpty(coll)) {return new LinkedHashSet<>();}
+        if (isEmpty(coll)) { return new LinkedHashSet<>(); }
         return transToTarget(coll, new LinkedHashSet<>(coll.size()), func, ignoreEmpty);
     }
 
     private static <K, V, C extends Collection<K>> C transToTarget(V[] src, C dst, Function<V, K> func,
             boolean ignoreEmpty) {
-        for (V e : src) {addToTarget(e, dst, func, ignoreEmpty);}
+        for (V e : src) { addToTarget(e, dst, func, ignoreEmpty); }
         return dst;
     }
 
     private static <K, V, C extends Collection<K>> C transToTarget(Collection<V> src, C dst, Function<V, K> func,
             boolean ignoreEmpty) {
-        for (V e : src) {addToTarget(e, dst, func, ignoreEmpty);}
+        for (V e : src) { addToTarget(e, dst, func, ignoreEmpty); }
         return dst;
     }
 
     private static <K, V, C extends Collection<K>> void addToTarget(V e, C dst, Function<V, K> func,
             boolean ignoreEmpty) {
-        if (e == null) {return;}
+        if (e == null) { return; }
         K value = func.apply(e);
         if (ignoreEmpty && (value == null || (value instanceof String && !StringUtils.isEmpty(value.toString())))) {
             return;
@@ -343,24 +343,24 @@ public class CollUtil {
 
     public static <K, T, R> List<T> mapReduceAsList(Collection<R> values, Function<R, K> mapFunc,
             Function<R, T> convertFunc, BiConsumer<T, R> reduceFunc) {
-        if (isEmpty(values)) {return new ArrayList<>();}
+        if (isEmpty(values)) { return new ArrayList<>(); }
         Map<K, T> result = mapReduce(values, mapFunc, convertFunc, reduceFunc);
         return new ArrayList<>(result.values());
     }
 
     public static <K, T, R> Map<K, T> mapReduce(Collection<R> values, Function<R, K> mapFunc,
             Function<R, T> convertFunc, BiConsumer<T, R> reduceFunc) {
-        if (isEmpty(values)) {return new LinkedHashMap<>();}
+        if (isEmpty(values)) { return new LinkedHashMap<>(); }
         Map<K, T> result = new LinkedHashMap<>(values.size());
         for (R v : values) {
-            if (v == null) {continue;}
+            if (v == null) { continue; }
             final K key = mapFunc.apply(v);
             T value = result.get(key);
             if (value == null) {
                 value = convertFunc.apply(v);
                 if (value != null) {
                     result.put(key, value);
-                    if (value != v) {reduceFunc.accept(value, v);}
+                    if (value != v) { reduceFunc.accept(value, v); }
                 }
             } else {
                 reduceFunc.accept(value, v);
@@ -377,7 +377,7 @@ public class CollUtil {
         Map<K, R> result = new HashMap<>();
         if (isNotEmpty(coll) && keyFunc != null && valueFunc != null) {
             for (V v : coll) {
-                if (v != null) {result.put(keyFunc.apply(v), valueFunc.apply(v));}
+                if (v != null) { result.put(keyFunc.apply(v), valueFunc.apply(v)); }
             }
         }
         return result;
@@ -408,7 +408,7 @@ public class CollUtil {
     }
 
     public static <V> BigDecimal sum(Collection<V> coll, Function<V, BigDecimal> func) {
-        if (isEmpty(coll)) {return BigDecimal.ZERO;}
+        if (isEmpty(coll)) { return BigDecimal.ZERO; }
         BigDecimal result = BigDecimal.ZERO;
         BigDecimal value;
         for (V e : coll) {
@@ -420,7 +420,7 @@ public class CollUtil {
     }
 
     public static <V> int sumInt(Collection<V> coll, Function<V, Integer> func) {//NOSONAR
-        if (isEmpty(coll)) {return 0;}
+        if (isEmpty(coll)) { return 0; }
         int result = 0;
         Integer value;
         for (V e : coll) {
@@ -544,61 +544,61 @@ public class CollUtil {
     }
 
     public static <T> List<T> filter(Collection<T> coll, Predicate<T> filter) {
-        if (isEmpty(coll)) {return new ArrayList<>();}
+        if (isEmpty(coll)) { return new ArrayList<>(); }
         List<T> result = new ArrayList<>(coll.size());
-        for (T e : coll) {if (e != null && filter.test(e)) {result.add(e);}}
+        for (T e : coll) { if (e != null && filter.test(e)) { result.add(e); } }
         return result;
     }
 
     public static <T> boolean anyMatch(T[] array, Predicate<T> predicate) {
-        if (isEmpty(array)) {return false;}
-        for (T e : array) {if (e != null && predicate.test(e)) {return true;}}
+        if (isEmpty(array)) { return false; }
+        for (T e : array) { if (e != null && predicate.test(e)) { return true; } }
         return false;
     }
 
     public static <T> boolean anyMatch(Collection<T> coll, Predicate<T> predicate) {
-        if (isEmpty(coll)) {return false;}
-        for (T e : coll) {if (e != null && predicate.test(e)) {return true;}}
+        if (isEmpty(coll)) { return false; }
+        for (T e : coll) { if (e != null && predicate.test(e)) { return true; } }
         return false;
     }
 
     public static <T> boolean allMatch(Collection<T> coll, Predicate<T> predicate) {
-        if (isEmpty(coll)) {return false;}
-        for (T e : coll) {if (e == null || !predicate.test(e)) {return false;}}
+        if (isEmpty(coll)) { return false; }
+        for (T e : coll) { if (e == null || !predicate.test(e)) { return false; } }
         return true;
     }
 
     public static <T> boolean allMatch(T[] array, Predicate<T> predicate) {
-        if (isEmpty(array)) {return false;}
-        for (T e : array) {if (e == null || !predicate.test(e)) {return false;}}
+        if (isEmpty(array)) { return false; }
+        for (T e : array) { if (e == null || !predicate.test(e)) { return false; } }
         return true;
     }
 
     public static <T> T get(Collection<T> coll, int idx) {
-        if (coll == null || idx < 0 || idx >= (coll).size()) {return null;}
-        if (coll instanceof List) {return ((List<T>) coll).get(idx);}
+        if (coll == null || idx < 0 || idx >= (coll).size()) { return null; }
+        if (coll instanceof List) { return ((List<T>) coll).get(idx); }
         for (T e : coll) {
-            if (idx < 1) {return e;}
+            if (idx < 1) { return e; }
             --idx;
         }
         return null;
     }
 
     public static <T> T getFirst(Collection<T> coll, Predicate<T> predicate) {
-        if (isEmpty(coll)) {return null;}
-        for (T e : coll) {if (e != null && predicate.test(e)) {return e;}}
+        if (isEmpty(coll)) { return null; }
+        for (T e : coll) { if (e != null && predicate.test(e)) { return e; } }
         return null;
     }
 
     public static <T> T getFirst(T[] array, Predicate<T> predicate) {
-        if (isEmpty(array)) {return null;}
-        for (T e : array) {if (e != null && predicate.test(e)) {return e;}}
+        if (isEmpty(array)) { return null; }
+        for (T e : array) { if (e != null && predicate.test(e)) { return e; } }
         return null;
     }
 
     public static <T> T getFirst(Collection<T> coll) {
-        if (isEmpty(coll)) {return null;}
-        if (coll instanceof LinkedList) {return ((LinkedList<T>) coll).peekFirst();}
+        if (isEmpty(coll)) { return null; }
+        if (coll instanceof LinkedList) { return ((LinkedList<T>) coll).peekFirst(); }
         return get(coll, 0);
     }
 
@@ -607,20 +607,20 @@ public class CollUtil {
     }
 
     public static <T> T getLast(Collection<T> coll) {
-        if (isEmpty(coll)) {return null;}
-        if (coll instanceof LinkedList) {return ((LinkedList<T>) coll).peekLast();}
+        if (isEmpty(coll)) { return null; }
+        if (coll instanceof LinkedList) { return ((LinkedList<T>) coll).peekLast(); }
         return get(coll, size(coll) - 1);
     }
 
     public static <K, V> V getFirst(Map<K, V> map) {
-        if (isEmpty(map)) {return null;}
+        if (isEmpty(map)) { return null; }
         return map.values().iterator().next();
     }
 
     public static <K, V> V getLast(Map<K, V> map) {
-        if (isEmpty(map)) {return null;}
+        if (isEmpty(map)) { return null; }
         V result = null;
-        for (V e : map.values()) {result = e;}
+        for (V e : map.values()) { result = e; }
         return result;
     }
 
@@ -629,13 +629,13 @@ public class CollUtil {
     }
 
     public static <K, T> T get(Map<K, T> map, K key, T def) {
-        if (isEmpty(map)) {return def;}
+        if (isEmpty(map)) { return def; }
         return map.getOrDefault(key, def);
     }
 
     public static <V> boolean contains(Object[] array, V value) {
         if (isNotEmpty(array)) {
-            for (Object v : array) {if (Objects.equals(v, value)) {return true;}}
+            for (Object v : array) { if (Objects.equals(v, value)) { return true; } }
         }
         return false;
     }
@@ -650,7 +650,7 @@ public class CollUtil {
 
     @SafeVarargs
     public static <T> List<T> newList(T... arrays) {
-        if (isEmpty(arrays)) {return new ArrayList<>();}
+        if (isEmpty(arrays)) { return new ArrayList<>(); }
         List<T> result = new ArrayList<>(arrays.length);
         Collections.addAll(result, arrays);
         return result;
@@ -659,7 +659,7 @@ public class CollUtil {
     @SafeVarargs
     public static <T> Set<T> newSet(T... arrays) {
         Set<T> result = new LinkedHashSet<>();
-        if (isNotEmpty(arrays)) {Collections.addAll(result, arrays);}
+        if (isNotEmpty(arrays)) { Collections.addAll(result, arrays); }
         return result;
     }
 
@@ -787,7 +787,7 @@ public class CollUtil {
 
         @Override
         public T next() throws NoSuchElementException {
-            if (!hasNext()) {throw new NoSuchElementException();}
+            if (!hasNext()) { throw new NoSuchElementException(); }
             return it.previous();
         }
 

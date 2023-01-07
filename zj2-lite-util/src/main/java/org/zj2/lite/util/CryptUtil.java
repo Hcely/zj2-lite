@@ -53,7 +53,7 @@ public class CryptUtil {
     }
 
     public static String encrypt(String val) {
-        if (StringUtils.isEmpty(val)) {return val;}
+        if (StringUtils.isEmpty(val)) { return val; }
         CryptProvider provider = getDefCryptProvider();
         return provider.supportsEncrypt(val) ? provider.encrypt(val) : val;
     }
@@ -76,7 +76,7 @@ public class CryptUtil {
             //noinspection ForLoopReplaceableByForEach
             for (int i = 0; i < size; ++i) {
                 CryptProvider p = providers.get(i);
-                if (p != null && p.supportsDecrypt(val) && (newVal = p.decrypt(val)) != null) {return newVal;}
+                if (p != null && p.supportsDecrypt(val) && (newVal = p.decrypt(val)) != null) { return newVal; }
             }
         }
         return val;
@@ -84,12 +84,12 @@ public class CryptUtil {
 
     @SafeVarargs
     public static <T> void decryptList(Collection<? extends T> beans, PropFunc<T, String>... getters) {
-        if (getters == null || getters.length == 0 || CollUtil.isEmpty(beans)) {return;}
+        if (getters == null || getters.length == 0 || CollUtil.isEmpty(beans)) { return; }
         for (PropFunc<T, String> getter : getters) {
             Field field = null;
             for (T e : beans) {
                 if (e != null) {
-                    if (field == null && (field = getBeanField(e.getClass(), getter)) == null) {break;}
+                    if (field == null && (field = getBeanField(e.getClass(), getter)) == null) { break; }
                     decryptBean(e, getter, field);
                 }
             }
@@ -106,7 +106,7 @@ public class CryptUtil {
     }
 
     private static <T> void decryptBean(T bean, PropFunc<T, String> getter, Field field) {
-        if (field == null) {return;}
+        if (field == null) { return; }
         try {
             String value = getter.apply(bean);
             String newValue = decrypt(value);
@@ -114,7 +114,7 @@ public class CryptUtil {
             if (value != newValue) {// NOSONAR
                 FieldUtils.writeField(field, bean, newValue);
             }
-        } catch (Throwable ignored) {}// NOSONAR
+        } catch (Throwable ignored) { }// NOSONAR
     }
 
     @SuppressWarnings("all")

@@ -45,7 +45,7 @@ public class EventPublishManager {
      * @param event
      */
     public static void publish(BaseEvent<?> event) {
-        if (event != null) {publish(event, false);}
+        if (event != null) { publish(event, false); }
     }
 
     /**
@@ -53,11 +53,11 @@ public class EventPublishManager {
      * @param event
      */
     public static void publishAfterCommit(BaseEvent<?> event) {
-        if (event != null) {TransactionSyncUtil.afterCommit(event, e -> publish(e, true));}
+        if (event != null) { TransactionSyncUtil.afterCommit(event, e -> publish(e, true)); }
     }
 
     public static void publishIgnoreError(BaseEvent<?> event) {
-        if (event != null) {publish(event, true);}
+        if (event != null) { publish(event, true); }
     }
 
     private static void publish(BaseEvent<?> event, boolean ignoreError) {

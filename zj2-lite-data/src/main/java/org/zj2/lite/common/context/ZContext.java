@@ -41,7 +41,7 @@ public class ZContext {
 
     public static ZContext current() {
         ZContext context = CONTEXT_TL.get();
-        if (context == null) {CONTEXT_TL.set(context = new ZContext());}//NOSONAR
+        if (context == null) { CONTEXT_TL.set(context = new ZContext()); }//NOSONAR
         return context;
     }
 
@@ -59,7 +59,7 @@ public class ZContext {
         ZContext context = CONTEXT_TL.get();
         if (context != null) {
             BaseContext[] contexts = context.contexts;
-            for (int i = 0, len = contexts.length; i < len; ++i) {contexts[i] = null;}
+            for (int i = 0, len = contexts.length; i < len; ++i) { contexts[i] = null; }
         }
     }
 
@@ -68,7 +68,7 @@ public class ZContext {
         ZContext zcontext = current();
         BaseContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
-            if (supplier == null) {return null;}
+            if (supplier == null) { return null; }
             zcontext.contexts = tmp = createNewContexts(tmp, idx + 1);
         }
         BaseContext result = tmp[idx];
@@ -83,7 +83,7 @@ public class ZContext {
         ZContext zcontext = current();
         BaseContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
-            if (context == null) {return null;}
+            if (context == null) { return null; }
             zcontext.contexts = tmp = createNewContexts(tmp, idx + 1);
         }
         BaseContext old = tmp[idx];
@@ -94,7 +94,7 @@ public class ZContext {
 
     static <T extends BaseContext> T clearSubContext(int idx) {
         ZContext zcontext = CONTEXT_TL.get();
-        if (zcontext == null) {return null;}
+        if (zcontext == null) { return null; }
         BaseContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
             return null;
@@ -108,9 +108,9 @@ public class ZContext {
 
     private static BaseContext[] createNewContexts(BaseContext[] array, int capacity) {
         int newCap = capacity < 1 ? 16 : ((capacity >>> 3) << 3);
-        if (newCap < capacity) {newCap += 8;}
+        if (newCap < capacity) { newCap += 8; }
         BaseContext[] newArray = new BaseContext[newCap];
-        if (array != null) {System.arraycopy(array, 0, newArray, 0, array.length);}
+        if (array != null) { System.arraycopy(array, 0, newArray, 0, array.length); }
         return newArray;
     }
 

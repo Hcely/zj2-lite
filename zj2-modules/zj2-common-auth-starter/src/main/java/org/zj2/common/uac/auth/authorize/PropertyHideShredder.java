@@ -9,7 +9,8 @@ import org.zj2.lite.common.Supportable;
  * @date 2023/1/7 2:46
  */
 public interface PropertyHideShredder extends Supportable<String> {
-    String STAR_4_STR= "****";
+    String STAR_4_STR = "****";
+
     @Override
     boolean supports(String propertyName);
 

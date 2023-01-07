@@ -22,7 +22,8 @@ import java.io.IOException;
  */
 @Component
 @Order(-2000)
-public class WebServiceRequestContextFilter extends AbsRequestContextServerFilter<HttpServletRequest> implements Filter {
+public class WebServiceRequestContextFilter extends AbsRequestContextServerFilter<HttpServletRequest>
+        implements Filter {
     private static final String[] IP_HEADERS = {"x-forwarded-for", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP",
             "HTTP_X_FORWARDED_FOR"};
 
@@ -44,7 +45,7 @@ public class WebServiceRequestContextFilter extends AbsRequestContextServerFilte
         if (StringUtils.isEmpty(value) && ServiceConstants.REQUEST_AUTHORIZATION.equalsIgnoreCase(key)
                 && HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())) {
             value = request.getParameter(key);
-            if (StringUtils.isEmpty(value)) {value = request.getParameter(StringUtils.lowerCase(key));}
+            if (StringUtils.isEmpty(value)) { value = request.getParameter(StringUtils.lowerCase(key)); }
         }
         return value;
     }
@@ -53,7 +54,7 @@ public class WebServiceRequestContextFilter extends AbsRequestContextServerFilte
     protected String getAttrIp(HttpServletRequest request) {
         for (String header : IP_HEADERS) {
             String ip = request.getHeader(header);
-            if (StringUtils.isNotEmpty(ip) && !StringUtils.equalsIgnoreCase("unknown", ip)) {return ip;}
+            if (StringUtils.isNotEmpty(ip) && !StringUtils.equalsIgnoreCase("unknown", ip)) { return ip; }
         }
         return request.getRemoteAddr();
     }

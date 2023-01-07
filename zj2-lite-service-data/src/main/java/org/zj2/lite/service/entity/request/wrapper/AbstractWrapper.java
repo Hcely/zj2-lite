@@ -44,10 +44,10 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
 
     protected boolean allowCondition(Object v) {
         if (ignoreEmpty) {
-            if (v == null) {return false;}
-            if (v instanceof CharSequence) {return ((CharSequence) v).length() > 0;}
-            if (v instanceof Collection) {return !((Collection<?>) v).isEmpty();}
-            if (v.getClass().isArray()) {return Array.getLength(v) > 0;}
+            if (v == null) { return false; }
+            if (v instanceof CharSequence) { return ((CharSequence) v).length() > 0; }
+            if (v instanceof Collection) { return !((Collection<?>) v).isEmpty(); }
+            if (v.getClass().isArray()) { return Array.getLength(v) > 0; }
         }
         return true;
     }
@@ -198,9 +198,9 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
 
     protected final W addCondition(boolean b, PropFunc<T, ?> prop, WhereMode mode, Object value1, Object value2,
             Collection<Object> values) {
-        if (!b) {return (W) this;}
+        if (!b) { return (W) this; }
         String name = getFieldName(prop);
-        if (conditions == null) {conditions = new ArrayList<>();}
+        if (conditions == null) { conditions = new ArrayList<>(); }
         if (CollUtil.getFirst(values) instanceof CodeEnum) {
             values = CollUtil.toList(values, AbstractWrapper::convertVal);
         }
@@ -211,7 +211,7 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
 
     protected static String getFieldName(PropFunc<?, ?> prop) {
         String fieldName = PropertyUtil.getLambdaFieldName(prop);
-        if (StringUtils.isEmpty(fieldName)) {throw new ZError("无法找到参数名称");}
+        if (StringUtils.isEmpty(fieldName)) { throw new ZError("无法找到参数名称"); }
         return fieldName;
     }
 

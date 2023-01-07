@@ -70,7 +70,7 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
 
     private void checkAccountName(UserDTO user) {
         String accountName = user.getUserAccountName();
-        if (StringUtils.isEmpty(accountName)) {return;}
+        if (StringUtils.isEmpty(accountName)) { return; }
         if (!UserUtil.isAccountName(accountName)) {
             throw ZRBuilder.failureErr("用户名不合法");
         }
@@ -81,23 +81,23 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
             throw ZRBuilder.failureErr("用户名不能与邮箱相同");
         }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.ACCOUNT_NAME, accountName);
-        if (exist) {throw ZRBuilder.failureErr("用户名已存在");}
+        if (exist) { throw ZRBuilder.failureErr("用户名已存在"); }
     }
 
     private void checkUserMobile(UserDTO user) {
         String mobile = user.getUserMobile();
-        if (StringUtils.isEmpty(mobile)) {return;}
-        if (!UserUtil.isMobile(mobile)) {throw ZRBuilder.failureErr("手机号不合法");}
+        if (StringUtils.isEmpty(mobile)) { return; }
+        if (!UserUtil.isMobile(mobile)) { throw ZRBuilder.failureErr("手机号不合法"); }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.MOBILE, mobile, user.getUserMobileAreaCode());
-        if (exist) {throw ZRBuilder.failureErr("手机号已存在");}
+        if (exist) { throw ZRBuilder.failureErr("手机号已存在"); }
     }
 
     private void checkUserEmail(UserDTO user) {
         String email = user.getUserEmail();
-        if (StringUtils.isEmpty(email)) {return;}
-        if (!UserUtil.isEmail(email)) {throw ZRBuilder.failureErr("邮箱不合法");}
+        if (StringUtils.isEmpty(email)) { return; }
+        if (!UserUtil.isEmail(email)) { throw ZRBuilder.failureErr("邮箱不合法"); }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.EMAIL, email);
-        if (exist) {throw ZRBuilder.failureErr("邮箱已存在");}
+        if (exist) { throw ZRBuilder.failureErr("邮箱已存在"); }
     }
 
 

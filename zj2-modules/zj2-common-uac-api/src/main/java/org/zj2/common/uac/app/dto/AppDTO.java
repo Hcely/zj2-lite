@@ -1,9 +1,11 @@
 package org.zj2.common.uac.app.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.zj2.lite.common.annotation.JProperty;
+import org.zj2.lite.common.util.StrUtil;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,13 +18,18 @@ import java.time.LocalDateTime;
  * @author peijie.ye
  * @since 2022-11-28
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Setter
+@Getter
+@NoArgsConstructor
 @Accessors(chain = true)
 public class AppDTO implements Serializable {
     public static final String COMMON_APP_CODE = "COMMON";
     protected static final String APP_CONFIG = "appConfig";
     private static final long serialVersionUID = 1L;
+
+    public static String getCacheKey(String appCode) {
+        return StrUtil.concat("APP:", appCode);
+    }
 
     /**
      * 应用id
@@ -55,7 +62,7 @@ public class AppDTO implements Serializable {
      */
     @JProperty(json = APP_CONFIG)
     private Integer singleSignOn;
-    
+
     /**
      * token过期时间
      */

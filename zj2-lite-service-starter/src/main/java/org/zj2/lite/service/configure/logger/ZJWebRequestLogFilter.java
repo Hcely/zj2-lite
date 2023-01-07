@@ -34,7 +34,7 @@ public class ZJWebRequestLogFilter extends AbstractRequestLogFilter implements F
             throw e;
         } finally {
             if (context.getLogState() != RequestLogContext.STATE_COMPLETED) {
-                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) {context.response(null, null, error);}
+                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
                 final int responseStatus = getResponseStatus(response);
                 context.completed(responseStatus);
                 logResponse(context);

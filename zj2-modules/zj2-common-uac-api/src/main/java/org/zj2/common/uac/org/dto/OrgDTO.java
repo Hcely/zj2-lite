@@ -1,7 +1,8 @@
 package org.zj2.common.uac.org.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -15,11 +16,11 @@ import java.time.LocalDateTime;
  * @author peijie.ye
  * @since 2022-11-28
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Setter
+@Getter
+@NoArgsConstructor
 @Accessors(chain = true)
 public class OrgDTO implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**

@@ -17,8 +17,8 @@ public class Quantity implements Serializable {
     public static final Quantity ZERO = new Quantity(null, null);
 
     public static Quantity min(Quantity q, Number main, Number vice) {
-        if (main == null && vice == null) {return q == null ? ZERO : q;}
-        if (q == null) {return new Quantity(NumUtil.min(main, BigDecimal.ZERO), NumUtil.min(vice, BigDecimal.ZERO));}
+        if (main == null && vice == null) { return q == null ? ZERO : q; }
+        if (q == null) { return new Quantity(NumUtil.min(main, BigDecimal.ZERO), NumUtil.min(vice, BigDecimal.ZERO)); }
         return new Quantity(NumUtil.min(q.main, main), NumUtil.min(q.vice, vice));
     }
 
@@ -27,8 +27,8 @@ public class Quantity implements Serializable {
     }
 
     public static Quantity max(Quantity q, Number main, Number vice) {
-        if (main == null && vice == null) {return q == null ? ZERO : q;}
-        if (q == null) {return new Quantity(NumUtil.max(main, BigDecimal.ZERO), NumUtil.max(vice, BigDecimal.ZERO));}
+        if (main == null && vice == null) { return q == null ? ZERO : q; }
+        if (q == null) { return new Quantity(NumUtil.max(main, BigDecimal.ZERO), NumUtil.max(vice, BigDecimal.ZERO)); }
         return new Quantity(NumUtil.max(q.main, main), NumUtil.max(q.vice, vice));
     }
 
@@ -91,7 +91,7 @@ public class Quantity implements Serializable {
     }
 
     public Quantity multi(Number main, Number vice, MathContext context) {
-        if (main == null && vice == null) {return ZERO;}
+        if (main == null && vice == null) { return ZERO; }
         return new Quantity(NumUtil.multi(this.main, main, context), NumUtil.multi(this.vice, vice, context));
     }
 
@@ -116,7 +116,7 @@ public class Quantity implements Serializable {
     }
 
     public boolean eq(Quantity quantity) {
-        if (quantity == null) {return eqZero();}
+        if (quantity == null) { return eqZero(); }
         return NumUtil.eq(main, quantity.main) && NumUtil.eq(vice, quantity.vice);
     }
 

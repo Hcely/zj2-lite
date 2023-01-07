@@ -16,5 +16,6 @@ import org.zj2.lite.service.entity.request.PageRequest;
 @NoArgsConstructor
 public class AppOrgQuery extends PageRequest {
     private static final long serialVersionUID = -3736815108228813601L;
-    
+    private String appCode;
+    private String orgName;
 }

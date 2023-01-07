@@ -22,10 +22,10 @@ public class SignBuilder {
     private String suffix;
     //
     private Function<SignBuilder, String> toStringFunc;
-    private Sign  signFunc;
+    private Sign signFunc;
 
     public SignBuilder put(String key, Object value) {
-        if (params == null) {params = new LinkedHashMap<>();}
+        if (params == null) { params = new LinkedHashMap<>(); }
         params.put(key == null ? "" : key, value);
         return this;
     }

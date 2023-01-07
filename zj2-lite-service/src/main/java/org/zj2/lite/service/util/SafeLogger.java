@@ -323,12 +323,12 @@ class SafeLogger implements Logger {
     }
 
     private static Object safeObject(Object obj) {
-        if (obj == null) {return null;}
+        if (obj == null) { return null; }
         return BeanUtils.isSimpleValueType(obj.getClass()) ? obj : SafeLogUtil.toJSONStr(obj);
     }
 
     private static Object[] safeObjects(Object[] objs) {
-        if (objs == null || objs.length == 0) {return objs;}
+        if (objs == null || objs.length == 0) { return objs; }
         for (int i = 0, len = objs.length; i < len; ++i) {
             objs[i] = safeObject(objs[i]);
         }

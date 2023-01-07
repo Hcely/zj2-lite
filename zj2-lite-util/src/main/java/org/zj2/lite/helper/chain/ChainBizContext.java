@@ -28,7 +28,7 @@ public class ChainBizContext extends TimeConsuming {
 
     public Logger logger() {
         ChainBizContext cxt = this;
-        while (cxt.parent != null) {cxt = cxt.parent;}
+        while (cxt.parent != null) { cxt = cxt.parent; }
         return cxt.chainHandler.logger();
     }
 
@@ -52,7 +52,7 @@ public class ChainBizContext extends TimeConsuming {
 
     public <T> T rootContext() {
         ChainBizContext cxt = this;
-        while (cxt.parent != null) {cxt = cxt.parent;}
+        while (cxt.parent != null) { cxt = cxt.parent; }
         return (T) cxt.nativeContext;
     }
 

@@ -24,7 +24,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
     private static final ChainBizFuncWrapper[] EMPTY_HANDLERS = {};
 
     public static <T> BizHandler<T> chain(BizFunc... handlers) {
-        if (ArrayUtils.isEmpty(handlers)) {return BizHandler.EMPTY_HANDLER;}
+        if (ArrayUtils.isEmpty(handlers)) { return BizHandler.EMPTY_HANDLER; }
         ChainBizFuncWrapper[] wrappers = new ChainBizFuncWrapper[handlers.length];
         for (int i = 0, len = handlers.length; i < len; ++i) {
             wrappers[i] = new ChainBizFuncWrapper(handlers[i]);
@@ -34,7 +34,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
 
     @SafeVarargs
     public static <T> BizHandler<T> chain(Class<? extends BizFunc>... handlerTypes) {
-        if (ArrayUtils.isEmpty(handlerTypes)) {return BizHandler.EMPTY_HANDLER;}
+        if (ArrayUtils.isEmpty(handlerTypes)) { return BizHandler.EMPTY_HANDLER; }
         Builder<T> builder = new Builder<>();
         for (int i = 0, len = handlerTypes.length; i < len; ++i) {
             builder.addHandler(handlerTypes[i]);
@@ -66,7 +66,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
             if (handlerType.getAnnotation(BizMulti.class) != null) {
                 Collection<? extends BizFunc> funcs = ChainBizHandlerUtil.getHandlers(handlerType);
                 if (funcs != null && !funcs.isEmpty()) {
-                    for (BizFunc func : funcs) {addHandler(func);}
+                    for (BizFunc func : funcs) { addHandler(func); }
                 }
             } else {
                 addHandler(ChainBizHandlerUtil.getHandler(handlerType));
@@ -76,7 +76,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
 
         public Builder<T> addHandler(BizFunc handler) {
             if (handler != null) {
-                if (handlers == null) {handlers = new ArrayList<>(10);}
+                if (handlers == null) { handlers = new ArrayList<>(10); }
                 handlers.add(new ChainBizFuncWrapper(handler));
             }
             return this;
@@ -129,7 +129,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
     @Override
     public boolean handle(T context) {
         final ChainBizFuncWrapper[] handlers = this.bizNodeWrappers;
-        if (handlers == null || handlers.length == 0) {return true;}
+        if (handlers == null || handlers.length == 0) { return true; }
         //
         boolean interrupted = false;
         Throwable error = null;

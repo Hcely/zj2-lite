@@ -62,7 +62,7 @@ public class CodecUtil {
     }
 
     public static String encodeHex(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) {return "";}
+        if (bytes == null || bytes.length == 0) { return ""; }
         char[] charHex = CHAR_HEX;
         StringBuilder sb = new StringBuilder(bytes.length << 1);
         for (byte b : bytes) {
@@ -73,7 +73,7 @@ public class CodecUtil {
     }
 
     public static StringBuilder encodeHex(StringBuilder sb, byte[] bytes) {
-        if (bytes == null || bytes.length == 0) {return sb == null ? new StringBuilder() : sb;}
+        if (bytes == null || bytes.length == 0) { return sb == null ? new StringBuilder() : sb; }
         char[] charHex = CHAR_HEX;
         if (sb == null) {
             sb = new StringBuilder(bytes.length << 1);

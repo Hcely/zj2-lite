@@ -45,7 +45,7 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     @Override
     public OrgEmployeeDTO getIfAbsentError(String employeeId) {
         OrgEmployeeDTO employee = get(employeeId);
-        if (employee == null) {throw ZRBuilder.failureErr("职员不存在");}
+        if (employee == null) { throw ZRBuilder.failureErr("职员不存在"); }
         return employee;
     }
 

@@ -30,7 +30,7 @@ public abstract class AbsQuantityDomainElement<S extends DomainSession, D> exten
 
     @Override
     public boolean modify(String key, Quantity modify) {
-        if (modify == null || modify.eqZero()) {return false;}
+        if (modify == null || modify.eqZero()) { return false; }
         return modify0(true, key, modify);
     }
 

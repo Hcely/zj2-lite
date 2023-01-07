@@ -40,9 +40,9 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     boolean forUpdate = false;
 
     public ZQueryWrapper<T> select(PropFunc<T, ?> prop) {
-        if (prop == null) {return this;}
+        if (prop == null) { return this; }
         String fieldName = getFieldName(prop);
-        if (selectProps == null) {selectProps = new LinkedHashSet<>();}
+        if (selectProps == null) { selectProps = new LinkedHashSet<>(); }
         selectProps.add(fieldName);
         return this;
     }
@@ -77,7 +77,7 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     }
 
     public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropFunc<T, ?>... props) {
-        if (!b) {return this;}
+        if (!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.toList(props, AbstractWrapper::getFieldName);
         return this;
@@ -104,7 +104,7 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     }
 
     public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropFunc<T, ?> prop) {
-        if (!b) {return this;}
+        if (!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.singletonList(getFieldName(prop));
         return this;

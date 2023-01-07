@@ -36,7 +36,7 @@ public class ChainBizHandlerUtil {
     }
 
     static void completeChain(ChainBizContext context) {
-        if (context == null) {CHAIN_CONTEXT_TL.remove();} else {CHAIN_CONTEXT_TL.set(context);}
+        if (context == null) { CHAIN_CONTEXT_TL.remove(); } else { CHAIN_CONTEXT_TL.set(context); }
     }
 
     public static ChainBizContext currentChainContext() {
@@ -57,7 +57,7 @@ public class ChainBizHandlerUtil {
     }
 
     public static void registerExecutor(ChainBizFuncExecutor executor) {
-        if (executor != null) {EXECUTORS.add(executor);}
+        if (executor != null) { EXECUTORS.add(executor); }
     }
 
     static ChainBizFuncExecutor getExecutor(BizFunc handler) {

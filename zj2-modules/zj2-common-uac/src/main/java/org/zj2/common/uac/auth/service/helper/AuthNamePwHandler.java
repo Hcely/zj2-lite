@@ -27,7 +27,7 @@ public class AuthNamePwHandler implements BizVHandler<AuthContext> {
     public void handle(AuthContext context) {
         AuthNamePwReq req = context.getReq();
         UserDTO user = getUser(req);
-        if (user == null) {throw ZRBuilder.failureErr("用户账号或密码错误");}
+        if (user == null) { throw ZRBuilder.failureErr("用户账号或密码错误"); }
         if (!StringUtils.equalsIgnoreCase(UserUtil.buildPassword(req.getPassword()), user.getUserPassword())) {
             throw ZRBuilder.failureErr("用户账号或密码错误");
         }

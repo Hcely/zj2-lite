@@ -218,18 +218,18 @@ public class DateUtil {
     }
 
     public static String format(LocalDate time) {
-        if (time == null) {return null;}
+        if (time == null) { return null; }
         return DATE_TIME_FORMATTER0.format(time);
     }
 
     public static String format(LocalDateTime time) {
-        if (time == null) {return null;}
+        if (time == null) { return null; }
         return DATE_TIME_FORMATTER.format(time);
     }
 
     public static String format(TemporalAccessor time) {
-        if (time == null) {return null;}
-        if (time instanceof LocalDate) {return DATE_TIME_FORMATTER0.format(time);}
+        if (time == null) { return null; }
+        if (time instanceof LocalDate) { return DATE_TIME_FORMATTER0.format(time); }
         return DATE_TIME_FORMATTER.format(time);
     }
 
@@ -316,11 +316,11 @@ public class DateUtil {
     }
 
     public static Date parseAsDate(String date) {
-        if (StringUtils.isEmpty(date)) {return null;}
+        if (StringUtils.isEmpty(date)) { return null; }
         for (FastDateFormat format : FAST_DATE_FORMATS) {
-            try {return format.parse(date);} catch (Throwable ignored) {}//NOSONAR
+            try { return format.parse(date); } catch (Throwable ignored) { }//NOSONAR
         }
-        try {return new Date(Long.parseLong(date));} catch (Throwable ignored) {}// NOSONAR
+        try { return new Date(Long.parseLong(date)); } catch (Throwable ignored) { }// NOSONAR
         return null;
     }
 
@@ -363,7 +363,7 @@ public class DateUtil {
     }
 
     public static int getYear(Date date) {
-        if (date == null) {return Integer.MIN_VALUE;}
+        if (date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
@@ -378,7 +378,7 @@ public class DateUtil {
     }
 
     public static int getMonth(Date date) {
-        if (date == null) {return Integer.MIN_VALUE;}
+        if (date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH) + 1;
@@ -393,7 +393,7 @@ public class DateUtil {
     }
 
     public static int getDayOfMonth(Date date) {
-        if (date == null) {return Integer.MIN_VALUE;}
+        if (date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_MONTH);
@@ -472,59 +472,59 @@ public class DateUtil {
 
 
     public static int compare(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == time2) {return 0;}
-        if (time1 == null) {return -1;}
-        if (time2 == null) {return 1;}
+        if (time1 == time2) { return 0; }
+        if (time1 == null) { return -1; }
+        if (time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static int compare(LocalDate time1, LocalDate time2) {
-        if (time1 == time2) {return 0;}
-        if (time1 == null) {return -1;}
-        if (time2 == null) {return 1;}
+        if (time1 == time2) { return 0; }
+        if (time1 == null) { return -1; }
+        if (time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static int compare(Date time1, Date time2) {
-        if (time1 == time2) {return 0;}
-        if (time1 == null) {return -1;}
-        if (time2 == null) {return 1;}
+        if (time1 == time2) { return 0; }
+        if (time1 == null) { return -1; }
+        if (time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static LocalDateTime max(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static LocalDateTime min(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
     public static LocalDate max(LocalDate time1, LocalDate time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static LocalDate min(LocalDate time1, LocalDate time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
     public static Date max(Date time1, Date time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static Date min(Date time1, Date time2) {
-        if (time1 == null) {return time2;}
-        if (time2 == null) {return time1;}
+        if (time1 == null) { return time2; }
+        if (time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
@@ -577,17 +577,17 @@ public class DateUtil {
     }
 
     public static int diffDay(Date leftTime, Date rightTime) {
-        if (leftTime == null || rightTime == null) {return Integer.MIN_VALUE;}
+        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
         return diffDay(leftTime.getTime(), rightTime.getTime());
     }
 
     public static int diffDay(LocalDate leftTime, LocalDate rightTime) {
-        if (leftTime == null || rightTime == null) {return Integer.MIN_VALUE;}
+        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
         return (int) leftTime.until(rightTime, ChronoUnit.DAYS);
     }
 
     public static int diffDay(LocalDateTime leftTime, LocalDateTime rightTime) {
-        if (leftTime == null || rightTime == null) {return Integer.MIN_VALUE;}
+        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
         return (int) leftTime.until(rightTime, ChronoUnit.DAYS);
     }
 

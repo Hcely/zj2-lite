@@ -5,10 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.common.util.StrUtil;
+import org.zj2.lite.service.auth.AuthorityResource;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -28,42 +32,93 @@ public class UserAuthorityResources implements Serializable {
     }
 
     private String userId;
-    private Map<String, UserAuthorityResource> authorityResources;
+    private Map<String, Long> authorityPatterns;
+    private Map<String, Long> authorityResources;
 
     public UserAuthorityResources(String userId) {
         this.userId = userId;
     }
 
+    public UserAuthorityResources addAuthority(UserAuthorityResource authority) {
+        if (authority == null) { return this; }
+        String name = authority.getName();
+        if (StringUtils.isEmpty(name)) { return this; }
+        long expireTime = authority.getExpireTime();
+        if (expireTime > 0 && expireTime < System.currentTimeMillis()) { return this; }
+        if (name.indexOf('*') != -1) {
+            if (authorityPatterns == null) { authorityPatterns = new HashMap<>(); }
+            authorityPatterns.put(name, expireTime);
+        } else {
+            if (authorityResources == null) { authorityResources = new LinkedHashMap<>(); }
+            authorityResources.put(name, expireTime);
+        }
+        return this;
+    }
+
+    private boolean checkEmptyAuthorities() {
+        return CollUtil.isEmpty(authorityResources) && CollUtil.isEmpty(authorityPatterns);
+    }
+
+    public boolean notContainsAuthority(String authority) {
+        return !containsAuthority(authority);
+    }
+
     public boolean containsAuthority(String authority) {
         if (StringUtils.isEmpty(authority)) { return false; }
-        final Map<String, UserAuthorityResource> localResources = authorityResources;
-        return CollUtil.isNotEmpty(localResources) && containsAuthority0(localResources, authority);
+        if (checkEmptyAuthorities()) { return false; }
+        long currentTime = System.currentTimeMillis();
+        if (containsSupperAuthority(currentTime)) { return true; }
+        return containsAuthority0(System.currentTimeMillis(), authority);
     }
 
     public boolean containsAllAuthorities(Collection<String> authorities) {
         if (CollUtil.isEmpty(authorities)) { return true; }
-        final Map<String, UserAuthorityResource> localResources = authorityResources;
-        if (CollUtil.isEmpty(localResources)) { return false; }
+        if (checkEmptyAuthorities()) { return false; }
+        long currentTime = System.currentTimeMillis();
+        if (containsSupperAuthority(currentTime)) { return true; }
         for (String e : authorities) {
-            if (!containsAuthority0(localResources, e)) { return false; }
+            if (!containsAuthority0(currentTime, e)) { return false; }
         }
         return true;
     }
 
     public boolean containsAnyAuthorities(Collection<String> authorities) {
         if (CollUtil.isEmpty(authorities)) { return true; }
-        final Map<String, UserAuthorityResource> localResources = authorityResources;
-        if (CollUtil.isEmpty(localResources)) { return false; }
+        if (checkEmptyAuthorities()) { return false; }
+        long currentTime = System.currentTimeMillis();
+        if (containsSupperAuthority(currentTime)) { return true; }
         for (String e : authorities) {
-            if (containsAuthority0(localResources, e)) { return true; }
+            if (containsAuthority0(currentTime, e)) { return true; }
         }
         return false;
     }
 
-    private static boolean containsAuthority0(Map<String, UserAuthorityResource> authorityResources, String authority) {
-        UserAuthorityResource resource = authorityResources.get(authority);
-        if (resource == null) { return false; }
-        long expireTime = resource.getExpireTime();
-        return expireTime < 0 || expireTime > System.currentTimeMillis();
+    public boolean containsSupperAuthority() {
+        return CollUtil.isNotEmpty(authorityResources) && containsSupperAuthority(System.currentTimeMillis());
+    }
+
+    private boolean containsSupperAuthority(long currentTime) {
+        final Long expireTime = CollUtil.get(authorityResources, AuthorityResource.SUPPER_AUTHORITY);
+        return expireTime != null && (expireTime <= 0 || expireTime > currentTime);
+    }
+
+    private boolean containsAuthority0(long currentTime, String authority) {
+        if (StringUtils.isEmpty(authority) || StringUtils.equals(authority, AuthorityResource.SUPPER_AUTHORITY)) {
+            return false;
+        }
+        Long expireTime = CollUtil.get(authorityResources, authority);
+        if (expireTime == null) {
+            expireTime = matchAuthority0(authority);
+            if (expireTime == null) { return false; }
+        }
+        return expireTime <= 0 || expireTime > currentTime;
+    }
+
+    private Long matchAuthority0(String authority) {
+        if (CollUtil.isEmpty(authorityPatterns)) { return null; }
+        for (Map.Entry<String, Long> e : authorityPatterns.entrySet()) {
+            if (PatternUtil.matchPath(e.getKey(), authority)) { return e.getValue(); }
+        }
+        return null;
     }
 }

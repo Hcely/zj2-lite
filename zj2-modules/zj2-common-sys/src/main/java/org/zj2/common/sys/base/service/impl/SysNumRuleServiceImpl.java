@@ -10,9 +10,9 @@ import org.zj2.common.sys.base.sequence.NumRuleUtil;
 import org.zj2.common.sys.base.service.SysNumRuleService;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.cache.CacheUtil;
-import org.zj2.lite.util.PatternUtil;
 
 /**
  *  SysNumRuleServiceImpl

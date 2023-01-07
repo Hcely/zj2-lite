@@ -34,7 +34,7 @@ public class AuthAppUserCheckHandler implements Supportable<AuthContext>, BizVHa
         UserDTO user = context.getUser();
         AppUserDTO appUser = appUserService.getAppUser(app.getAppCode(), user.getUserId());
         if (appUser == null) {
-            if (BooleanUtil.isFalse(app.getAllowAllUser())) {throw ZRBuilder.failureErr("应用账号无法使用");}
+            if (BooleanUtil.isFalse(app.getAllowAllUser())) { throw ZRBuilder.failureErr("应用账号无法使用"); }
         } else if (BooleanUtil.isFalse(appUser.getEnableFlag())) {
             throw ZRBuilder.failureErr("应用账号无法使用");
         }

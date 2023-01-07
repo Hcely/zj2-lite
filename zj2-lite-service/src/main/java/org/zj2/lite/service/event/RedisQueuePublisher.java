@@ -30,7 +30,7 @@ class RedisQueuePublisher implements EventPublisher {
         MqEvent mqEvent = event.mqEvent();
         if (mqEvent != null && event.containsMqType(TYPE)) {
             String topic = mqEvent.topic();
-            if (StringUtils.isNotEmpty(topic)) {send(topic, event.toJSONStr());}
+            if (StringUtils.isNotEmpty(topic)) { send(topic, event.toJSONStr()); }
         }
     }
 

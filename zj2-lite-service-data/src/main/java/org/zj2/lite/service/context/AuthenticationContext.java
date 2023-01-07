@@ -72,10 +72,10 @@ public class AuthenticationContext extends BaseContext {
 
     public Map<String, String> buildHeaders() {
         Map<String, String> result = new LinkedHashMap<>();
-        if (StringUtils.isNotEmpty(userId)) {result.put(ServiceConstants.JWT_USER_ID, userId);}
-        if (StringUtils.isNotEmpty(userName)) {result.put(ServiceConstants.JWT_USERNAME, userName);}
-        if (StringUtils.isNotEmpty(appCode)) {result.put(ServiceConstants.JWT_APP_CODE, appCode);}
-        if (StringUtils.isNotEmpty(orgCode)) {result.put(ServiceConstants.JWT_ORG_CODE, orgCode);}
+        if (StringUtils.isNotEmpty(userId)) { result.put(ServiceConstants.JWT_USER_ID, userId); }
+        if (StringUtils.isNotEmpty(userName)) { result.put(ServiceConstants.JWT_USERNAME, userName); }
+        if (StringUtils.isNotEmpty(appCode)) { result.put(ServiceConstants.JWT_APP_CODE, appCode); }
+        if (StringUtils.isNotEmpty(orgCode)) { result.put(ServiceConstants.JWT_ORG_CODE, orgCode); }
         return result;
     }
 

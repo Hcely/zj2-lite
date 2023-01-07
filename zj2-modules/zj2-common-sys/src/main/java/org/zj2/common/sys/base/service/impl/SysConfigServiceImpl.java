@@ -11,10 +11,10 @@ import org.zj2.common.sys.base.mapper.SysConfigMapper;
 import org.zj2.common.sys.base.service.SysConfigService;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;
-import org.zj2.lite.util.PatternUtil;
 
 /**
  *  SysConfigServiceImpl
@@ -27,7 +27,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         implements SysConfigService {
     @Override
     public SysConfigDTO get(String appCode, String configCode) {
-        if (StringUtils.isEmpty(configCode)) {return null;}
+        if (StringUtils.isEmpty(configCode)) { return null; }
         appCode = StringUtils.defaultIfEmpty(appCode, SysConfigDTO.COMMON_APP_CODE);
         return getOne(wrapper().eq(SysConfigDTO::getAppCode, appCode).eq(SysConfigDTO::getConfigCode, configCode));
     }
@@ -70,8 +70,8 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     }
 
     private void checkReqParams(SysConfigSaveReq req) {
-        if (StringUtils.isEmpty(req.getConfigCode())) {throw ZRBuilder.failureErr("系统配置编码不能为空");}
-        if (PatternUtil.isWord(req.getConfigCode())) {throw ZRBuilder.failureErr("系统配置编码不合法");}
+        if (StringUtils.isEmpty(req.getConfigCode())) { throw ZRBuilder.failureErr("系统配置编码不能为空"); }
+        if (PatternUtil.isWord(req.getConfigCode())) { throw ZRBuilder.failureErr("系统配置编码不合法"); }
     }
 
     private SysConfigDTO saveConfig0(SysConfigSaveReq req) {

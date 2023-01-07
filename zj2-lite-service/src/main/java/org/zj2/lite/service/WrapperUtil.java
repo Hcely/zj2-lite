@@ -63,7 +63,7 @@ class WrapperUtil {
         if (wrapper.getOffset() >= 0 && wrapper.getSize() > 0) {
             StringBuilder sb = new StringBuilder(32);
             sb.append("LIMIT ").append(wrapper.getOffset()).append(',').append(wrapper.getSize());
-            if (wrapper.isForUpdate()) {sb.append(" FOR UPDATE");}
+            if (wrapper.isForUpdate()) { sb.append(" FOR UPDATE"); }
             result.last(sb.toString());
         } else if (wrapper.isForUpdate()) {
             result.last("FOR UPDATE");
@@ -95,13 +95,13 @@ class WrapperUtil {
             }
         }
         String column = tableFieldMap.get(ServiceConstants.UPDATE_TIME);
-        if (column != null) {result.set(column, LocalDateTime.now());}
+        if (column != null) { result.set(column, LocalDateTime.now()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) {result.set(column, AuthenticationContext.currentUserId());}
+        if (column != null) { result.set(column, AuthenticationContext.currentUserId()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) {result.set(column, AuthenticationContext.currentUserName());}
+        if (column != null) { result.set(column, AuthenticationContext.currentUserName()); }
         return result;
     }
 
@@ -124,7 +124,7 @@ class WrapperUtil {
 
     private static void addCondition(Map<String, String> tableFieldMap, PropCondition condition,
             AbstractWrapper wrapper) {
-        if (condition.getMode() == null) {return;}
+        if (condition.getMode() == null) { return; }
         String column = getColumnName(tableFieldMap, condition.getName());
         switch (condition.getMode()) {
             case EQ:
@@ -180,7 +180,7 @@ class WrapperUtil {
 
     private static void addUpdateField(Map<String, String> tableFieldMap, String name, UpdateField field,
             UpdateWrapper wrapper) {
-        if (field.getMode() == null) {return;}
+        if (field.getMode() == null) { return; }
         String column = getColumnName(tableFieldMap, name);
         switch (field.getMode()) {
             case SET:
@@ -214,7 +214,7 @@ class WrapperUtil {
     }
 
     private static String getSqlValue(Object value) {
-        if (value == null) {return "null";}
+        if (value == null) { return "null"; }
         if (value instanceof Number) {
             return NumUtil.toStr((Number) value);
         } else if (value instanceof Date) {
@@ -227,7 +227,7 @@ class WrapperUtil {
             sb.append('\'');
             for (int i = 0, len = valueStr.length(); i < len; ++i) {
                 char c = valueStr.charAt(i);
-                if (c == '\'') {sb.append('\\');}
+                if (c == '\'') { sb.append('\\'); }
                 sb.append(c);
             }
             sb.append('\'');
@@ -237,7 +237,7 @@ class WrapperUtil {
 
     private static String getColumnName(Map<String, String> tableFieldMap, String propName) {
         String column = tableFieldMap.get(propName);
-        if (column == null) {throw new ZError(propName + "-字段不存在!");}
+        if (column == null) { throw new ZError(propName + "-字段不存在!"); }
         return column;
     }
 }

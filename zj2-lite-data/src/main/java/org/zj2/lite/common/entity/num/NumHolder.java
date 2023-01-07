@@ -40,7 +40,7 @@ public class NumHolder extends Number {
 
     public NumHolder add(Number value, MathContext context) {
         if (value != null) {
-            if (value instanceof NumHolder) {value = ((NumHolder) value).numValue;}
+            if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
             numValue = NumUtil.add(numValue, value, context);
         }
         return this;
@@ -52,7 +52,7 @@ public class NumHolder extends Number {
 
     public NumHolder sub(Number value, MathContext context) {
         if (value != null) {
-            if (value instanceof NumHolder) {value = ((NumHolder) value).numValue;}
+            if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
             numValue = NumUtil.sub(numValue, value, context);
         }
         return this;
@@ -63,7 +63,7 @@ public class NumHolder extends Number {
     }
 
     public NumHolder multi(Number value, MathContext context) {
-        if (value instanceof NumHolder) {value = ((NumHolder) value).numValue;}
+        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
         numValue = NumUtil.multi(numValue, value, context);
         return this;
     }
@@ -73,7 +73,7 @@ public class NumHolder extends Number {
     }
 
     public NumHolder divide(Number value, MathContext context) {
-        if (value instanceof NumHolder) {value = ((NumHolder) value).numValue;}
+        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
         numValue = NumUtil.divide(numValue, value, context);
         return this;
     }
@@ -84,7 +84,7 @@ public class NumHolder extends Number {
 
     public NumHolder operate(UnaryOperator<BigDecimal> operator, MathContext context) {
         numValue = operator.apply(numValue);
-        if (context != null) {numValue = NumUtil.of(numValue, context);}
+        if (context != null) { numValue = NumUtil.of(numValue, context); }
         return this;
     }
 
@@ -93,9 +93,9 @@ public class NumHolder extends Number {
     }
 
     public NumHolder operate(Number value, BiFunction<BigDecimal, Number, BigDecimal> operator, MathContext context) {
-        if (value instanceof NumHolder) {value = ((NumHolder) value).numValue;}
+        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
         numValue = operator.apply(numValue, value);
-        if (context != null) {numValue = NumUtil.of(numValue, context);}
+        if (context != null) { numValue = NumUtil.of(numValue, context); }
         return this;
     }
 

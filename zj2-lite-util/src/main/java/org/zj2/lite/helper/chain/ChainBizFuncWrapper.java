@@ -39,7 +39,7 @@ final class ChainBizFuncWrapper implements BizFunc {
 
     boolean execute(ChainBizContext chainContext) {
         Object context = chainContext.currentContext();
-        if (executor == null || !isSupport(context)) {return true;}
+        if (executor == null || !isSupport(context)) { return true; }
         final ChainBizFuncStack stack = chainContext.startStack(this, context);
         Logger logger = chainContext.logger();
         try {
@@ -59,7 +59,7 @@ final class ChainBizFuncWrapper implements BizFunc {
         if (supportable) {
             try {
                 return ((Supportable) instance).supports(context);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) { }
             return false;
         } else {
             return true;

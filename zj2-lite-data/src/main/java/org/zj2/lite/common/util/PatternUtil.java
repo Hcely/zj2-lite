@@ -1,6 +1,7 @@
-package org.zj2.lite.util;
+package org.zj2.lite.common.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.regex.Pattern;
 
@@ -14,6 +15,12 @@ public class PatternUtil {
     private static final Pattern WORD_PATTERN = Pattern.compile("^[0-9a-zA-Z_-]+$");
     private static final Pattern ASCII_PATTERN = Pattern.compile("^[\\x00-\\x7F]+$");
     private static final Pattern INT_NUM_PATTERN = Pattern.compile("^\\d+$");
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    static {
+        pathMatcher.setCaseSensitive(true);
+        pathMatcher.setCachePatterns(true);
+    }
 
     public static boolean isAscii(String value) {
         return test(ASCII_PATTERN, value);
@@ -39,5 +46,10 @@ public class PatternUtil {
             return false;
         }
         return pattern.matcher(value).matches();
+    }
+
+    public static boolean matchPath(String pattern, String path) {
+        if (StringUtils.isEmpty(pattern)) { return false; }
+        return pathMatcher.match(pattern, path);
     }
 }

@@ -81,7 +81,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
     @Override
     public UserDTO getIfAbsentError(String userId) {
         UserDTO user = get(userId);
-        if (user == null) {throw ZRBuilder.failureErr("用户账户不存在");}
+        if (user == null) { throw ZRBuilder.failureErr("用户账户不存在"); }
         return user;
     }
 

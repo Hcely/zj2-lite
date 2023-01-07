@@ -21,7 +21,7 @@ public class SysConfigUtil {
     private static final SpringBeanRef<SysConfigApi> SEQUENCE_API_REF = new SpringBeanRef<>(SysConfigApi.class);
 
     public static String getConfigKey(String appCode, String configCode) {
-        if (StringUtils.isEmpty(appCode)) {appCode = COMMON_APP;}
+        if (StringUtils.isEmpty(appCode)) { appCode = COMMON_APP; }
         StringBuilder sb = new StringBuilder(StringUtils.length(appCode) + StringUtils.length(configCode) + 16);
         sb.append("SYS_CONFIG:").append(appCode);
         if (StringUtils.isNotEmpty(configCode)) {
@@ -31,7 +31,7 @@ public class SysConfigUtil {
     }
 
     public static SysConfigDTO config(String configCode) {
-        if (StringUtils.isEmpty(configCode)) {return EMPTY_CONFIG;}
+        if (StringUtils.isEmpty(configCode)) { return EMPTY_CONFIG; }
         String appCode = AuthenticationContext.currentAppCode();
         SysConfigDTO config = null;
         if (StringUtils.isNotEmpty(appCode)) {

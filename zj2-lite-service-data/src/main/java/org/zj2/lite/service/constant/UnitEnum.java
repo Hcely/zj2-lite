@@ -125,7 +125,7 @@ public enum UnitEnum implements CodeEnum<String> {
     }
 
     public BigDecimal toBasic(Number value, MathContext context) {
-        if (type == Type.QTY || type == Type.CURRENCY) {return NumUtil.of(value);}
+        if (type == Type.QTY || type == Type.CURRENCY) { return NumUtil.of(value); }
         return NumUtil.multi(value, convertValue, context);
     }
 
@@ -169,10 +169,10 @@ public enum UnitEnum implements CodeEnum<String> {
     }
 
     public static BigDecimal convert(Number sourceValue, String sourceUnit, String targetUnit, MathContext context) {
-        if (sourceValue == null) {return null;}
-        if (NumUtil.eqZero(sourceValue)) {return BigDecimal.ZERO;}
+        if (sourceValue == null) { return null; }
+        if (NumUtil.eqZero(sourceValue)) { return BigDecimal.ZERO; }
         BigDecimal convert = getConvert(sourceUnit, targetUnit);
-        if (convert == null) {return NumUtil.of(sourceValue, context);}
+        if (convert == null) { return NumUtil.of(sourceValue, context); }
         return NumUtil.multi(sourceValue, convert, context);
     }
 
@@ -189,17 +189,17 @@ public enum UnitEnum implements CodeEnum<String> {
     }
 
     public static BigDecimal getConvert(String source, String target) {
-        if (StringUtils.equalsAnyIgnoreCase(source, target)) {return BigDecimal.ONE;}
+        if (StringUtils.equalsAnyIgnoreCase(source, target)) { return BigDecimal.ONE; }
         UnitEnum sourceUnit = get(source);
-        if (sourceUnit == null) {return null;}
+        if (sourceUnit == null) { return null; }
         UnitEnum targetUnit = get(target);
-        if (targetUnit == null) {return null;}
+        if (targetUnit == null) { return null; }
         return getConvert(sourceUnit, targetUnit);
     }
 
     public static BigDecimal getConvert(UnitEnum sourceUnit, UnitEnum targetUnit) {
-        if (sourceUnit == targetUnit) {return BigDecimal.ONE;}
-        if (sourceUnit.type != targetUnit.type) {return null;}
+        if (sourceUnit == targetUnit) { return BigDecimal.ONE; }
+        if (sourceUnit.type != targetUnit.type) { return null; }
         return NumUtil.divide(sourceUnit.convertValue, targetUnit.convertValue, NumUtil._10);
     }
 
@@ -218,12 +218,12 @@ public enum UnitEnum implements CodeEnum<String> {
     }
 
     public static UnitEnum get(String code, UnitEnum defaultUnit) {
-        if (StringUtils.isEmpty(code)) {return defaultUnit;}
+        if (StringUtils.isEmpty(code)) { return defaultUnit; }
         code = StringUtils.trimToNull(code);
-        if (code == null) {return defaultUnit;}
+        if (code == null) { return defaultUnit; }
         Map<String, UnitEnum> unitMap = unitMap();
         UnitEnum result = unitMap.get(code);
-        if (result == null) {result = unitMap.getOrDefault(code.toUpperCase(), defaultUnit);}
+        if (result == null) { result = unitMap.getOrDefault(code.toUpperCase(), defaultUnit); }
         return result;
     }
 
@@ -236,7 +236,7 @@ public enum UnitEnum implements CodeEnum<String> {
         Map<String, UnitEnum> map = UNIT_MAP;
         if (map == null) {
             synchronized (UnitEnum.class) {
-                if ((map = UNIT_MAP) == null) {UNIT_MAP = map = createUnitMap();}
+                if ((map = UNIT_MAP) == null) { UNIT_MAP = map = createUnitMap(); }
             }
         }
         return map;
@@ -248,15 +248,15 @@ public enum UnitEnum implements CodeEnum<String> {
             map.put(e.code, e);
             map.put(e.desc, e);
             map.put(e.name(), e);
-            if (e.aliasNames != null) {for (String name : e.aliasNames) {map.put(name, e);}}
+            if (e.aliasNames != null) { for (String name : e.aliasNames) { map.put(name, e); } }
         }
         return map;
     }
 
     @Override
     public boolean eq(Object value) {
-        if (value == null) {return false;}
-        if (value == this) {return true;}
+        if (value == null) { return false; }
+        if (value == this) { return true; }
         String valueStr = value instanceof CodeEnum ?
                 String.valueOf(((CodeEnum<?>) value).getCode()) :
                 value.toString();
@@ -292,11 +292,11 @@ public enum UnitEnum implements CodeEnum<String> {
         }
 
         public static UnionUnit valueOf(String value) {
-            if (StringUtils.isEmpty(value)) {return null;}
+            if (StringUtils.isEmpty(value)) { return null; }
             int idx = value.indexOf('/');
             UnitEnum numeratorUnit = idx == -1 ? UnitEnum.get(value) : UnitEnum.get(value.substring(0, idx));
             UnitEnum denominatorUnit = idx == -1 ? null : UnitEnum.get(value.substring(idx + 1));
-            if (numeratorUnit == null && denominatorUnit == null) {return null;}
+            if (numeratorUnit == null && denominatorUnit == null) { return null; }
             return new UnionUnit(numeratorUnit, denominatorUnit);
         }
 
@@ -309,11 +309,11 @@ public enum UnitEnum implements CodeEnum<String> {
         }
 
         private String getName(boolean lowerCase) {
-            if (numeratorUnit == null && denominatorUnit == null) {return "";}
+            if (numeratorUnit == null && denominatorUnit == null) { return ""; }
             StringBuilder sb = new StringBuilder(32);
-            if (numeratorUnit != null) {sb.append(lowerCase ? numeratorUnit.nameLowerCase : numeratorUnit.desc);}
+            if (numeratorUnit != null) { sb.append(lowerCase ? numeratorUnit.nameLowerCase : numeratorUnit.desc); }
             if (denominatorUnit != null) {
-                if (sb.length() > 0) {sb.append('/');}
+                if (sb.length() > 0) { sb.append('/'); }
                 sb.append(lowerCase ? denominatorUnit.nameLowerCase : denominatorUnit.desc);
             }
             return sb.toString();

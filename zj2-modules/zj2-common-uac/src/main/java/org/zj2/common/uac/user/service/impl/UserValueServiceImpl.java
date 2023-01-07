@@ -31,8 +31,8 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
 
     @Override
     public boolean existUserValue(UserValueTypeEnum valueType, String userValue, String userExtValue) {
-        if (StringUtils.isEmpty(userValue)) {return false;}
-        if (valueType.isCrypt()) {userValue = CryptUtil.encrypt(userValue);}
+        if (StringUtils.isEmpty(userValue)) { return false; }
+        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
         return exists(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
                 .eq(UserValueDTO::getUserValue, userValue)
                 .eq(UserValueDTO::getUserExtValue, StringUtils.defaultString(userExtValue))
@@ -41,9 +41,9 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
 
     @Override
     public String findUserId(UserValueTypeEnum valueType, String userValue, String userExtValue) {
-        if (valueType.isCrypt()) {userValue = CryptUtil.encrypt(userValue);}
+        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
         if (UserValueTypeEnum.MOBILE.eq(valueType)) {
-            if (StringUtils.isEmpty(userExtValue)) {userExtValue = UserConstants.DEF_MOBILE_AREA_CODE;}
+            if (StringUtils.isEmpty(userExtValue)) { userExtValue = UserConstants.DEF_MOBILE_AREA_CODE; }
         }
         UserValueDTO value = getOne(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
                 .eq(UserValueDTO::getUserValue, userValue)
@@ -55,7 +55,7 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
     @Override
     public UserValueDTO addUserValue(boolean editValue, String userId, UserValueTypeEnum valueType, String userValue,
             String userExtValue) {
-        if (valueType.isCrypt()) {userValue = CryptUtil.encrypt(userValue);}
+        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
         LocalDateTime now = DateUtil.now();
         // 作废之前 value
         if (editValue) {
@@ -66,7 +66,7 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
                     .eq(UserValueDTO::getUserId, userId).eq(UserValueDTO::getEnableFlag, 1));
         }
         // 仅作废
-        if (StringUtils.isEmpty(userValue)) {return null;}
+        if (StringUtils.isEmpty(userValue)) { return null; }
         // 新增
         UserValueDTO value = new UserValueDTO();
         value.setUserId(userId);

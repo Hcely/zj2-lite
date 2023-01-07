@@ -44,29 +44,29 @@ public @interface BizReference {
     final class Helper {
         public static BizHandler createHandler(Class<?> type) {
             Multi multi = type.getAnnotation(Multi.class);
-            if (multi != null) {return createHandler(type, multi);}
+            if (multi != null) { return createHandler(type, multi); }
             BizReference reference = type.getAnnotation(BizReference.class);
-            if (reference != null) {return createHandler(type, reference);}
+            if (reference != null) { return createHandler(type, reference); }
             return BizHandler.EMPTY_HANDLER;
         }
 
         private static BizHandler createHandler(Class<?> type, Multi reference) {
             BizReference[] references = reference.value();
-            if (references.length == 0) {return BizHandler.EMPTY_HANDLER;}
-            if (references.length == 1) {return createHandler(type, references[0]);}
+            if (references.length == 0) { return BizHandler.EMPTY_HANDLER; }
+            if (references.length == 1) { return createHandler(type, references[0]); }
             String handlerName = type.getSimpleName();
             Logger logger = LoggerFactory.getLogger(type);
             ChainBizHandler.Builder<?> builder = ChainBizHandler.builder();
             builder.handlerName(handlerName);
             builder.logger(logger);
             for (BizReference ref : references) {
-                if (reference.value().length > 0) {builder.addHandler(createHandler(handlerName, logger, ref));}
+                if (reference.value().length > 0) { builder.addHandler(createHandler(handlerName, logger, ref)); }
             }
             return builder.build();
         }
 
         private static BizHandler createHandler(Class<?> type, BizReference reference) {
-            if (reference.value().length == 0) {return BizHandler.EMPTY_HANDLER;}
+            if (reference.value().length == 0) { return BizHandler.EMPTY_HANDLER; }
             return createHandler(type.getSimpleName(), LoggerFactory.getLogger(type), reference);
         }
 
@@ -74,8 +74,8 @@ public @interface BizReference {
             ChainBizHandler.Builder<?> builder = ChainBizHandler.builder();
             builder.handlerName(name);
             builder.logger(logger);
-            if (reference.converter() != NoneContextConverter.class) {builder.addHandler(reference.converter());}
-            for (Class<? extends BizFunc> type : reference.value()) {builder.addHandler(type);}
+            if (reference.converter() != NoneContextConverter.class) { builder.addHandler(reference.converter()); }
+            for (Class<? extends BizFunc> type : reference.value()) { builder.addHandler(type); }
             return builder.build();
         }
     }

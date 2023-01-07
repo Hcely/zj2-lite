@@ -63,7 +63,7 @@ public class ByteArrayBuf {
      * @return 写入量
      */
     public int write(byte[] buf, int offset, int length) {
-        if (length < 1) {return 0;}
+        if (length < 1) { return 0; }
         int remain = capacity - writePos;
         //noinspection ManualMinMaxCalculation
         int writeLen = length < remain ? length : remain;

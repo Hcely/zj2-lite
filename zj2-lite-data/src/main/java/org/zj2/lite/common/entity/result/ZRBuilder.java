@@ -183,7 +183,7 @@ public class ZRBuilder implements Serializable {
 
     public ZRBuilder addError(String msg) {
         if (StringUtils.isNotEmpty(msg)) {
-            if (errors == null) {errors = new ArrayList<>(5);}
+            if (errors == null) { errors = new ArrayList<>(5); }
             errors.add(msg);
         }
         return this;
@@ -239,7 +239,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public <T> ZListResp<T> buildListResp(List<T> list) {
-        if (list == null) {list = new ArrayList<>();}
+        if (list == null) { list = new ArrayList<>(); }
         return buildListResp(list, list.size());
     }
 
@@ -271,7 +271,7 @@ public class ZRBuilder implements Serializable {
         } else {
             error = cause == null ? new ZError() : new ZError(cause);
             StackTraceElement[] stacks = error.getStackTrace();
-            if (stacks.length > 1) {error.setStackTrace(Arrays.copyOfRange(stacks, 1, stacks.length));}
+            if (stacks.length > 1) { error.setStackTrace(Arrays.copyOfRange(stacks, 1, stacks.length)); }
         }
         return error.setSuccess(getSuccess(false)).setStatus(status).setMsg(getMsg());
     }
@@ -298,13 +298,13 @@ public class ZRBuilder implements Serializable {
         } else {
             int size = 0;
             separator = StringUtils.defaultIfEmpty(separator, ",");
-            if (StringUtils.isNotEmpty(module)) {size += module.length() + 1;}
+            if (StringUtils.isNotEmpty(module)) { size += module.length() + 1; }
             for (String value : errors) {
                 size += StringUtils.length(value);
                 size += separator.length();
             }
             TextStringBuilder sb = new TextStringBuilder(size);
-            if (StringUtils.isNotEmpty(module)) {sb.append(module).append('-');}
+            if (StringUtils.isNotEmpty(module)) { sb.append(module).append('-'); }
             boolean first = true;
             for (String value : errors) {
                 if (first) {

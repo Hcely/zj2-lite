@@ -21,7 +21,7 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
 
     @Override
     public boolean broadcast(String tag, String signal) {
-        if (StringUtils.isEmpty(tag) || StringUtils.isEmpty(signal)) {return false;}
+        if (StringUtils.isEmpty(tag) || StringUtils.isEmpty(signal)) { return false; }
         if (tag.length() > 250) {
             logger.warn("系统信号广播:tag[{}]不能超过250字符", tag);
             return false;
@@ -30,8 +30,8 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
             logger.warn("系统信号广播:signal[{}]不能超过250字符", signal);
             return false;
         }
-        final ServerSignal serverSignal = new ServerSignal(ServerInfoUtil.getServerId(), System.currentTimeMillis(), tag,
-                signal);
+        final ServerSignal serverSignal = new ServerSignal(ServerInfoUtil.getServerId(), System.currentTimeMillis(),
+                tag, signal);
         AsyncUtil.execute(() -> {
             onMsg0(serverSignal);
             broadcast(serverSignal);
@@ -42,7 +42,7 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
     @Override
     public void addSignalListener(ServerSignalListener listener) {
         if (listener != null) {
-            synchronized (this) {if (!listeners.contains(listener)) {listeners.add(listener);}}
+            synchronized (this) { if (!listeners.contains(listener)) { listeners.add(listener); } }
         }
     }
 
@@ -62,7 +62,7 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
         CopyOnWriteArrayList<ServerSignalListener> list = listeners;
         for (int i = 0, len = list.size(); i < len; ++i) {
             ServerSignalListener listener = list.get(0);
-            if (listener != null) {onMsg0(listener, msg);}
+            if (listener != null) { onMsg0(listener, msg); }
         }
     }
 

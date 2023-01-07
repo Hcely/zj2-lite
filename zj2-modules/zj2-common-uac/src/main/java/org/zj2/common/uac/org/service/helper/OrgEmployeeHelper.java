@@ -67,15 +67,15 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
             context.setOrgCode(orgCode);
         }
         OrgDTO org = orgService.getByCode(orgCode);
-        if (org == null) {throw ZRBuilder.failureErr("机构不存在");}
+        if (org == null) { throw ZRBuilder.failureErr("机构不存在"); }
         context.setOrg(org);
     }
 
     private void checkEmployeeNo(OrgEmployeeContext context) {
         String employeeNo = context.getEmployeeNo();
-        if (StringUtils.isEmpty(employeeNo)) {return;}
+        if (StringUtils.isEmpty(employeeNo)) { return; }
         boolean exist = orgEmployeeService.existEmployeeNo(context.getOrgCode(), employeeNo);
-        if (exist) {throw ZRBuilder.failureErr("职员号已存在");}
+        if (exist) { throw ZRBuilder.failureErr("职员号已存在"); }
     }
 
     private void loadUserForAdd(OrgEmployeeContext context) {

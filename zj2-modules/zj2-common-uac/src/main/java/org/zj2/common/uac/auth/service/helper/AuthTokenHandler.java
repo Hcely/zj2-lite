@@ -64,12 +64,12 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
                 timeout = client.getTokenTimeout();
                 namespace = client.getNamespace();
             }
-            if (BooleanUtil.isTrue(app.getSingleSignOn()) && StringUtils.isEmpty(namespace)) {namespace = "1";}
+            if (BooleanUtil.isTrue(app.getSingleSignOn()) && StringUtils.isEmpty(namespace)) { namespace = "1"; }
         }
-        if (timeout == null) {timeout = 3600000L * 4;}
+        if (timeout == null) { timeout = 3600000L * 4; }
         token.setExpireAt(System.currentTimeMillis() + timeout);
         token.setNamespace(namespace);
-        if (org != null) {token.setOrgCode(org.getOrgCode());}
+        if (org != null) { token.setOrgCode(org.getOrgCode()); }
         token.setToken(JWTBuildUtil.build(app == null ? null : app.getAppSecret(), token));
         return token;
     }
@@ -79,7 +79,7 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         LocalDateTime now = DateUtil.now();
         UserDTO update = new UserDTO();
         update.setUserId(user.getUserId());
-        if (user.getFirstLoginTime() == null) {update.setFirstLoginTime(now);}
+        if (user.getFirstLoginTime() == null) { update.setFirstLoginTime(now); }
         update.setLastLoginTime(now);
         userService.updateById(update);
     }
@@ -94,9 +94,9 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         log.setUserName(user.getUserName());
         log.setLogEvent(UserEventEnum.LOGIN.getCode());
         log.setLogTime(DateUtil.now());
-        if (client != null) {log.setLogClientCode(client.getClientCode());}
-        if (app != null) {log.setAppCode(app.getAppCode());}
-        if (org != null) {log.setOrgCode(org.getOrgCode());}
+        if (client != null) { log.setLogClientCode(client.getClientCode()); }
+        if (app != null) { log.setAppCode(app.getAppCode()); }
+        if (org != null) { log.setOrgCode(org.getOrgCode()); }
         userLogService.addLogAfterCommit(log);
     }
 }

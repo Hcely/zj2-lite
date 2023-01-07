@@ -29,11 +29,11 @@ public class ZJacksonDateConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (objectMappers == null) {return;}
+        if (objectMappers == null) { return; }
         SimpleModule module = new SimpleModule().addDeserializer(Date.class, DateDeserializer.INSTANCE)
                 .addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE)
                 .addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
-        for (ObjectMapper mapper : objectMappers) {mapper.registerModule(module);}
+        for (ObjectMapper mapper : objectMappers) { mapper.registerModule(module); }
     }
 
     private static class DateDeserializer extends JsonDeserializer<Date> {

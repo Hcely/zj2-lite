@@ -31,8 +31,8 @@ public class StandardToStringFunc implements Function<SignBuilder, String> {
             boolean first = true;
             for (Map.Entry<String, Object> e : list) {
                 String value = serializeValue(e.getValue());
-                if (StringUtils.isEmpty(value)) {continue;}
-                if (!first) {sb.append('&');}
+                if (StringUtils.isEmpty(value)) { continue; }
+                if (!first) { sb.append('&'); }
                 sb.append(e.getKey()).append('=').append(value);
                 first = false;
             }
@@ -44,7 +44,7 @@ public class StandardToStringFunc implements Function<SignBuilder, String> {
     }
 
     protected String serializeValue(Object value) {
-        if (value == null) {return null;}
+        if (value == null) { return null; }
         return value instanceof Number ? NumUtil.toStr((Number) value) : value.toString();
     }
 }

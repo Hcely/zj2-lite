@@ -69,7 +69,7 @@ public final class SlotFormatPart implements FormatPart {
         if (idx == -2) {
             try {
                 idx = Integer.parseInt(getKeyPart(rawArgKey));
-            } catch (Exception e) {idx = -1;}
+            } catch (Exception e) { idx = -1; }
             valueIdx = idx < 0 ? -1 : idx;
         }
         return idx;
@@ -101,20 +101,20 @@ public final class SlotFormatPart implements FormatPart {
         String[] paths = valuePathKeys;
         if (paths == null) {
             paths = PropertyUtil.getPathKeys(getKey());
-            if (paths != null && paths.length == 1) {paths = NoneConstants.EMPTY_STRINGS;}
+            if (paths != null && paths.length == 1) { paths = NoneConstants.EMPTY_STRINGS; }
             valuePathKeys = paths;
         }
         return paths;
     }
 
     private static String getKeyPart(String key) {
-        if (key == null) {return "";}
+        if (key == null) { return ""; }
         int i = key.indexOf(',');
         return i == -1 ? StringUtils.trimToEmpty(key) : StringUtils.trimToEmpty(key.substring(0, i));
     }
 
     private static String getFormatterPart(String key) {
-        if (key == null) {return "";}
+        if (key == null) { return ""; }
         int i = key.indexOf(',');
         return i == -1 ? "" : StringUtils.trimToEmpty(key.substring(i + 1));
     }
