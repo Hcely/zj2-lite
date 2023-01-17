@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
+import org.zj2.common.uac.app.dto.req.AppQuery;
 import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.app.mapper.AppMapper;
 import org.zj2.common.uac.app.service.AppService;
 import org.zj2.lite.common.constant.NoneConstants;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
@@ -125,6 +127,11 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
             update.setDisabledTime(DateUtil.now());
             updateById(update);
         }
+    }
+
+    @Override
+    public ZListResp<AppDTO> pageQuery(AppQuery query) {
+        return null;
     }
 
     private static final String SECRET_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";

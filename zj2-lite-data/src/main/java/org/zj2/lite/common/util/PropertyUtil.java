@@ -4,7 +4,6 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeanUtils;
-import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.common.bean.BeanDescriptor;
 import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;

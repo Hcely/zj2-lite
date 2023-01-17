@@ -2,6 +2,8 @@ package org.zj2.common.uac.org.service;
 
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.req.OrgEditReq;
+import org.zj2.common.uac.org.dto.req.OrgQuery;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -35,4 +37,11 @@ public interface OrgService extends BaseInnerService<OrgDTO>, OrgApi {
      * @param orgCode
      */
     void disable(String orgCode);
+
+    /**
+     *
+     * @param query
+     * @return
+     */
+    ZListResp<OrgDTO> pageQuery(OrgQuery query);
 }

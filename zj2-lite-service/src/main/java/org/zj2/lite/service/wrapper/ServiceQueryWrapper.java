@@ -2,10 +2,10 @@ package org.zj2.lite.service.wrapper;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.PropFunc;
 import org.zj2.lite.service.BaseInnerService;
 import org.zj2.lite.service.entity.request.PageRequest;
 import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;

@@ -1,6 +1,9 @@
 package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppUserDTO;
+import org.zj2.common.uac.app.dto.AppUserPlusDTO;
+import org.zj2.common.uac.app.dto.req.AppQuery;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -35,4 +38,11 @@ public interface AppUserService extends BaseInnerService<AppUserDTO>, AppUserApi
      * @param appUserId
      */
     void disable(String appUserId);
+
+    /**
+     * 查询应用用户
+     * @param query
+     * @return
+     */
+    ZListResp<AppUserPlusDTO> pageQuery(AppQuery query);
 }

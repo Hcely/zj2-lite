@@ -1,6 +1,9 @@
 package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppOrgDTO;
+import org.zj2.common.uac.app.dto.AppOrgPlusDTO;
+import org.zj2.common.uac.app.dto.req.AppOrgQuery;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -35,4 +38,11 @@ public interface AppOrgService extends BaseInnerService<AppOrgDTO>, AppOrgApi {
      * @param appOrgId
      */
     void disable(String appOrgId);
+
+    /**
+     * 查询应用机构
+     * @param query
+     * @return
+     */
+    ZListResp<AppOrgPlusDTO> pageQuery(AppOrgQuery query);
 }

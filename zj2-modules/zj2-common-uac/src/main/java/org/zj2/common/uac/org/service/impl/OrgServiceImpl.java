@@ -4,10 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.req.OrgEditReq;
+import org.zj2.common.uac.org.dto.req.OrgQuery;
 import org.zj2.common.uac.org.entity.Org;
 import org.zj2.common.uac.org.mapper.OrgMapper;
 import org.zj2.common.uac.org.service.OrgService;
 import org.zj2.lite.common.constant.NoneConstants;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
@@ -85,5 +87,10 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
             update.setDisabledTime(DateUtil.now());
             updateById(update);
         }
+    }
+
+    @Override
+    public ZListResp<OrgDTO> pageQuery(OrgQuery query) {
+        return null;
     }
 }

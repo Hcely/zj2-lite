@@ -2,10 +2,13 @@ package org.zj2.common.uac.app.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppOrgDTO;
+import org.zj2.common.uac.app.dto.AppOrgPlusDTO;
+import org.zj2.common.uac.app.dto.req.AppOrgQuery;
 import org.zj2.common.uac.app.entity.AppOrg;
 import org.zj2.common.uac.app.mapper.AppOrgMapper;
 import org.zj2.common.uac.app.service.AppOrgService;
 import org.zj2.lite.common.constant.NoneConstants;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.service.BaseServiceImpl;
@@ -67,5 +70,10 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
             update.setDisabledTime(DateUtil.now());
             updateById(update);
         }
+    }
+
+    @Override
+    public ZListResp<AppOrgPlusDTO> pageQuery(AppOrgQuery query) {
+        return null;
     }
 }

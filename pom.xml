@@ -22,6 +22,7 @@
         <module>zj2-modules</module>
         <module>zj2-lite-test</module>
         <module>zj2-lite-service-starter</module>
+        <module>zj2-lite-net</module>
     </modules>
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
@@ -60,6 +61,11 @@
             <dependency>
                 <groupId>org.zj2.lite</groupId>
                 <artifactId>zj2-lite-util</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite</groupId>
+                <artifactId>zj2-lite-net</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

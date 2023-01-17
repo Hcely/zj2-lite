@@ -1,7 +1,9 @@
 package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppClientDTO;
+import org.zj2.common.uac.app.dto.req.AppClientQuery;
 import org.zj2.common.uac.app.dto.req.AppClientSaveReq;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -29,4 +31,11 @@ public interface AppClientService extends BaseInnerService<AppClientDTO>, AppCli
      * @param appClientId
      */
     void disable(String appClientId);
+
+    /**
+     * 查询应用客户端
+     * @param query
+     * @return
+     */
+    ZListResp<AppClientDTO> pageQuery(AppClientQuery query);
 }

@@ -1,4 +1,4 @@
-package org.zj2.lite.common;
+package org.zj2.lite.common.util;
 
 import java.io.Serializable;
 import java.util.function.Function;

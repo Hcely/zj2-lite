@@ -3,8 +3,8 @@ package org.zj2.lite.service.entity.request.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.PropFunc;
 import org.zj2.lite.service.entity.request.PageRequest;
 
 import java.util.LinkedHashSet;

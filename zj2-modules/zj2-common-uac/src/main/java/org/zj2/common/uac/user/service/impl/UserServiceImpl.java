@@ -10,6 +10,7 @@ import org.zj2.common.uac.user.dto.req.UserCreateReq;
 import org.zj2.common.uac.user.dto.req.UserEditPasswordReq;
 import org.zj2.common.uac.user.dto.req.UserEditValueReq;
 import org.zj2.common.uac.user.dto.req.UserOperationReq;
+import org.zj2.common.uac.user.dto.req.UserQuery;
 import org.zj2.common.uac.user.entity.User;
 import org.zj2.common.uac.user.mapper.UserMapper;
 import org.zj2.common.uac.user.service.UserService;
@@ -22,6 +23,7 @@ import org.zj2.common.uac.user.service.helper.UserEditValueHelper;
 import org.zj2.common.uac.user.service.helper.UserEnableHelper;
 import org.zj2.common.uac.user.service.helper.UserForbiddenHelper;
 import org.zj2.common.uac.user.service.helper.UserValidHelper;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.BaseServiceImpl;
 
@@ -83,6 +85,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
         UserDTO user = get(userId);
         if (user == null) { throw ZRBuilder.failureErr("用户账户不存在"); }
         return user;
+    }
+
+    @Override
+    public ZListResp<UserDTO> pageQuery(UserQuery query) {
+        return null;
     }
 
     @Override

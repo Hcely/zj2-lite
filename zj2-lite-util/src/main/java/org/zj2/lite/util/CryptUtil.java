@@ -3,8 +3,8 @@ package org.zj2.lite.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.zj2.lite.codec.AesCrypto;
-import org.zj2.lite.common.PropFunc;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.PropFunc;
 import org.zj2.lite.common.util.PropertyUtil;
 
 import java.lang.reflect.Field;

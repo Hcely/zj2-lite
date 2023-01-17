@@ -16,4 +16,6 @@ import org.zj2.lite.service.entity.request.PageRequest;
 @NoArgsConstructor
 public class UserQuery extends PageRequest {
     private static final long serialVersionUID = 8771726132728176145L;
+    private String mobile;
+    private String userName;
 }

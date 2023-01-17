@@ -114,10 +114,6 @@ public class StrUtil {
         return sb.toString();
     }
 
-    public static int length(String value) {
-        return value == null ? 0 : value.length();
-    }
-
     public static String concat(String... values) {
         if (values == null || values.length == 0) { return ""; }
         int len = 0;
@@ -128,19 +124,48 @@ public class StrUtil {
         return sb.toString();
     }
 
+    public static boolean isEmpty(CharSequence str) {
+        return str == null || str.length() == 0;
+    }
+
+    public static boolean isNotEmpty(CharSequence str) {
+        return str != null && str.length() > 0;
+    }
+
     public static boolean equals(String value1, String value2) {
-        if (StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2)) { return true; }
-        return StringUtils.equals(value1, value2);
+        if (value1 == null) {
+            return isEmpty(value2);
+        } else if (value2 == null) {
+            return isEmpty(value1);
+        } else {
+            return value1.equals(value2);
+        }
     }
 
     public static boolean equalsIgnoreCase(String value1, String value2) {
-        if (StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2)) { return true; }
+        if (isEmpty(value1) && isEmpty(value2)) { return true; }
+        int len = length(value1);
+        int len2 = length(value2);
+        if (len != len2) { return false; }
+        for (int i = 0; i < len; ++i) {
+            int ch1 = value1.charAt(i);
+            int ch2 = value2.charAt(i);
+            if (ch1 == ch2) { continue; }
+            if (ch1 < 128 && ch2 < 128) {
+                if (Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
         return StringUtils.equalsIgnoreCase(value1, value2);
     }
 
     public static boolean equals(String value1, String value2, int start2, int end2) {
         final int len = end2 - start2;
-        if (len != StringUtils.length(value1)) { return false; }
+        if (len != length(value1)) { return false; }
         if (len == 0) { return true; }
         for (int i = 0; i < len; ++i, ++start2) {
             if (value1.charAt(i) != value2.charAt(start2)) { return false; }
@@ -160,7 +185,9 @@ public class StrUtil {
                 if (Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
                     return false;
                 }
-            } else { return false; }
+            } else {
+                return false;
+            }
         }
         return true;
     }
@@ -172,11 +199,19 @@ public class StrUtil {
         if (len2 == 0) { return 1; }
         final int len = Math.max(len1, len2);
         for (int idx1 = len1 - len, idx2 = len2 - len; idx1 < len1; ++idx1, ++idx2) {
-            char ch1 = idx1 < 0 ? '0' : str1.charAt(idx1);
-            char ch2 = idx2 < 0 ? '0' : str2.charAt(idx2);
+            char ch1 = idx1 < 0 ? 0 : str1.charAt(idx1);
+            char ch2 = idx2 < 0 ? 0 : str2.charAt(idx2);
             if (ch1 != ch2) { return Integer.compare(ch1, ch2); }
         }
         return 0;
+    }
+
+    public static int length(CharSequence str) {
+        return str == null ? 0 : str.length();
+    }
+
+    public static char firstChar(CharSequence str) {
+        return str == null || str.length() == 0 ? 0 : str.charAt(0);
     }
 
     public static char lastChar(CharSequence str) {

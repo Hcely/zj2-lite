@@ -5,6 +5,8 @@ import org.zj2.common.uac.user.dto.req.UserCreateReq;
 import org.zj2.common.uac.user.dto.req.UserEditPasswordReq;
 import org.zj2.common.uac.user.dto.req.UserEditValueReq;
 import org.zj2.common.uac.user.dto.req.UserOperationReq;
+import org.zj2.common.uac.user.dto.req.UserQuery;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
@@ -15,6 +17,8 @@ import org.zj2.lite.service.BaseInnerService;
  */
 public interface UserService extends BaseInnerService<UserDTO>, UserApi {
     UserDTO getIfAbsentError(String userId);
+
+    ZListResp<UserDTO> pageQuery(UserQuery query);
 
     UserDTO create(UserCreateReq user);
 
