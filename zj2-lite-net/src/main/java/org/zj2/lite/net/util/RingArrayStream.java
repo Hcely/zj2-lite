@@ -217,7 +217,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             int len = size < 0x3F ? 0x7F : (size + (size >>> 1));
             if (len > 0x3FFF) { len = 0x3FFF; }
             for (int i = 0; lPos < max && i < len; ++i) {
-                byte state = (byte) STATES_AA.get(localStates, (int) (lPos & localMask));
+                byte state = (byte) STATES_AA.getVolatile(localStates, (int) (lPos & localMask));
                 if (state == targetState) {
                     ++lPos;
                 } else {
