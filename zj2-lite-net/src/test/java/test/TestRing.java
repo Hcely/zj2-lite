@@ -6,7 +6,6 @@ import org.zj2.lite.net.util.RingArrayStream;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *  TestRing
@@ -15,11 +14,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2023/1/18 11:37
  */
 public class TestRing {
-    private static final int COUNT = 1280_0000;
-    private static AtomicLong num = new AtomicLong();
+    static final int COUNT = 1280_0000;
+    static long num = 0;
 
-    private static void handle(E e) {
-        num.addAndGet(e.i);
+    static void handle(E e) {
+        num += e.i;
         e.str = e.str + e.i;
     }
 
@@ -64,6 +63,7 @@ public class TestRing {
         @Override
         public void accept(E e, int value) {
             e.i = value;
+            e.str = "AAAA_AAAA_AAAA";
         }
     }
 
@@ -82,7 +82,7 @@ public class TestRing {
         }
     }
 
-    private static class E implements Releasable {
+    static class E implements Releasable {
         int i;
         String str = "";
 
