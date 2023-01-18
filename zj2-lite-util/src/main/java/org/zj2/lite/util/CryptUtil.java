@@ -3,8 +3,8 @@ package org.zj2.lite.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.zj2.lite.codec.AesCrypto;
+import org.zj2.lite.common.function.PropGetter;
 import org.zj2.lite.common.util.CollUtil;
-import org.zj2.lite.common.util.PropFunc;
 import org.zj2.lite.common.util.PropertyUtil;
 
 import java.lang.reflect.Field;
@@ -83,9 +83,9 @@ public class CryptUtil {
     }
 
     @SafeVarargs
-    public static <T> void decryptList(Collection<? extends T> beans, PropFunc<T, String>... getters) {
+    public static <T> void decryptList(Collection<? extends T> beans, PropGetter<T, String>... getters) {
         if (getters == null || getters.length == 0 || CollUtil.isEmpty(beans)) { return; }
-        for (PropFunc<T, String> getter : getters) {
+        for (PropGetter<T, String> getter : getters) {
             Field field = null;
             for (T e : beans) {
                 if (e != null) {
@@ -97,15 +97,15 @@ public class CryptUtil {
     }
 
     @SafeVarargs
-    public static <T> void decryptBean(T bean, PropFunc<T, String>... getters) {
+    public static <T> void decryptBean(T bean, PropGetter<T, String>... getters) {
         if (bean != null && getters != null && getters.length > 0) {
-            for (PropFunc<T, String> getter : getters) {
+            for (PropGetter<T, String> getter : getters) {
                 decryptBean(bean, getter, getBeanField(bean.getClass(), getter));
             }
         }
     }
 
-    private static <T> void decryptBean(T bean, PropFunc<T, String> getter, Field field) {
+    private static <T> void decryptBean(T bean, PropGetter<T, String> getter, Field field) {
         if (field == null) { return; }
         try {
             String value = getter.apply(bean);
@@ -118,7 +118,7 @@ public class CryptUtil {
     }
 
     @SuppressWarnings("all")
-    private static Field getBeanField(Class<?> beanType, PropFunc<?, String> getter) {
+    private static Field getBeanField(Class<?> beanType, PropGetter<?, String> getter) {
         try {
             String fieldName = PropertyUtil.getLambdaFieldName(getter);
             return StringUtils.isEmpty(fieldName) ? null : FieldUtils.getField(beanType, fieldName, true);

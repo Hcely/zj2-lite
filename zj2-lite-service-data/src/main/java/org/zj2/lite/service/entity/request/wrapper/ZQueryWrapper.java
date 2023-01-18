@@ -3,8 +3,8 @@ package org.zj2.lite.service.entity.request.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import org.zj2.lite.common.function.PropGetter;
 import org.zj2.lite.common.util.CollUtil;
-import org.zj2.lite.common.util.PropFunc;
 import org.zj2.lite.service.entity.request.PageRequest;
 
 import java.util.LinkedHashSet;
@@ -39,7 +39,7 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     @JsonProperty("fu")
     boolean forUpdate = false;
 
-    public ZQueryWrapper<T> select(PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> select(PropGetter<T, ?> prop) {
         if (prop == null) { return this; }
         String fieldName = getFieldName(prop);
         if (selectProps == null) { selectProps = new LinkedHashSet<>(); }
@@ -47,63 +47,63 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
         return this;
     }
 
-    public ZQueryWrapper<T> select(PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> select(PropGetter<T, ?>... props) {
         if (props != null && props.length > 0) {
-            for (PropFunc<T, ?> prop : props) {
+            for (PropGetter<T, ?> prop : props) {
                 select(prop);
             }
         }
         return this;
     }
 
-    public ZQueryWrapper<T> orderByAsc(PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderByAsc(PropGetter<T, ?>... props) {
         return orderBy(true, true, props);
     }
 
-    public ZQueryWrapper<T> orderByAsc(boolean b, PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderByAsc(boolean b, PropGetter<T, ?>... props) {
         return orderBy(b, true, props);
     }
 
-    public ZQueryWrapper<T> orderByDesc(PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderByDesc(PropGetter<T, ?>... props) {
         return orderBy(true, false, props);
     }
 
-    public ZQueryWrapper<T> orderByDesc(boolean b, PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderByDesc(boolean b, PropGetter<T, ?>... props) {
         return orderBy(b, false, props);
     }
 
-    public ZQueryWrapper<T> orderBy(boolean asc, PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderBy(boolean asc, PropGetter<T, ?>... props) {
         return orderBy(true, asc, props);
     }
 
-    public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropFunc<T, ?>... props) {
+    public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropGetter<T, ?>... props) {
         if (!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.toList(props, AbstractWrapper::getFieldName);
         return this;
     }
 
-    public ZQueryWrapper<T> orderByAsc(PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderByAsc(PropGetter<T, ?> prop) {
         return orderBy(true, true, prop);
     }
 
-    public ZQueryWrapper<T> orderByAsc(boolean b, PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderByAsc(boolean b, PropGetter<T, ?> prop) {
         return orderBy(b, true, prop);
     }
 
-    public ZQueryWrapper<T> orderByDesc(PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderByDesc(PropGetter<T, ?> prop) {
         return orderBy(true, false, prop);
     }
 
-    public ZQueryWrapper<T> orderByDesc(boolean b, PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderByDesc(boolean b, PropGetter<T, ?> prop) {
         return orderBy(b, false, prop);
     }
 
-    public ZQueryWrapper<T> orderBy(boolean asc, PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderBy(boolean asc, PropGetter<T, ?> prop) {
         return orderBy(true, asc, prop);
     }
 
-    public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropFunc<T, ?> prop) {
+    public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropGetter<T, ?> prop) {
         if (!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.singletonList(getFieldName(prop));

@@ -10,6 +10,7 @@ import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.BeanPropertyScanner;
 import org.zj2.lite.common.bean.DefBeanPropertyScanner;
 import org.zj2.lite.common.constant.NoneConstants;
+import org.zj2.lite.common.function.PropGetter;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Array;
@@ -26,9 +27,9 @@ import java.util.Map;
 public class PropertyUtil {
     private static final ThreadLocal<DefBeanPropertyScanner> SCANNER_THREAD_LOCAL = ThreadLocal.withInitial(
             DefBeanPropertyScanner::new);
-    private static final Map<PropFunc, String> LAMBDA_PROP_NAMES = new HashMap<>(1024);
+    private static final Map<PropGetter, String> LAMBDA_PROP_NAMES = new HashMap<>(1024);
 
-    public static <T> String getLambdaFieldName(PropFunc<T, ?> func) {
+    public static <T> String getLambdaFieldName(PropGetter<T, ?> func) {
         String name = LAMBDA_PROP_NAMES.get(func);
         if (name == null) {
             synchronized (LAMBDA_PROP_NAMES) {
@@ -38,7 +39,7 @@ public class PropertyUtil {
         return name == NoneConstants.NONE_STR ? "" : name;
     }
 
-    private static <T> String getLambdaFieldName0(PropFunc<T, ?> func) {
+    private static <T> String getLambdaFieldName0(PropGetter<T, ?> func) {
         try {
             SerializedLambda lambda = (SerializedLambda) MethodUtils.invokeMethod(func, true, "writeReplace");
             String methodName = lambda.getImplMethodName();
