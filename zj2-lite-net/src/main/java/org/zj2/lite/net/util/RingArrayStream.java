@@ -214,8 +214,8 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             final byte[] localStates = states;
             final byte targetState = step.state;
             final int localMask = mask;
-            int len = size < 100 ? 200 : (size + (size >>> 1));
-            if (len > 10000) { len = 10000; }
+            int len = size < 0x3F ? 0x7F : (size + (size >>> 1));
+            if (len > 0x3FFF) { len = 0x3FFF; }
             for (int i = 0; lPos < max && i < len; ++i) {
                 byte state = (byte) STATES_AA.get(localStates, (int) (lPos & localMask));
                 if (state == targetState) {
@@ -349,13 +349,13 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         }
 
         private static int getDynamicSize(long size, long take) {
-            if (size < 10) { return 10; }
-            if (take < 1) {
+            if (size < 16) { return 16; }
+            if (take < 2) {
                 size <<= 1;
-                return size < 10000 ? (int) size : 10000;
+                return size < 0x3FFF ? (int) size : 0x3FFF;
             } else {
-                size = 10000L / take;
-                return size < 10 ? 10 : (int) size;
+                size = 0x3FFFL / take;
+                return size < 16 ? 16 : (int) size;
             }
         }
     }
