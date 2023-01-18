@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class TestRing {
     static final int COUNT = 1280_0000;
+    static final int STEP_COUNT = 4;
     static long num = 0;
 
     static void handle(E e) {
@@ -23,17 +24,14 @@ public class TestRing {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        RingArrayStream<E> stream = new RingArrayStream<>(4, 1 << 20, E::new);
+        RingArrayStream<E> stream = new RingArrayStream<>(STEP_COUNT, 1 << 20, E::new);
         List<Thread> producers = new ArrayList<>(5);
         List<Thread> threads = new ArrayList<>(15);
         for (int i = 0; i < 4; ++i) {
             Producer producer = new Producer(stream);
             producers.add(producer);
             threads.add(producer);
-            threads.add(new Consumer(0, stream));
-            threads.add(new Consumer(1, stream));
-            threads.add(new Consumer(2, stream));
-            threads.add(new Consumer(3, stream));
+            for (int n = 0; n < STEP_COUNT; ++n) { threads.add(new Consumer(n, stream)); }
         }
         for (Thread e : threads) { e.start(); }
         for (Thread e : producers) { e.join(); }

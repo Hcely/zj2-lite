@@ -176,7 +176,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             if ((rPos = readPos.get()) < lPos || rPos < (lPos = limitPos.get())) {
                 if ((nPos = rPos + size) <= lPos || (tryCount > TRY_COUNT_YIELD - 1 && (nPos = lPos) > 0)) {
                     if (readPos.compareAndSet(rPos, nPos)) {
-                        if (stream != null) { stream.setPos(rPos, nPos); }
+                        if (stream != null) { stream.setEndPos(nPos); }
                         return rPos;
                     } else {
                         continue;
@@ -308,10 +308,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         private static final int NOTIFY_COUNT = (1 << 8) - 1;
         private final RingArrayStream<T> stream;
         private final StateStep step;
-        private long startPos;
         private long endPos;
-        private long startTime;
-        private long endTime;
 
         private StepStream(RingArrayStream<T> stream, StateStep step) {
             this.stream = stream;
@@ -324,12 +321,14 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             final Object[] references = localStream.references;
             final int mask = localStream.mask;
             Object value;
-            long pos;
-            for (; ; ) {
-                pos = localStream.nextPos(this, localStep, getDynamicSize(), TRY_COUNT_MAX);
+            for (long pos, size = 0, take = 0, end; ; ) {
+                pos = localStream.nextPos(this, localStep, getDynamicSize(size, take), TRY_COUNT_MAX);
                 if (pos > FAILURE_POS) {
-                    startTime = System.currentTimeMillis();
-                    for (long end = endPos; pos < end; ++pos) {
+                    end = endPos;
+                    size = end - pos;
+                    take = System.currentTimeMillis();
+                    //
+                    for (; pos < end; ++pos) {
                         try {
                             consumer.accept((T) references[(int) (mask & pos)]);
                         } catch (Throwable e) {
@@ -338,22 +337,19 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
                             localStream.nextStep(step, pos, (pos & NOTIFY_COUNT) == NOTIFY_COUNT);
                         }
                     }
-                    endTime = System.currentTimeMillis();
+                    take = System.currentTimeMillis() - take;
                 } else if (pos == DESTROY_POS) {
                     break;
                 }
             }
         }
 
-        private void setPos(long startPos, long endPos) {
-            this.startPos = startPos;
+        private void setEndPos(long endPos) {
             this.endPos = endPos;
         }
 
-        private int getDynamicSize() {
-            long size = endPos - startPos;
+        private static int getDynamicSize(long size, long take) {
             if (size < 10) { return 10; }
-            long take = endTime - startTime;
             if (take < 1) {
                 size <<= 1;
                 return size < 10000 ? (int) size : 10000;
