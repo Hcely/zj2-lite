@@ -47,7 +47,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     private final StateStep[] steps;
     private volatile int streamState;
     private final byte[] states;
-    private final Object[] references;
+    private final Releasable[] references;
 
     public RingArrayStream(int capacity, Supplier<T> enumCreator) {
         this(1, capacity, enumCreator);
@@ -58,13 +58,13 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         capacity = normalizeCapacity(capacity);
         this.capacity = capacity;
         this.mask = capacity - 1;
-        this.produceStep = new StateStep(0, capacity, false);
+        this.produceStep = new StateStep(0, capacity, stepCount);
         this.steps = new StateStep[stepCount + 1];
         this.streamState = STATE_RUNNING;
         this.states = new byte[capacity];
-        this.references = new Object[capacity];
+        this.references = new Releasable[capacity];
         steps[0] = produceStep;
-        for (int i = 1; i <= stepCount; ++i) { steps[i] = new StateStep(i, capacity, i == stepCount); }
+        for (int i = 1; i <= stepCount; ++i) { steps[i] = new StateStep(i, capacity, stepCount); }
         for (int i = 0; i < capacity; ++i) { references[i] = enumCreator.get(); }
     }
 
@@ -106,7 +106,6 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     public boolean tryAdd(long value, BeanLongConsumer<T> handler) {
         return add0(value, handler, true);
     }
-
 
     private <E> boolean add0(E value, BiConsumer<T, E> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
@@ -171,10 +170,9 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     }
 
     private long nextPos(StepStream<?> stream, StateStep step, int size, int timeoutCount) {//NOSONAR
-        final AtomicLong readPos = step.readPos, limitPos = step.limitPos, maxPos = steps[step.nextState].releasePos;
+        final AtomicLong readPos = step.readPos, limitPos = step.limitPos, maxPos = steps[step.prevState].readPos;
         long rPos, nPos, lPos = limitPos.get(), newLPos;
-        int tryCount = 0;
-        while (timeoutCount < 0 || tryCount < timeoutCount) {
+        for (int tryCount = 0; ; ) {
             if ((rPos = readPos.get()) < lPos || rPos < (lPos = limitPos.get())) {
                 if ((nPos = rPos + size) <= lPos || (tryCount > TRY_COUNT_YIELD - 1 && (nPos = lPos) > 0)) {
                     if (readPos.compareAndSet(rPos, nPos)) {
@@ -191,14 +189,16 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             } else if (lPos == newLPos) {
                 final int state = streamState;
                 if (state == STATE_DESTROYED) {
-                    if (lPos >= produceStep.readPos.get()) {
-                        return DESTROY_POS;
-                    }
+                    if (rPos >= produceStep.readPos.get()) { return DESTROY_POS; }
                 } else if (state == STATE_DESTROYED_NOW) {
                     return DESTROY_POS;
                 }
-                step.tryWait(tryCount);
                 if (tryCount < Integer.MAX_VALUE) { ++tryCount; }
+                if (timeoutCount < 0 || tryCount < timeoutCount) {
+                    step.tryWait(tryCount);
+                } else {
+                    break;
+                }
             } else {
                 Thread.yield();
             }
@@ -209,7 +209,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     private long nextLimitPos(final StateStep step, AtomicLong limitPos, AtomicLong maxPos, int size) {
         if (step.tryLock()) {
             final long oldLPos = limitPos.get();
-            final long max = maxPos.get();
+            final long max = maxPos.get() + step.offset;
             long lPos = oldLPos;
             final byte[] localStates = states;
             final byte targetState = step.state;
@@ -236,11 +236,9 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         final byte nextState = step.nextState;
         if (nextState == 0) {
             try {
-                T value = (T) references[idx];
-                value.release();
+                references[idx].release();
             } catch (Throwable ignore) { }
         }
-        step.releasePos.incrementAndGet();
         STATES_AA.setVolatile(states, idx, nextState);
         if (notifyNextStep) { steps[nextState].tryNotify(); }
     }
@@ -250,28 +248,25 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     }
 
     private static class StateStep {
-        private final AtomicLong releasePos;
         private final AtomicLong readPos;
         private final AtomicLong limitPos;
+        private final int offset;
         private final AtomicInteger lockFlag;
         private volatile int waitThread;
         private final byte state;
+        private final byte prevState;
         private final byte nextState;
 
 
-        private StateStep(int state, int capacity, boolean lastStep) {
-            this.releasePos = new AtomicLong(0L);
+        private StateStep(int state, int capacity, int stepCount) {
             this.readPos = new AtomicLong(0L);
-            this.limitPos = new AtomicLong(0L);
+            this.limitPos = new AtomicLong(state == 0 ? capacity : 0);
             this.lockFlag = new AtomicInteger(0);
+            this.offset = state == 0 ? capacity : 0;
             this.waitThread = 0;
             this.state = (byte) state;
-            this.nextState = (byte) (lastStep ? 0 : (state + 1));
-            if (state == 0) {
-                limitPos.set(capacity);
-            } else if (lastStep) {
-                releasePos.set(capacity);
-            }
+            this.prevState = (byte) (state == 0 ? stepCount : state - 1);
+            this.nextState = (byte) (state == stepCount ? 0 : (state + 1));
         }
 
         private boolean tryLock() {
@@ -336,7 +331,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
                     startTime = System.currentTimeMillis();
                     for (long end = endPos; pos < end; ++pos) {
                         try {
-                            if ((value = references[(int) (mask & pos)]) != null) { consumer.accept((T) value); }
+                            consumer.accept((T) references[(int) (mask & pos)]);
                         } catch (Throwable e) {
                             LOGGER.error("Data consume error!", e);
                         } finally {

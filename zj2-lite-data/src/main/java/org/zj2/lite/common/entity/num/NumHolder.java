@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
 @NoArgsConstructor
 public class NumHolder extends Number {
     private static final long serialVersionUID = 20220719163940L;
-    private BigDecimal numValue = BigDecimal.ZERO;
+    private BigDecimal value = BigDecimal.ZERO;
 
     public static NumHolder of(String value) {
         return new NumHolder(NumUtil.parse(value));
@@ -30,8 +30,8 @@ public class NumHolder extends Number {
         return new NumHolder(NumUtil.of(value));
     }
 
-    public NumHolder(BigDecimal numValue) {
-        this.numValue = numValue == null ? BigDecimal.ZERO : numValue;
+    public NumHolder(BigDecimal value) {
+        this.value = value == null ? BigDecimal.ZERO : value;
     }
 
     public NumHolder add(Number value) {
@@ -40,8 +40,8 @@ public class NumHolder extends Number {
 
     public NumHolder add(Number value, MathContext context) {
         if (value != null) {
-            if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
-            numValue = NumUtil.add(numValue, value, context);
+            if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+            this.value = NumUtil.add(this.value, value, context);
         }
         return this;
     }
@@ -52,8 +52,8 @@ public class NumHolder extends Number {
 
     public NumHolder sub(Number value, MathContext context) {
         if (value != null) {
-            if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
-            numValue = NumUtil.sub(numValue, value, context);
+            if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+            this.value = NumUtil.sub(this.value, value, context);
         }
         return this;
     }
@@ -63,8 +63,8 @@ public class NumHolder extends Number {
     }
 
     public NumHolder multi(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
-        numValue = NumUtil.multi(numValue, value, context);
+        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        this.value = NumUtil.multi(this.value, value, context);
         return this;
     }
 
@@ -73,8 +73,8 @@ public class NumHolder extends Number {
     }
 
     public NumHolder divide(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
-        numValue = NumUtil.divide(numValue, value, context);
+        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        this.value = NumUtil.divide(this.value, value, context);
         return this;
     }
 
@@ -83,8 +83,8 @@ public class NumHolder extends Number {
     }
 
     public NumHolder operate(UnaryOperator<BigDecimal> operator, MathContext context) {
-        numValue = operator.apply(numValue);
-        if (context != null) { numValue = NumUtil.of(numValue, context); }
+        value = operator.apply(value);
+        if (context != null) { value = NumUtil.of(value, context); }
         return this;
     }
 
@@ -93,47 +93,47 @@ public class NumHolder extends Number {
     }
 
     public NumHolder operate(Number value, BiFunction<BigDecimal, Number, BigDecimal> operator, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).numValue; }
-        numValue = operator.apply(numValue, value);
-        if (context != null) { numValue = NumUtil.of(numValue, context); }
+        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        this.value = operator.apply(this.value, value);
+        if (context != null) { this.value = NumUtil.of(this.value, context); }
         return this;
     }
 
     public NumHolder context(MathContext context) {
-        this.numValue = NumUtil.of(numValue, context);
+        this.value = NumUtil.of(value, context);
         return this;
     }
 
     public BigDecimal numValue() {
-        return numValue;
+        return value;
     }
 
     public BigDecimal numValue(MathContext context) {
-        return NumUtil.of(numValue, context);
+        return NumUtil.of(value, context);
     }
 
     @Override
     public int intValue() {
-        return numValue == null ? 0 : numValue.intValue();
+        return value == null ? 0 : value.intValue();
     }
 
     @Override
     public long longValue() {
-        return numValue == null ? 0 : numValue.longValue();
+        return value == null ? 0 : value.longValue();
     }
 
     @Override
     public float floatValue() {
-        return numValue == null ? 0 : numValue.floatValue();
+        return value == null ? 0 : value.floatValue();
     }
 
     @Override
     public double doubleValue() {
-        return numValue == null ? 0 : numValue.doubleValue();
+        return value == null ? 0 : value.doubleValue();
     }
 
     @Override
     public String toString() {
-        return numValue == null ? "0" : NumUtil.toStr(numValue);
+        return value == null ? "0" : NumUtil.toStr(value);
     }
 }
