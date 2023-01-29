@@ -10,41 +10,44 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.zj2.lite.common.context.ZContext;
 import org.zj2.lite.common.util.CollUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * AsyncUtil 异步执行工具
  * <br>CreateDate 三月 02,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
 @Configuration
 @EnableAsync
+@SuppressWarnings("all")
 public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncUtil.class);
-    private static final ThreadPoolTaskExecutor EXECUTOR = createExecutor(64);
+    private static final ThreadTaskExecutor EXECUTOR;
 
-    public static ThreadPoolTaskExecutor createExecutor(int coreNum) {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(coreNum);
-        executor.setMaxPoolSize(coreNum << 2);
-        executor.setKeepAliveSeconds(60 * 5);
-        executor.setAllowCoreThreadTimeOut(true);
-        executor.setQueueCapacity(1 << 24);
-        executor.setThreadFactory(new AsyncThreadFactory());
-        executor.setTaskDecorator(AsyncUtil::of);
-        executor.initialize();
-        return executor;
+    static {
+        int coreNum = Runtime.getRuntime().availableProcessors() << 2;
+        EXECUTOR = createExecutor(Math.max(coreNum, 64));
+    }
+
+    public static ThreadTaskExecutor createExecutor(int coreNum) {
+        return new ThreadTaskExecutor(coreNum);
     }
 
     @Override
@@ -65,25 +68,37 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         return currentThread.getClass() == AsyncTaskThread.class;
     }
 
-
     /**
      * 异步执行
+     *
      * @param command
      */
     public static void execute(final Runnable command) {
-        if (command != null) {
-            EXECUTOR.execute(of(command));
-        }
+        if (command != null) { EXECUTOR.execute(command); }
+    }
+
+    public static void execute(final Object key, final Runnable command) {
+        if (command != null) { EXECUTOR.execute(key, command); }
     }
 
     /**
      * 事务提交后异步执行
+     *
      * @param command
      */
     public static void executeAfterCommit(final Runnable command) {
         if (command == null) { return; }
         if (TransactionSyncUtil.isActualTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), AsyncUtil::execute);
+        } else {
+            execute(command);
+        }
+    }
+
+    public static void executeAfterCommit(final Object key, final Runnable command) {
+        if (command == null) { return; }
+        if (TransactionSyncUtil.isActualTransactionActive()) {
+            TransactionSyncUtil.afterCommit(of(command), cmd -> execute(key, command));
         } else {
             execute(command);
         }
@@ -103,7 +118,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         List<Future<?>> futures = new ArrayList<>(commands.length);
         Throwable ex = null;
         for (Runnable cmd : commands) {
-            if (cmd != null) { futures.add(EXECUTOR.submit(of(cmd))); }
+            if (cmd != null) { futures.add(EXECUTOR.submit(cmd)); }
         }
         for (Future<?> f : futures) {
             if (ex != null) {
@@ -125,6 +140,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     /**
      * 返回具有上下文runnable
+     *
      * @param command
      * @return
      */
@@ -138,7 +154,6 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         private final Runnable command;
         private final ZContext context;
         protected final String tid;
-
 
         protected AsyncCommand() {
             this(null);
@@ -171,20 +186,91 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         }
     }
 
-    public static class AsyncThreadFactory implements ThreadFactory {
-        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+
+    public static class ThreadTaskExecutor implements AsyncTaskExecutor {
+        private final AtomicLong nextIdx;
+        private final ThreadPoolExecutor[] workers;
+        private final int mask;
+
+        public ThreadTaskExecutor(int size) {
+            size = 32 - Integer.numberOfLeadingZeros(size - 1);
+            this.workers = new ThreadPoolExecutor[size];
+            this.mask = size - 1;
+            this.nextIdx = new AtomicLong(0);
+            AsyncThreadFactory threadFactory = new AsyncThreadFactory();
+            for (int i = 0; i < size; ++i) { workers[i] = new AsyncThreadExecutor(threadFactory); }
+        }
+
+        @Override
+        public void execute(Runnable command, long startTimeout) {
+            execute(null, command);
+        }
+
+        @Override
+        public Future<?> submit(Runnable command) {
+            return submit(null, command);
+        }
+
+        @Override
+        public <T> Future<T> submit(Callable<T> command) {
+            return submit(null, command);
+        }
+
+        @Override
+        public void execute(Runnable command) {
+            execute(null, command);
+        }
+
+        public Future<?> submit(Object key, Runnable command) {
+            FutureTask<?> futureTask = new FutureTask<>(command, null);
+            getWorkor(key).execute(futureTask);
+            return futureTask;
+        }
+
+        public <T> Future<T> submit(Object key, Callable<T> command) {
+            FutureTask<T> futureTask = new FutureTask<>(command);
+            getWorkor(key).execute(futureTask);
+            return futureTask;
+        }
+
+        public void execute(Object key, Runnable command) {
+            getWorkor(key).execute(command);
+        }
+
+        public void shutdown() {
+            for (ThreadPoolExecutor e : workers) { e.shutdown(); }
+        }
+
+
+        private ThreadPoolExecutor getWorkor(Object key) {
+            if (key != null) { return workers[key.hashCode() & mask]; }
+            return workers[(int) (nextIdx.getAndIncrement() & mask)];
+        }
+    }
+
+
+    private static class AsyncThreadExecutor extends ThreadPoolExecutor {
+        public AsyncThreadExecutor(AsyncThreadFactory threadFactory) {
+            super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), threadFactory);
+        }
+
+        @Override
+        public void execute(Runnable command) {
+            super.execute(of(command));
+        }
+    }
+
+    private static class AsyncThreadFactory implements ThreadFactory {
+        private static final AtomicInteger threadNumber = new AtomicInteger(1);
         private final ThreadGroup group;// NOSONAR
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
 
         AsyncThreadFactory() {
             SecurityManager s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-            namePrefix = "ASYNC-TASK-" + poolNumber.getAndIncrement() + "-";// 指定线程名称好定位问题
         }
 
         public Thread newThread(Runnable r) {
-            Thread t = new AsyncTaskThread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            Thread t = new AsyncTaskThread(this, r, "ASYNC-" + threadNumber.getAndIncrement());
             if (t.isDaemon()) { t.setDaemon(false); }
             if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;
@@ -192,8 +278,8 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     }
 
     private static final class AsyncTaskThread extends Thread {
-        public AsyncTaskThread(ThreadGroup group, Runnable target, String name, long stackSize) {
-            super(group, target, name, stackSize);
+        public AsyncTaskThread(AsyncThreadFactory threadFactory, Runnable target, String name) {
+            super(threadFactory.group, target, name, 0);
         }
     }
 }

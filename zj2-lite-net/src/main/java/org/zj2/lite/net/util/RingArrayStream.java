@@ -35,6 +35,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     private static final int TRY_COUNT_YIELD = TRY_COUNT_CAL + 100;
     private static final int TRY_COUNT_PARK = TRY_COUNT_YIELD + 100;
     private static final int TRY_COUNT_MAX = 1 << 14;
+    private static final int MAX_CONSUME_SIZE = 1 << 14;
     private static final int STATE_RUNNING = 1;
     private static final int STATE_DESTROYED = 10;
     private static final int STATE_DESTROYED_NOW = 11;
@@ -174,7 +175,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         long rPos, nPos, lPos = limitPos.get(), newLPos;
         for (int tryCount = 0; ; ) {
             if ((rPos = readPos.get()) < lPos || rPos < (lPos = limitPos.get())) {
-                if ((nPos = rPos + size) <= lPos || (tryCount > TRY_COUNT_YIELD - 1 && (nPos = lPos) > 0)) {
+                if ((nPos = rPos + size) <= lPos || (tryCount > (TRY_COUNT_YIELD - 1) && (nPos = lPos) > 0)) {
                     if (readPos.compareAndSet(rPos, nPos)) {
                         if (stream != null) { stream.setEndPos(nPos); }
                         return rPos;
@@ -215,7 +216,6 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             final byte targetState = step.state;
             final int localMask = mask;
             int len = size < 0x3F ? 0x7F : (size + (size >>> 1));
-            if (len > 0x3FFF) { len = 0x3FFF; }
             for (int i = 0; lPos < max && i < len; ++i) {
                 byte state = (byte) STATES_AA.getVolatile(localStates, (int) (lPos & localMask));
                 if (state == targetState) {
@@ -322,7 +322,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             final int mask = localStream.mask;
             Object value;
             for (long pos, size = 0, take = 0, end; ; ) {
-                pos = localStream.nextPos(this, localStep, getDynamicSize(size, take), TRY_COUNT_MAX);
+                pos = localStream.nextPos(this, localStep, getDynamicConsumeSize(size, take), TRY_COUNT_MAX);
                 if (pos > FAILURE_POS) {
                     end = endPos;
                     size = end - pos;
@@ -338,7 +338,9 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
                         }
                     }
                     take = System.currentTimeMillis() - take;
-                } else if (pos == DESTROY_POS) {
+                } else if (pos == FAILURE_POS) {
+                    size = 0;
+                } else {
                     break;
                 }
             }
@@ -348,14 +350,15 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
             this.endPos = endPos;
         }
 
-        private static int getDynamicSize(long size, long take) {
-            if (size < 16) { return 16; }
+        // 动态消费数量，让整体生产消费处于合理平衡
+        private static int getDynamicConsumeSize(long size, long take) {
+            if (size < 4) { return 4; }
             if (take < 2) {
                 size <<= 1;
-                return size < 0x3FFF ? (int) size : 0x3FFF;
+                return size < MAX_CONSUME_SIZE ? (int) size : MAX_CONSUME_SIZE;
             } else {
-                size = 0x3FFFL / take;
-                return size < 16 ? 16 : (int) size;
+                size = MAX_CONSUME_SIZE / take;
+                return size < 4 ? 4 : (int) size;
             }
         }
     }

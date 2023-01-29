@@ -6,7 +6,6 @@ import org.zj2.lite.session.element.DomainElementView;
 import org.zj2.lite.session.entity.DefSessionResult;
 import org.zj2.lite.session.entity.SessionLog;
 import org.zj2.lite.session.entity.SessionResult;
-import org.zj2.lite.util.TransactionSyncUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,8 +13,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- *
  * <br>CreateDate 三月 25,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("all")
@@ -74,7 +73,7 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
         if (elements != null && !elements.isEmpty()) {
             beforeSaveElements(elements);
             result.addLogs(sessionLogs());
-            TransactionSyncUtil.executeWithTX(() -> executeSaveElements(elements, result));
+            executeSaveElements(elements, result);
             saveResult(result);
         }
         return result;

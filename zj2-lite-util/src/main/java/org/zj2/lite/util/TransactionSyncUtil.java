@@ -14,10 +14,13 @@ import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * TransactionSyncUtil 事务同步执行工具
  * <br>CreateDate 一月 16,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -36,37 +39,13 @@ public class TransactionSyncUtil {
         SYNCHRONIZATIONS_FIELD = FieldUtils.getField(TransactionSynchronizationManager.class, "synchronizations", true);
     }
 
-    private static TransactionExecutor getTransactionExecutor() {
+    public static TransactionExecutor transExecutor() {
         return TRANSACTION_EXECUTOR_REF.get();
-    }
-
-
-    public static void executeWithTX(Runnable cmd) {
-        getTransactionExecutor().executeWithTX(cmd);
-    }
-
-    public static void executeWithNewTX(Runnable cmd) {
-        getTransactionExecutor().executeWithNewTX(cmd);
-    }
-
-    public static void executeWithoutTX(Runnable cmd) {
-        getTransactionExecutor().executeWithoutTX(cmd);
-    }
-
-    public static <T> void executeWithTX(T value, Consumer<T> consumer) {
-        getTransactionExecutor().executeWithTX(value, consumer);
-    }
-
-    public static <T> void executeWithNewTX(T value, Consumer<T> consumer) {
-        getTransactionExecutor().executeWithNewTX(value, consumer);
-    }
-
-    public static <T> void executeWithoutTX(T value, Consumer<T> consumer) {
-        getTransactionExecutor().executeWithoutTX(value, consumer);
     }
 
     /**
      * 事务提交后执行
+     *
      * @param cmd
      */
     public static void afterCommit(Runnable cmd) {
@@ -75,6 +54,7 @@ public class TransactionSyncUtil {
 
     /**
      * 事务提交后执行，作为优化调用编码的备选方式
+     *
      * @param cmd
      */
     public static <T> void afterCommit(T value, Consumer<T> consumer) {
@@ -83,6 +63,7 @@ public class TransactionSyncUtil {
 
     /**
      * 事务回滚后执行
+     *
      * @param cmd
      */
     public static void afterRollback(Runnable cmd) {
@@ -91,6 +72,7 @@ public class TransactionSyncUtil {
 
     /**
      * 事务回滚后执行，作为优化调用编码的备选方式
+     *
      * @param cmd
      */
     public static <T> void afterRollback(T value, Consumer<T> consumer) {
@@ -112,6 +94,7 @@ public class TransactionSyncUtil {
 
     /**
      * 是否存在事务
+     *
      * @param cmd
      */
     public static boolean isActualTransactionActive() {
@@ -186,33 +169,63 @@ public class TransactionSyncUtil {
     @Component
     public static class TransactionExecutor {
         @Transactional
-        public void executeWithTX(Runnable cmd) {
+        public void doWithTX(Runnable cmd) {
             cmd.run();
         }
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
-        public void executeWithNewTX(Runnable cmd) {
+        public void doWithNewTX(Runnable cmd) {
             cmd.run();
         }
 
         @Transactional(propagation = Propagation.NOT_SUPPORTED)
-        public void executeWithoutTX(Runnable cmd) {
+        public void doWithoutTX(Runnable cmd) {
             cmd.run();
         }
 
         @Transactional
-        public <T> void executeWithTX(T value, Consumer<T> consumer) {
+        public <T> void doWithTX(T value, Consumer<T> consumer) {
             consumer.accept(value);
         }
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
-        public <T> void executeWithNewTX(T value, Consumer<T> consumer) {
+        public <T> void doWithNewTX(T value, Consumer<T> consumer) {
             consumer.accept(value);
         }
 
         @Transactional(propagation = Propagation.NOT_SUPPORTED)
-        public <T> void executeWithoutTX(T value, Consumer<T> consumer) {
+        public <T> void doWithoutTX(T value, Consumer<T> consumer) {
             consumer.accept(value);
+        }
+
+        @Transactional
+        public <T> T doWithTX(Supplier<T> supplier) {
+            return supplier.get();
+        }
+
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
+        public <T> T doWithNewTX(Supplier<T> supplier) {
+            return supplier.get();
+        }
+
+        @Transactional(propagation = Propagation.NOT_SUPPORTED)
+        public <T> T doWithoutTX(Supplier<T> supplier) {
+            return supplier.get();
+        }
+
+        @Transactional
+        public <R, T> T doWithTX(R value, Function<R, T> function) {
+            return function.apply(value);
+        }
+
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
+        public <R, T> T doWithNewTX(R value, Function<R, T> function) {
+            return function.apply(value);
+        }
+
+        @Transactional(propagation = Propagation.NOT_SUPPORTED)
+        public <R, T> T doWithoutTX(R value, Function<R, T> function) {
+            return function.apply(value);
         }
     }
 }
