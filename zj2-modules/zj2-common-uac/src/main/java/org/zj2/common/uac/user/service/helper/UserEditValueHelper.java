@@ -14,8 +14,8 @@ import org.zj2.common.uac.user.dto.req.UserEditValueReq;
 import org.zj2.common.uac.user.service.UserLogService;
 import org.zj2.common.uac.user.service.UserService;
 import org.zj2.common.uac.user.service.UserValueService;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.helper.handler.BizVHandler;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  UserEditValueHelper

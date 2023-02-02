@@ -14,10 +14,10 @@ import org.zj2.common.uac.user.service.UserLogService;
 import org.zj2.common.uac.user.service.UserPasswordService;
 import org.zj2.common.uac.user.service.UserService;
 import org.zj2.common.uac.user.service.UserValueService;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BeanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizRespHandler;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  UserCreateHelper

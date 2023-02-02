@@ -1,5 +1,6 @@
 package org.zj2.lite.util;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.apache.skywalking.apm.toolkit.trace.TraceCrossThread;
@@ -88,7 +89,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
      */
     public static void executeAfterCommit(final Runnable command) {
         if (command == null) { return; }
-        if (TransactionSyncUtil.isActualTransactionActive()) {
+        if (TransactionSyncUtil.isTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), AsyncUtil::execute);
         } else {
             execute(command);
@@ -97,7 +98,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     public static void executeAfterCommit(final Object key, final Runnable command) {
         if (command == null) { return; }
-        if (TransactionSyncUtil.isActualTransactionActive()) {
+        if (TransactionSyncUtil.isTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), cmd -> execute(key, command));
         } else {
             execute(command);
@@ -153,6 +154,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     public static class AsyncCommand implements Runnable {
         private final Runnable command;
         private final ZContext context;
+        @Getter
         protected final String tid;
 
         protected AsyncCommand() {
@@ -261,16 +263,15 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     }
 
     private static class AsyncThreadFactory implements ThreadFactory {
-        private static final AtomicInteger threadNumber = new AtomicInteger(1);
+        private static final AtomicInteger THREAD_NUMBER = new AtomicInteger(1);
         private final ThreadGroup group;// NOSONAR
 
         AsyncThreadFactory() {
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            group = Thread.currentThread().getThreadGroup();
         }
 
         public Thread newThread(Runnable r) {
-            Thread t = new AsyncTaskThread(this, r, "ASYNC-" + threadNumber.getAndIncrement());
+            Thread t = new AsyncTaskThread(this, r, "ASYNC-" + THREAD_NUMBER.getAndIncrement());
             if (t.isDaemon()) { t.setDaemon(false); }
             if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;

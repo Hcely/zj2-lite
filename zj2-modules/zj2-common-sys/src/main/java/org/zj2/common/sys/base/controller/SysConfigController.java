@@ -14,9 +14,9 @@ import org.zj2.common.sys.base.dto.req.SysConfigQuery;
 import org.zj2.common.sys.base.dto.req.SysConfigSaveReq;
 import org.zj2.common.sys.base.service.SysConfigService;
 import org.zj2.lite.common.entity.result.ZListResp;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.entity.result.ZResp;
 import org.zj2.lite.common.entity.result.ZResult;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  SysConfigController

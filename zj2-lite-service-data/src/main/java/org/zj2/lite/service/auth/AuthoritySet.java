@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.dto;
+package org.zj2.lite.service.auth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.common.util.StrUtil;
-import org.zj2.lite.service.auth.AuthorityResource;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *  UserResources
+ * UserResources
  *
  * @author peijie.ye
  * @date 2023/1/2 19:22
@@ -24,7 +23,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserAuthorityResources implements Serializable {
+public class AuthoritySet implements Serializable {
     private static final long serialVersionUID = 3292141917083713905L;
 
     public static String getCacheKey(String appCode, String orgCode, String userId) {
@@ -35,11 +34,11 @@ public class UserAuthorityResources implements Serializable {
     private Map<String, Long> authorityPatterns;
     private Map<String, Long> authorityResources;
 
-    public UserAuthorityResources(String userId) {
+    public AuthoritySet(String userId) {
         this.userId = userId;
     }
 
-    public UserAuthorityResources addAuthority(UserAuthorityResource authority) {
+    public AuthoritySet addAuthority(Authority authority) {
         if (authority == null) { return this; }
         String name = authority.getName();
         if (StringUtils.isEmpty(name)) { return this; }

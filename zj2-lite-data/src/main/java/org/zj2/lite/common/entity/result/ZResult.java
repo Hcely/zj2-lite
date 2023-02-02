@@ -20,7 +20,6 @@ public class ZResult implements ZStatusMsg {
     protected int status;
     protected String msg;
 
-
     public ZResult setSuccess(boolean success) {
         this.success = success;
         return this;

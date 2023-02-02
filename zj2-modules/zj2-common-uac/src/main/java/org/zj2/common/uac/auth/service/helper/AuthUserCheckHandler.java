@@ -3,10 +3,10 @@ package org.zj2.common.uac.auth.service.helper;
 import org.springframework.stereotype.Component;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.user.dto.UserDTO;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
+import org.zj2.lite.util.ZRBuilder;
 
 import java.time.LocalDateTime;
 

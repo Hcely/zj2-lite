@@ -1,14 +1,14 @@
 package org.zj2.common.uac.auth.fliter;
 
-import org.zj2.common.uac.auth.dto.AuthenticationJWT;
-import org.zj2.common.uac.auth.dto.AuthenticationSign;
 import org.zj2.common.uac.auth.util.JWTValidUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
-import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.service.auth.AuthenticationJWT;
+import org.zj2.lite.service.auth.AuthenticationSign;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  AuthenticationWebFilter

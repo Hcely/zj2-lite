@@ -13,9 +13,9 @@ import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.SysNumRuleQuery;
 import org.zj2.common.sys.base.service.SysNumRuleService;
 import org.zj2.lite.common.entity.result.ZListResp;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.entity.result.ZResp;
 import org.zj2.lite.common.entity.result.ZResult;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  SysNumRuleController

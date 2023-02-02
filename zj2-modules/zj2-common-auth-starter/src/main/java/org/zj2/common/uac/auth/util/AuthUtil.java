@@ -4,10 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.service.AppApi;
 import org.zj2.lite.common.entity.result.ZError;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.spring.SpringBeanRef;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  AppUtil

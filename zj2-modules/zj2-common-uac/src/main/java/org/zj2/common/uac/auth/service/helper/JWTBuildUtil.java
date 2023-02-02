@@ -2,8 +2,8 @@ package org.zj2.common.uac.auth.service.helper;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.common.uac.auth.dto.AuthenticationJWT;
 import org.zj2.lite.codec.Base64Util;
+import org.zj2.lite.service.auth.AuthenticationJWT;
 import org.zj2.lite.sign.HMacSHA256Sign;
 
 /**

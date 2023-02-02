@@ -1,7 +1,7 @@
 package org.zj2.lite.helper.handler;
 
 
-import org.zj2.lite.common.entity.result.ZRBuilder;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  * BizHandler

@@ -24,8 +24,8 @@ import org.zj2.common.uac.user.service.helper.UserEnableHelper;
 import org.zj2.common.uac.user.service.helper.UserForbiddenHelper;
 import org.zj2.common.uac.user.service.helper.UserValidHelper;
 import org.zj2.lite.common.entity.result.ZListResp;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.BaseServiceImpl;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  UserServiceImpl

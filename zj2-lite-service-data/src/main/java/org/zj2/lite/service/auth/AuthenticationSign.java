@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.dto;
+package org.zj2.lite.service.auth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

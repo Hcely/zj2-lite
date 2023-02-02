@@ -3,13 +3,13 @@ package org.zj2.common.uac.auth.authorize;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.auth.dto.UserAuthorityResources;
 import org.zj2.lite.common.bean.BeanPropertyContext;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.service.auth.AuthorityResource;
+import org.zj2.lite.service.auth.AuthoritySet;
 
 import java.util.List;
 
@@ -26,16 +26,16 @@ public class AuthorizeBeanPropertyHandler extends AbstractAuthorizeHandler<Objec
 
     @Override
     public void authorize(Object bean) {
-        final UserAuthorityResources authorities = getAuthorityResources();
+        final AuthoritySet authorities = getAuthorityResources();
         PropertyUtil.scanProperties(bean, new AuthorizePropertyScanHandler(this, authorities));
     }
 
     private static class AuthorizePropertyScanHandler implements BeanPropertyScanHandler {
         private final AuthorizeBeanPropertyHandler propertyHandler;
-        private final UserAuthorityResources authorities;
+        private final AuthoritySet authorities;
 
         private AuthorizePropertyScanHandler(AuthorizeBeanPropertyHandler propertyHandler,
-                UserAuthorityResources authorities) {
+                AuthoritySet authorities) {
             this.propertyHandler = propertyHandler;
             this.authorities = authorities;
         }

@@ -1,11 +1,11 @@
 package org.zj2.lite.session;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.session.entity.DefSessionResult;
 import org.zj2.lite.session.entity.SessionAttr;
 import org.zj2.lite.session.entity.SessionLog;
 import org.zj2.lite.session.entity.SessionResult;
+import org.zj2.lite.util.ZRBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,14 +53,14 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
                 b = lock.lock();
             } catch (Throwable e) {
                 casStatus(STARTING, ERROR);
-                throw ZRBuilder.builder().msg0("session启动失败").buildError(e);
+                throw ZRBuilder.builder().msg("session启动失败").buildError(e);
             }
             if (b) {
                 casStatus(STARTING, STARTED);
                 onStarted();
             } else {
                 casStatus(STARTING, ERROR);
-                throw ZRBuilder.builder().msg0("session请求频繁，启动失败").buildError();
+                throw ZRBuilder.builder().msg("session请求频繁，启动失败").buildError();
             }
         }
     }
@@ -114,7 +114,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
     }
 
     protected final void checkStatus() {
-        if (state != STARTED) { throw ZRBuilder.builder().msg0("session未启动!").buildError(); }
+        if (state != STARTED) { throw ZRBuilder.builder().msg("session未启动!").buildError(); }
     }
 
     private boolean casStatus(int oldValue, int newValue) {

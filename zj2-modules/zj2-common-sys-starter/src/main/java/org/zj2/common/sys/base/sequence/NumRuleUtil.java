@@ -4,12 +4,12 @@ import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.service.SysNumRuleApi;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.spring.SpringBeanRef;
 import org.zj2.lite.util.AsyncUtil;
 import org.zj2.lite.util.TransactionSyncUtil;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  SequenceNoUtil

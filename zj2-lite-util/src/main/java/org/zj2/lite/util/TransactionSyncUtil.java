@@ -10,7 +10,6 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.zj2.lite.spring.SpringBeanRef;
 
-import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -27,16 +26,24 @@ import java.util.function.Supplier;
 @SuppressWarnings("all")
 public class TransactionSyncUtil {
     private static final Logger log = LoggerFactory.getLogger(TransactionSyncUtil.class);
-    private static final ThreadLocal<AtomicInteger> IDX_TL = ThreadLocal.withInitial(AtomicInteger::new);
-    // 防止被嵌套调用
-    private static final ThreadLocal<Boolean> COMMITTED_FLAG_TL = new ThreadLocal<>();
     //
-    private static final Field SYNCHRONIZATIONS_FIELD;
     private static final SpringBeanRef<TransactionExecutor> TRANSACTION_EXECUTOR_REF = new SpringBeanRef<>(
             TransactionExecutor.class);
+    private static final ThreadLocal<AtomicInteger> IDX_TL = ThreadLocal.withInitial(AtomicInteger::new);
+    // 防止被嵌套调用
+    private static final ThreadLocal<Boolean> TRANS_STATE_TL = new ThreadLocal<>();
+    //
+    private static final ThreadLocal<Set> synchronizations;
 
     static {
-        SYNCHRONIZATIONS_FIELD = FieldUtils.getField(TransactionSynchronizationManager.class, "synchronizations", true);
+        ThreadLocal<Set> tmp;
+        try {
+            tmp = (ThreadLocal<Set>) FieldUtils.readStaticField(TransactionSynchronizationManager.class,
+                    "synchronizations", true);
+        } catch (Throwable e) {
+            tmp = null;
+        }
+        synchronizations = tmp;
     }
 
     public static TransactionExecutor transExecutor() {
@@ -80,7 +87,7 @@ public class TransactionSyncUtil {
     }
 
     private static <T> void transSync(Runnable cmd, T value, Consumer<T> consumer, boolean afterCommit) {
-        Boolean committedflag = COMMITTED_FLAG_TL.get();
+        Boolean committedflag = TRANS_STATE_TL.get();
         if (committedflag != null) {
             if (committedflag == afterCommit) { executeCmd(cmd, value, consumer); }
         } else if (TransactionSynchronizationManager.isActualTransactionActive()) {
@@ -97,10 +104,9 @@ public class TransactionSyncUtil {
      *
      * @param cmd
      */
-    public static boolean isActualTransactionActive() {
-        return COMMITTED_FLAG_TL.get() == null && TransactionSynchronizationManager.isActualTransactionActive();
+    public static boolean isTransactionActive() {
+        return TRANS_STATE_TL.get() == null && TransactionSynchronizationManager.isActualTransactionActive();
     }
-
 
     private static void executeCmd(Runnable cmd, Object value, Consumer consumer) {
         if (cmd != null) {
@@ -143,27 +149,23 @@ public class TransactionSyncUtil {
 
         private void doExecute(Boolean commited) {
             try {
-                COMMITTED_FLAG_TL.set(commited);
+                TRANS_STATE_TL.set(commited);
                 executeCmd(cmd, value, consumer);
             } catch (Throwable e) {
                 throw e;
             } finally {
-                COMMITTED_FLAG_TL.remove();
+                TRANS_STATE_TL.remove();
             }
         }
     }
 
     private static int getSyncIdx() {
-        if (SYNCHRONIZATIONS_FIELD != null) {
-            try {
-                ThreadLocal<Set> synchronizations = (ThreadLocal<Set>) FieldUtils.readStaticField(
-                        SYNCHRONIZATIONS_FIELD);
-                Set value = synchronizations.get();
-                return value == null ? 0 : value.size();
-            } catch (Throwable e) {
-            }
+        if (synchronizations != null) {
+            Set value = synchronizations.get();
+            return value == null ? 0 : value.size();
+        } else {
+            return IDX_TL.get().getAndIncrement() & Integer.MAX_VALUE;
         }
-        return IDX_TL.get().getAndIncrement() & Integer.MAX_VALUE;
     }
 
     @Component

@@ -2,9 +2,9 @@ package org.zj2.common.uac.auth.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
-import org.zj2.common.uac.auth.dto.AuthenticationSign;
 import org.zj2.lite.codec.CodecUtil;
 import org.zj2.lite.common.util.StrUtil;
+import org.zj2.lite.service.auth.AuthenticationSign;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;

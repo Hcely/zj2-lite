@@ -13,8 +13,8 @@ import org.zj2.common.uac.org.service.helper.OrgEmployeeEnableHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeQuitHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeVisibleHelper;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.service.BaseServiceImpl;
+import org.zj2.lite.util.ZRBuilder;
 
 import java.time.LocalDateTime;
 

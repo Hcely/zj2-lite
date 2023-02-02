@@ -1,10 +1,10 @@
 package org.zj2.common.sys.base.service.helper;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.text.SlotFormatPart;
 import org.zj2.lite.common.text.StrFormatterManager;
 import org.zj2.lite.common.text.ValueSerializer;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  SequenceUtil

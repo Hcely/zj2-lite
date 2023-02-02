@@ -1,7 +1,12 @@
-package org.zj2.lite.common.entity.result;
+package org.zj2.lite.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
+import org.zj2.lite.common.entity.result.ZError;
+import org.zj2.lite.common.entity.result.ZListResp;
+import org.zj2.lite.common.entity.result.ZResp;
+import org.zj2.lite.common.entity.result.ZResult;
+import org.zj2.lite.common.entity.result.ZStatusMsg;
 import org.zj2.lite.common.util.StrUtil;
 
 import java.io.Serializable;
@@ -10,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *  ZResultBuilder
+ * ZResultBuilder
  *
  * @author peijie.ye
  * @date 2022/11/23 15:14
@@ -103,81 +108,81 @@ public class ZRBuilder implements Serializable {
 
     public ZRBuilder msg(String msg) {
         if (StringUtils.isNotEmpty(module) && StringUtils.isNotEmpty(msg)) {
-            msg0(StrUtil.concat(module, "-", msg));
+            msg0(StrUtil.concat(module, '-', msg));
         } else {
             msg0(msg);
         }
         return this;
     }
 
-    public ZRBuilder msg0(String msg) {
+    private ZRBuilder msg0(String msg) {
         this.msg = msg;
         return this;
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, arg0));
+            return msg(StrUtil.format(msgFormat, arg0));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 2;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, arg0);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, arg0, arg1));
+            return msg(StrUtil.format(msgFormat, arg0, arg1));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 2;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, arg0, arg1);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, arg0, arg1, arg2));
+            return msg(StrUtil.format(msgFormat, arg0, arg1, arg2));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 3;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, arg0, arg1, arg2);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3));
+            return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 4;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, arg0, arg1, arg2, arg3);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 
-    public ZRBuilder setMsg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
+    public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3, arg4));
+            return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3, arg4));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 4;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, arg0, arg1, arg2, arg3, arg4);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 
     public ZRBuilder msg(String msgFormat, Object... args) {
         if (StringUtils.isEmpty(module)) {
-            return msg0(StrUtil.format(msgFormat, args));
+            return msg(StrUtil.format(msgFormat, args));
         } else {
             int initialCapacity = module.length() + StringUtils.length(msgFormat) + 32 * 4;
             TextStringBuilder sb = new TextStringBuilder(initialCapacity).append(module).append('-');
             StrUtil.getFormatter(msgFormat).appendArgs(sb, args);
-            return msg0(sb.toString());
+            return msg(sb.toString());
         }
     }
 

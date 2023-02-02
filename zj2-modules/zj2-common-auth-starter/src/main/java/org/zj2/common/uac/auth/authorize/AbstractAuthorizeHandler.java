@@ -1,8 +1,8 @@
 package org.zj2.common.uac.auth.authorize;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.common.uac.auth.dto.UserAuthorityResources;
 import org.zj2.common.uac.auth.service.AuthorityApi;
+import org.zj2.lite.service.auth.AuthoritySet;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.spring.SpringBeanRef;
@@ -18,19 +18,19 @@ public abstract class AbstractAuthorizeHandler<T> {
 
     public abstract void authorize(T value);
 
-    protected UserAuthorityResources getAuthorityResources() {
+    protected AuthoritySet getAuthorityResources() {
         AuthenticationContext cxt = AuthenticationContext.current();
         final String userId = AuthenticationContext.currentUserId();
-        if (StringUtils.isEmpty(userId)) { return new UserAuthorityResources(userId); }
+        if (StringUtils.isEmpty(userId)) { return new AuthoritySet(userId); }
         AuthorityApi authorityApi = authorityApiRef.get();
-        if (authorityApi == null) { return new UserAuthorityResources(userId); }
+        if (authorityApi == null) { return new AuthoritySet(userId); }
         final String appCode = cxt.getAppCode();
         final String orgCode = cxt.getOrgCode();
-        String key = UserAuthorityResources.getCacheKey(appCode, orgCode, userId);
-        UserAuthorityResources authorityResources = CacheUtil.DEF_CACHE.getCache(key, userId,
+        String key = AuthoritySet.getCacheKey(appCode, orgCode, userId);
+        AuthoritySet authorityResources = CacheUtil.DEF_CACHE.getCache(key, userId,
                 e -> authorityApi.getUserAuthorities(appCode, orgCode, userId));
         //
-        return authorityResources == null ? new UserAuthorityResources(userId) : authorityResources;
+        return authorityResources == null ? new AuthoritySet(userId) : authorityResources;
     }
 
 }

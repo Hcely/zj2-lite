@@ -147,7 +147,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
             throw e;
         } finally {
             completed(chainContext, error, interrupted);
-            ChainBizHandlerUtil.completeChain(chainContext.parent());
+            ChainBizHandlerUtil.completeChain(chainContext);
             chainContext.finish();
         }
     }

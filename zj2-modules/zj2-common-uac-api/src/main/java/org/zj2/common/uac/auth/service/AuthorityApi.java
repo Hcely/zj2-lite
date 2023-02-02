@@ -1,7 +1,7 @@
 package org.zj2.common.uac.auth.service;
 
-import org.zj2.common.uac.auth.dto.UserAuthorityResources;
 import org.zj2.lite.service.ApiReference;
+import org.zj2.lite.service.auth.AuthoritySet;
 
 /**
  *  AuthorityApi
@@ -11,5 +11,5 @@ import org.zj2.lite.service.ApiReference;
  */
 @ApiReference
 public interface AuthorityApi {
-    UserAuthorityResources getUserAuthorities(String appCode, String orgCode, String userId);
+    AuthoritySet getUserAuthorities(String appCode, String orgCode, String userId);
 }

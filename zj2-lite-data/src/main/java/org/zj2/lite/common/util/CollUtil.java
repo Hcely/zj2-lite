@@ -584,13 +584,13 @@ public class CollUtil {
         return null;
     }
 
-    public static <T> T getFirst(Collection<T> coll, Predicate<T> predicate) {
+    public static <T> T findFirst(Collection<T> coll, Predicate<T> predicate) {
         if (isEmpty(coll)) { return null; }
         for (T e : coll) { if (e != null && predicate.test(e)) { return e; } }
         return null;
     }
 
-    public static <T> T getFirst(T[] array, Predicate<T> predicate) {
+    public static <T> T findFirst(T[] array, Predicate<T> predicate) {
         if (isEmpty(array)) { return null; }
         for (T e : array) { if (e != null && predicate.test(e)) { return e; } }
         return null;

@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.dto;
+package org.zj2.lite.service.auth;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- *  JWToken
+ * JWToken
  *
  * @author peijie.ye
  * @date 2022/11/27 22:25
@@ -18,7 +18,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class AuthenticationJWT implements Serializable {
     private static final long serialVersionUID = 20221127222539L;
-
+    /**
+     *
+     */
+    @JSONField(name = "tid")
+    private String tokenId;
     /**
      * 用户id
      */
@@ -54,6 +58,9 @@ public class AuthenticationJWT implements Serializable {
      */
     @JSONField(name = "ns")
     private String namespace;
+
+    @JSONField(name = "at")
+    private Integer authorityType;
 
     /**
      * 用户token

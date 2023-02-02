@@ -7,6 +7,7 @@ import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.dto.req.AuthReq;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.user.dto.UserDTO;
+import org.zj2.lite.service.auth.AuthenticationJWT;
 
 /**
  *  AuthContext

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.entity.result.ZListResp;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BeanUtil;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
@@ -28,6 +27,7 @@ import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
 import org.zj2.lite.service.entity.request.wrapper.ZUpdateWrapper;
 import org.zj2.lite.service.util.SafeLogUtil;
 import org.zj2.lite.spring.SpringUtil;
+import org.zj2.lite.util.ZRBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;

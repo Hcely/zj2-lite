@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.dto;
+package org.zj2.lite.service.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuthorityResource implements Serializable {
+public class Authority implements Serializable {
     private static final long serialVersionUID = 3432530857062182779L;
     private String name;
     private long expireTime;

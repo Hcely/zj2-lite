@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * 业务处理器标识
  * <br>CreateDate 三月 27,2022
+ *
  * @author peijie.ye
  */
 @Slf4j
@@ -36,7 +37,11 @@ public class ChainBizHandlerUtil {
     }
 
     static void completeChain(ChainBizContext context) {
-        if (context == null) { CHAIN_CONTEXT_TL.remove(); } else { CHAIN_CONTEXT_TL.set(context); }
+        if (context == null || context.parent() == null) {
+            CHAIN_CONTEXT_TL.remove();
+        } else {
+            CHAIN_CONTEXT_TL.set(context.parent());
+        }
     }
 
     public static ChainBizContext currentChainContext() {

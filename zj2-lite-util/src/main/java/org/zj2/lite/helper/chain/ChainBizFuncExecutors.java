@@ -1,13 +1,13 @@
 package org.zj2.lite.helper.chain;
 
 
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.helper.handler.BizContextConverter;
 import org.zj2.lite.helper.handler.BizFunc;
 import org.zj2.lite.helper.handler.BizHandler;
 import org.zj2.lite.helper.handler.BizRespHandler;
 import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.helper.handler.BizValidator;
+import org.zj2.lite.util.ZRBuilder;
 
 @SuppressWarnings("all")
 interface ChainBizFuncExecutors {

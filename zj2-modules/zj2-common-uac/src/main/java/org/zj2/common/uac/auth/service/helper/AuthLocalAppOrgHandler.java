@@ -11,9 +11,9 @@ import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.dto.req.AuthReq;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.service.OrgService;
-import org.zj2.lite.common.entity.result.ZRBuilder;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
+import org.zj2.lite.util.ZRBuilder;
 
 /**
  *  AuthLocalAppOrgHandler
