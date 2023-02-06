@@ -24,34 +24,34 @@ import org.zj2.lite.util.ZRBuilder;
  * @author peijie.ye
  * @date 2022/12/28 21:54
  */
-@Tag(name = "系统配置模块")
+@Tag(name = "sys-系统配置模块")
 @RestController
 @RequestMapping("/api/sys/config")
 public class SysConfigController {
     @Autowired
     private SysConfigService sysConfigService;
 
-    @Operation(tags = "系统配置模块", summary = "保存系统配置接口", description = "创建或编辑系统配置")
+    @Operation(tags = "sys-系统配置模块", summary = "保存系统配置接口", description = "创建或编辑系统配置")
     @PostMapping("/save")
     public ZResp<SysConfigDTO> save(@RequestBody SysConfigSaveReq req) {
         SysConfigDTO config = sysConfigService.saveConfig(req);
         return ZRBuilder.successResp(config);
     }
 
-    @Operation(tags = "系统配置模块", summary = "查询系统配置接口")
+    @Operation(tags = "sys-系统配置模块", summary = "查询系统配置接口")
     @PostMapping("/pageQuery")
     public ZListResp<SysConfigDTO> pageQuery(@RequestBody SysConfigQuery query) {
         return sysConfigService.pageQuery(query);
     }
 
-    @Operation(tags = "系统配置模块", summary = "获取系统配置接口")
+    @Operation(tags = "sys-系统配置模块", summary = "获取系统配置接口")
     @GetMapping("/{sysConfigId}")
     public ZResp<SysConfigDTO> get(@PathVariable String sysConfigId) {
         SysConfigDTO config = sysConfigService.get(sysConfigId);
         return ZRBuilder.successResp(config);
     }
 
-    @Operation(tags = "系统配置模块", summary = "删除系统配置接口")
+    @Operation(tags = "sys-系统配置模块", summary = "删除系统配置接口")
     @PostMapping("/remove/{sysConfigId}")
     public ZResult remove(@PathVariable String sysConfigId) {
         sysConfigService.removeConfig(sysConfigId);
