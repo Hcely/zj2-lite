@@ -59,6 +59,11 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
     }
 
     @Override
+    public void removeClient(String appClientId) {
+
+    }
+
+    @Override
     public void enable(String appClientId) {
         AppClientDTO appClient = get(appClientId);
         if (appClient != null && BooleanUtil.isTrue(appClient.getEnableFlag())) {

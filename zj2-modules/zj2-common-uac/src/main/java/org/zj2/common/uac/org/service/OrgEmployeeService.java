@@ -5,6 +5,7 @@ import org.zj2.common.uac.org.dto.OrgEmployeeExtDTO;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeAddReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeCreateReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeQuery;
+import org.zj2.common.uac.org.dto.req.OrgEmployeeQuitReq;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
@@ -69,7 +70,8 @@ public interface OrgEmployeeService extends BaseInnerService<OrgEmployeeDTO>, Or
     /**
      * 离职
      */
-    void quit(String employeeId, LocalDateTime quitTime);
+    void quit(OrgEmployeeQuitReq req);
+
 
     ZListResp<OrgEmployeeExtDTO> pageQuery(OrgEmployeeQuery query);
 }

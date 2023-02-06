@@ -3,6 +3,7 @@ package org.zj2.common.uac.app.service;
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.dto.AppUserExtDTO;
 import org.zj2.common.uac.app.dto.req.AppUserQuery;
+import org.zj2.common.uac.app.dto.req.AppUserAddReq;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
@@ -16,11 +17,10 @@ public interface AppUserService extends BaseInnerService<AppUserDTO>, AppUserApi
     /**
      * 添加用户
      *
-     * @param appCode
-     * @param userId
+     * @param req
      * @return
      */
-    AppUserDTO addUser(String appCode, String userId);
+    AppUserDTO addUser(AppUserAddReq req);
 
     /**
      * 移除用户

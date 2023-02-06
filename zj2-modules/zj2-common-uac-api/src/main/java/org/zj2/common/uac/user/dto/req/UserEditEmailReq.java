@@ -15,9 +15,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEditMobileReq implements Serializable {
+public class UserEditEmailReq implements Serializable {
     private static final long serialVersionUID = 20221128144806L;
     private String userId;
-    private String userMobileAreaCode;
-    private String userMobile;
+    private String userEmail;
 }

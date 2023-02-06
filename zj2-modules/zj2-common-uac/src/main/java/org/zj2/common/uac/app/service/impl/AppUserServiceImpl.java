@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.dto.AppUserExtDTO;
 import org.zj2.common.uac.app.dto.req.AppUserQuery;
+import org.zj2.common.uac.app.dto.req.AppUserAddReq;
 import org.zj2.common.uac.app.entity.AppUser;
 import org.zj2.common.uac.app.mapper.AppUserMapper;
 import org.zj2.common.uac.app.service.AppUserService;
@@ -27,12 +28,12 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     }
 
     @Override
-    public AppUserDTO addUser(String appCode, String userId) {
-        AppUserDTO exist = getAppUser(appCode, userId);
+    public AppUserDTO addUser(AppUserAddReq req) {
+        AppUserDTO exist = getAppUser(req.getAppCode(), req.getUserId());
         if (exist == null) {
             AppUserDTO appUser = new AppUserDTO();
-            appUser.setAppCode(appCode);
-            appUser.setUserId(userId);
+            appUser.setAppCode(req.getAppCode());
+            appUser.setUserId(req.getUserId());
             appUser.setEnableFlag(1);
             appUser.setEnabledTime(DateUtil.now());
             add(appUser);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zj2.common.uac.app.dto.AppClientDTO;
 import org.zj2.common.uac.app.dto.AppDTO;
+import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.service.JWTokenService;
 import org.zj2.common.uac.org.dto.OrgDTO;
@@ -83,6 +84,10 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
         update.setUserId(user.getUserId());
         if (user.getFirstLoginTime() == null) { update.setFirstLoginTime(now); }
         update.setLastLoginTime(now);
+        AppClientDTO client = context.getClient();
+        if (client != null) { update.setLastLoginClientCode(client.getClientCode()); }
+        AppDTO app = context.getApp();
+        if (app != null) { update.setLastLoginAppCode(app.getAppCode()); }
         userService.updateById(update);
     }
 

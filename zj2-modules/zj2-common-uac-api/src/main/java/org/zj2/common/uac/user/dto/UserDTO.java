@@ -73,6 +73,16 @@ public class UserDTO implements Serializable {
     private LocalDateTime lastLoginTime;
 
     /**
+     * 最新一次登录客户端
+     */
+    private String lastLoginClientCode;
+
+    /**
+     * 最新一次登录应用
+     */
+    private String lastLoginAppCode;
+
+    /**
      * 停用到期时间
      */
     private LocalDateTime forbiddenExpireTime;

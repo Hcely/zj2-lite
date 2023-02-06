@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
+import org.zj2.common.uac.app.dto.req.AppEditSecretReq;
 import org.zj2.common.uac.app.dto.req.AppQuery;
 import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.app.mapper.AppMapper;
@@ -51,7 +52,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     }
 
     @Override
-    public AppDTO createApp(AppCreateSaveReq req) {
+    public AppDTO addApp(AppCreateSaveReq req) {
         // 处理参数
         req.setAppCode(StringUtils.trimToEmpty(req.getAppCode()));
         req.setAppName(StringUtils.trimToEmpty(req.getAppName()));
@@ -92,16 +93,16 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
     }
 
     @Override
-    public void editSecret(String appCode, String appSecret) {
-        AppDTO app = getByCode0(appCode);
+    public void editSecret(AppEditSecretReq req) {
+        AppDTO app = getByCode0(req.getAppCode());
         if (app == null) { throw ZRBuilder.failureErr("应用不存在"); }
-        if (!validSecret(appSecret)) { throw ZRBuilder.failureErr("应用密钥不合法"); }
+        if (!validSecret(req.getAppSecret())) { throw ZRBuilder.failureErr("应用密钥不合法"); }
         //
         AppDTO update = new AppDTO();
         update.setAppId(app.getAppId());
-        update.setAppSecret(appSecret);
+        update.setAppSecret(req.getAppSecret());
         updateById(update);
-        CacheUtil.sendCacheSign(AppDTO.getCacheKey(appCode));
+        CacheUtil.sendCacheSign(AppDTO.getCacheKey(req.getAppCode()));
     }
 
     @Override

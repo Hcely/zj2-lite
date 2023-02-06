@@ -3,6 +3,7 @@ package org.zj2.common.uac.app.service.impl;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppOrgDTO;
 import org.zj2.common.uac.app.dto.AppOrgExtDTO;
+import org.zj2.common.uac.app.dto.req.AppOrgAddReq;
 import org.zj2.common.uac.app.dto.req.AppOrgQuery;
 import org.zj2.common.uac.app.entity.AppOrg;
 import org.zj2.common.uac.app.mapper.AppOrgMapper;
@@ -27,12 +28,12 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     }
 
     @Override
-    public AppOrgDTO addOrg(String appCode, String orgCode) {
-        AppOrgDTO exist = getAppOrg(appCode, orgCode);
+    public AppOrgDTO addOrg(AppOrgAddReq req) {
+        AppOrgDTO exist = getAppOrg(req.getAppCode(), req.getOrgCode());
         if (exist == null) {
             AppOrgDTO appOrg = new AppOrgDTO();
-            appOrg.setAppCode(appCode);
-            appOrg.setOrgCode(orgCode);
+            appOrg.setAppCode(req.getAppCode());
+            appOrg.setOrgCode(req.getOrgCode());
             appOrg.setEnableFlag(1);
             appOrg.setEnabledTime(DateUtil.now());
             return add(appOrg);

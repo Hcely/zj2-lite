@@ -2,6 +2,7 @@ package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
+import org.zj2.common.uac.app.dto.req.AppEditSecretReq;
 import org.zj2.common.uac.app.dto.req.AppQuery;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
@@ -18,7 +19,7 @@ public interface AppService extends BaseInnerService<AppDTO>, AppApi {
      * @param req
      * @return
      */
-    AppDTO createApp(AppCreateSaveReq req);
+    AppDTO addApp(AppCreateSaveReq req);
 
     /**
      * 编辑应用
@@ -28,10 +29,9 @@ public interface AppService extends BaseInnerService<AppDTO>, AppApi {
 
     /**
      * 编辑密钥
-     * @param appCode
-     * @param appSecret
+     * @param req
      */
-    void editSecret(String appCode, String appSecret);
+    void editSecret(AppEditSecretReq req);
 
     /**
      * 启用

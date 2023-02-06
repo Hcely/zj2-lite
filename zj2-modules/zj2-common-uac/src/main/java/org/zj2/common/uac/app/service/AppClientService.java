@@ -7,7 +7,7 @@ import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  AppClientService
+ * AppClientService
  *
  * @author peijie.ye
  * @date 2022/12/6 11:05
@@ -15,25 +15,36 @@ import org.zj2.lite.service.BaseInnerService;
 public interface AppClientService extends BaseInnerService<AppClientDTO>, AppClientApi {
     /**
      * 创建
+     *
      * @param req
      * @return
      */
     AppClientDTO saveClient(AppClientSaveReq req);
 
     /**
+     * 删除
+     *
+     * @param appClientId
+     */
+    void removeClient(String appClientId);
+
+    /**
      * 启用
+     *
      * @param appClientId
      */
     void enable(String appClientId);
 
     /**
      * 禁用
+     *
      * @param appClientId
      */
     void disable(String appClientId);
 
     /**
      * 查询应用客户端
+     *
      * @param query
      * @return
      */

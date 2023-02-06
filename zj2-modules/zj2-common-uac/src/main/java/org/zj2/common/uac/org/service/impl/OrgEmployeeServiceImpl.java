@@ -7,6 +7,7 @@ import org.zj2.common.uac.org.dto.OrgEmployeeExtDTO;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeAddReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeCreateReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeQuery;
+import org.zj2.common.uac.org.dto.req.OrgEmployeeQuitReq;
 import org.zj2.common.uac.org.entity.OrgEmployee;
 import org.zj2.common.uac.org.mapper.OrgEmployeeMapper;
 import org.zj2.common.uac.org.service.OrgEmployeeService;
@@ -92,8 +93,8 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     }
 
     @Override
-    public void quit(String employeeId, LocalDateTime quitTime) {
-        orgEmployeeQuitHelper.handle(employeeId, quitTime);
+    public void quit(OrgEmployeeQuitReq req) {
+        orgEmployeeQuitHelper.handle(req.getEmployeeId(), req.getQuitTime());
     }
 
     @Override

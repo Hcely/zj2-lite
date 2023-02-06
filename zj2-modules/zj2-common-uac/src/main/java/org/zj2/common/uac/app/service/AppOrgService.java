@@ -2,6 +2,7 @@ package org.zj2.common.uac.app.service;
 
 import org.zj2.common.uac.app.dto.AppOrgDTO;
 import org.zj2.common.uac.app.dto.AppOrgExtDTO;
+import org.zj2.common.uac.app.dto.req.AppOrgAddReq;
 import org.zj2.common.uac.app.dto.req.AppOrgQuery;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
@@ -15,11 +16,10 @@ import org.zj2.lite.service.BaseInnerService;
 public interface AppOrgService extends BaseInnerService<AppOrgDTO>, AppOrgApi {
     /**
      * 添加机构
-     * @param appCode
-     * @param orgCode
+     * @param req
      * @return
      */
-    AppOrgDTO addOrg(String appCode, String orgCode);
+    AppOrgDTO addOrg(AppOrgAddReq req);
 
     /**
      * 移除机构
