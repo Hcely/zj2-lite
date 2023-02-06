@@ -17,7 +17,7 @@ import org.zj2.lite.service.BaseServiceImpl;
 import java.util.List;
 
 /**
- *  AppServiceImpl
+ * AppServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -85,6 +85,8 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
 
     @Override
     public ZListResp<AppClientDTO> pageQuery(AppClientQuery query) {
-        return null;
+        return pageQuery(query, q -> query(wrapper(true).eq(AppClientDTO::getAppCode, q.getAppCode())
+                .like(AppClientDTO::getClientCode, q.getClientCode())
+                .like(AppClientDTO::getClientName, q.getClientName())));
     }
 }

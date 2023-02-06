@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.zj2.common.uac.app.mapper.AppUserMapper">
+
+    <select id="query" resultType="org.zj2.common.uac.app.dto.AppUserExtDTO">
+        SELECT t1.*, t2.user_name
+        FROM uac_app_user t1
+        LEFT JOIN uac_user t2 ON t1.user_id = t2.user_id
+        WHERE t1.app_code = #{query.appCode}
+        <if test="query.username!=null">
+            AND t2.user_name like CONCAT('%',#{query.userName},'%')
+        </if>
+        <if test="query.enableFlag!=null">
+            AND t1.enable_flag = #{enableFlag}
+        </if>
+        ORDER BY t1.app_user_id DESC
+    </select>
 </mapper>

@@ -3,8 +3,10 @@ package org.zj2.common.uac.org.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.org.dto.OrgEmployeeDTO;
+import org.zj2.common.uac.org.dto.OrgEmployeeExtDTO;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeAddReq;
 import org.zj2.common.uac.org.dto.req.OrgEmployeeCreateReq;
+import org.zj2.common.uac.org.dto.req.OrgEmployeeQuery;
 import org.zj2.common.uac.org.entity.OrgEmployee;
 import org.zj2.common.uac.org.mapper.OrgEmployeeMapper;
 import org.zj2.common.uac.org.service.OrgEmployeeService;
@@ -13,13 +15,14 @@ import org.zj2.common.uac.org.service.helper.OrgEmployeeEnableHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeQuitHelper;
 import org.zj2.common.uac.org.service.helper.OrgEmployeeVisibleHelper;
+import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.util.ZRBuilder;
 
 import java.time.LocalDateTime;
 
 /**
- *  OrgEmployeeServiceImpl
+ * OrgEmployeeServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -91,5 +94,10 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     @Override
     public void quit(String employeeId, LocalDateTime quitTime) {
         orgEmployeeQuitHelper.handle(employeeId, quitTime);
+    }
+
+    @Override
+    public ZListResp<OrgEmployeeExtDTO> pageQuery(OrgEmployeeQuery query) {
+        return pageQuery(query, mapper::query);
     }
 }

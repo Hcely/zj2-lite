@@ -26,7 +26,7 @@ public class AuthorizeBeanPropertyHandler extends AbstractAuthorizeHandler<Objec
 
     @Override
     public void authorize(Object bean) {
-        final AuthoritySet authorities = getAuthorityResources();
+        final AuthoritySet authorities = getAuthoritySet();
         PropertyUtil.scanProperties(bean, new AuthorizePropertyScanHandler(this, authorities));
     }
 

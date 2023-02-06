@@ -25,10 +25,11 @@ import org.zj2.common.uac.user.service.helper.UserForbiddenHelper;
 import org.zj2.common.uac.user.service.helper.UserValidHelper;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseServiceImpl;
+import org.zj2.lite.util.CryptUtil;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  UserServiceImpl
+ * UserServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -89,7 +90,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
 
     @Override
     public ZListResp<UserDTO> pageQuery(UserQuery query) {
-        return null;
+        return pageQuery(query, q -> query(
+                wrapper(true).eq(UserDTO::getUserMobile, CryptUtil.encrypt(q.getUserMobile()))
+                        .eq(UserDTO::getUserEmail, CryptUtil.encrypt(q.getUseremail()))
+                        .like(UserDTO::getUserName, q.getUserName()).eq(UserDTO::getActivateFlag, q.getActivateFlag())
+                        .eq(UserDTO::getEnableFlag, q.getEnableFlag()).orderByDesc(UserDTO::getUserId)));
     }
 
     @Override

@@ -2,7 +2,7 @@ package org.zj2.lite.service.configure.context;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.zj2.lite.common.context.ZContext;
+import org.zj2.lite.common.context.ZContexts;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class WebContextFilter implements Filter {
         try {
             chain.doFilter(request, response);
         } finally {
-            ZContext.clearContext();
+            ZContexts.clearContext();
         }
     }
 }

@@ -6,13 +6,13 @@ import java.lang.ref.SoftReference;
 import java.nio.charset.StandardCharsets;
 
 /**
- *  CodecUtil
+ * CodecUtil
  *
  * @author peijie.ye
  * @date 2022/11/24 15:10
  */
 public class CodecUtil {
-    public static final int BUFFER_SIZE = 256;
+    private static final int BUFFER_SIZE = 512;
     private static final SoftBufferThreadLocal BUFFERS = new SoftBufferThreadLocal();
     private static final char[] CHAR_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
             'F'};

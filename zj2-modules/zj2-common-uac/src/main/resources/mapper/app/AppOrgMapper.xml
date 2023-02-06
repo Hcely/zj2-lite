@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zj2.common.uac.app.mapper.AppOrgMapper">
+    <select id="query" resultType="org.zj2.common.uac.app.dto.AppOrgExtDTO">
+        SELECT t1.*,
+        t2.org_name
+        FROM uac_app_org t1
+        LEFT JOIN uac_org t2 ON t1.org_code = t2.org_code
+        WHERE t1.app_code = #{query.appCode}
+        <if test="query.orgCode!=null">
+            AND t1.org_code like CONCAT('%',#{query.orgCode},'%')
+        </if>
+        <if test="query.orgName!=null">
+            AND t2.org_name like CONCAT('%',#{query.orgName},'%')
+        </if>
+        <if test="query.enableFlag!=null">
+            AND t1.enable_flag = #{query.enableFlag}
+        </if>
+        ORDER BY t1.app_org_id DESC
+    </select>
+</mapper>

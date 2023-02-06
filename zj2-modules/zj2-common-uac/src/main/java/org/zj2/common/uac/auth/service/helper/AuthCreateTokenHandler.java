@@ -1,5 +1,6 @@
 package org.zj2.common.uac.auth.service.helper;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,13 @@ import org.zj2.lite.service.auth.AuthenticationJWT;
 import java.time.LocalDateTime;
 
 /**
- *  AuthUserNamePwHandler
+ * AuthUserNamePwHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 9:20
  */
 @Component
-public class AuthTokenHandler implements BizVHandler<AuthContext> {
+public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
     @Autowired
     private UserService userService;
     @Autowired
@@ -53,6 +54,7 @@ public class AuthTokenHandler implements BizVHandler<AuthContext> {
         AppClientDTO client = context.getClient();
         OrgDTO org = context.getOrg();
         AuthenticationJWT token = new AuthenticationJWT();
+        token.setTokenId(IdWorker.getIdStr());
         token.setUserId(user.getUserId());
         token.setUserName(user.getUserName());
         Long timeout = null;

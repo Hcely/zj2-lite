@@ -4,12 +4,12 @@ import org.zj2.lite.service.ApiReference;
 import org.zj2.lite.service.auth.AuthoritySet;
 
 /**
- *  AuthorityApi
+ * AuthorityApi
  *
  * @author peijie.ye
  * @date 2023/1/2 19:57
  */
 @ApiReference
 public interface AuthorityApi {
-    AuthoritySet getUserAuthorities(String appCode, String orgCode, String userId);
+    AuthoritySet getAuthorities(String tokenId);
 }

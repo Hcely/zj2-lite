@@ -18,7 +18,7 @@ import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  OrgServiceImpl
+ * OrgServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -91,6 +91,8 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
 
     @Override
     public ZListResp<OrgDTO> pageQuery(OrgQuery query) {
-        return null;
+        return pageQuery(query, q -> query(
+                wrapper(true).like(OrgDTO::getOrgCode, q.getOrgCode()).like(OrgDTO::getOrgName, q.getOrgName())
+                        .orderByDesc(OrgDTO::getOrgId)));
     }
 }

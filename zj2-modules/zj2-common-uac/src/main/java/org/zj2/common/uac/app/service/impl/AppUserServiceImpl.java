@@ -2,8 +2,8 @@ package org.zj2.common.uac.app.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppUserDTO;
-import org.zj2.common.uac.app.dto.AppUserPlusDTO;
-import org.zj2.common.uac.app.dto.req.AppQuery;
+import org.zj2.common.uac.app.dto.AppUserExtDTO;
+import org.zj2.common.uac.app.dto.req.AppUserQuery;
 import org.zj2.common.uac.app.entity.AppUser;
 import org.zj2.common.uac.app.mapper.AppUserMapper;
 import org.zj2.common.uac.app.service.AppUserService;
@@ -14,7 +14,7 @@ import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 
 /**
- *  AppUserServiceImpl
+ * AppUserServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -74,7 +74,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     }
 
     @Override
-    public ZListResp<AppUserPlusDTO> pageQuery(AppQuery query) {
-        return null;
+    public ZListResp<AppUserExtDTO> pageQuery(AppUserQuery query) {
+        return pageQuery(query, mapper::query);
     }
 }

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;
 import org.zj2.common.uac.auth.authorize.AuthorizeBeanPropertyHandler;
 import org.zj2.common.uac.auth.authorize.AuthorizeUriHandler;
-import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.auth.AuthenticationIgnored;
 import org.zj2.lite.service.auth.AuthenticationRequired;
 import org.zj2.lite.service.auth.AuthorityResource;
+import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
 
@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- *  AuthenticationInterceptor
+ * AuthenticationInterceptor
  *
  * @author peijie.ye
  * @date 2022/12/9 2:19
@@ -48,22 +48,23 @@ public class AuthWebInterceptor extends AbstractAuthInterceptor {
 
     @Around("pointcut()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {// NOSONAR
-        final ServiceRequestContext context = ServiceRequestContext.current();
-        final boolean filtered = !context.isFiltered();
+        final ServiceRequestContext reqContext = ServiceRequestContext.current();
+        final AuthenticationContext authContext = AuthenticationContext.current();
+        final boolean filtered = !reqContext.isFiltered();
         if (filtered) {
-            context.setFiltered(true);
+            reqContext.setFiltered(true);
             final Method method = getMethod(joinPoint);
-            authenticate(context, method);// 认证
-            authoriseMethod(context, method);// 授权
+            authenticate(reqContext, authContext, method);// 认证
+            authoriseUri(reqContext, authContext, method);// 授权
         }
         Object result = joinPoint.proceed();
-        if (filtered) { authoriseProperties(context, result); }
+        if (filtered) { authoriseProperties(authContext, result); }
         return result;
     }
 
-    private void authenticate(ServiceRequestContext context, Method method) {
+    private void authenticate(ServiceRequestContext reqContext, AuthenticationContext authContext, Method method) {
         if (method == null) { return; }
-        Class<?> type = method.getDeclaringClass();
+        final Class<?> type = method.getDeclaringClass();
         // 无需认证
         if (method.getAnnotation(AuthenticationIgnored.class) != null) { return; }
         AuthenticationRequired required = method.getAnnotation(AuthenticationRequired.class);
@@ -79,41 +80,29 @@ public class AuthWebInterceptor extends AbstractAuthInterceptor {
             // 非本身服务，无需处理
             if (!StringUtils.startsWithIgnoreCase(type.getName(), ZJ2_PACKAGE)) { return; }
         }
-        TokenType[] types = required == null ? DEFAULT_TOKEN_TYPE : required.allowToken();
-        authenticate(context, types.length == 0 ? DEFAULT_TOKEN_TYPE : types);
+        TokenType[] requiredTypes = required == null ? DEFAULT_TOKEN_TYPE : required.requiredType();
+        requiredTypes = requiredTypes.length == 0 ? DEFAULT_TOKEN_TYPE : requiredTypes;
+        authenticate(reqContext, authContext, requiredTypes);
     }
 
-    protected void authenticate(ServiceRequestContext context, TokenType[] types) {
-        if (StringUtils.isEmpty(context.getToken())) { throw AuthUtil.unAuthenticationErr("缺失认证信息"); }
-        TokenType type = context.getTokenType();
-        if (!CollUtil.contains(types, type)) { throw AuthUtil.unAuthenticationErr("非法认证信息"); }
-        if (type == TokenType.JWT) {
-            authenticateJWT(context);
-        } else {
-            authenticateSign(context);
-        }
-        context.setAuthenticated(true);
-    }
-
-    protected void authoriseMethod(ServiceRequestContext context, Method method) {
+    protected void authoriseUri(ServiceRequestContext reqContext, AuthenticationContext authContext, Method method) {
         if (method == null) { return; }
-        if (!context.isAuthenticated()) { return; }
-        if (context.getTokenType() != TokenType.JWT) { return; }
+        if (!authContext.isAuthenticated()) { return; }
+        if (authContext.getTokenType() != TokenType.JWT) { return; }
         AuthorityResource resource = method.getAnnotation(AuthorityResource.class);
         if (resource == null) {
             resource = method.getDeclaringClass().getAnnotation(AuthorityResource.class);
             if (resource == null) { return; }
         }
-        final String authorityResource = StrUtil.formatObj(resource.value(), getPathParams(context));
-        authorizeUriHandler.authorize(authorityResource);
+        final String authority = StrUtil.formatObj(resource.value(), getPathParams(reqContext));
+        authorizeUriHandler.authorize(authority);
     }
 
-    protected void authoriseProperties(ServiceRequestContext context, Object data) {
-        if (context.isAuthenticated() && context.getTokenType() == TokenType.JWT) {
+    protected void authoriseProperties(AuthenticationContext authContext, Object data) {
+        if (authContext.isAuthenticated() && authContext.getTokenType() == TokenType.JWT) {
             authorizeBeanPropertyHandler.authorize(data);
         }
     }
-
 
     private static Method getMethod(ProceedingJoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();

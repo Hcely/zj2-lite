@@ -25,16 +25,13 @@ import java.util.Map;
 @NoArgsConstructor
 public class AuthoritySet implements Serializable {
     private static final long serialVersionUID = 3292141917083713905L;
-
-    public static String getCacheKey(String appCode, String orgCode, String userId) {
-        return StrUtil.concat("USER_AUTHORITY:", appCode, orgCode, userId);
-    }
-
+    private String tokenId;
     private String userId;
     private Map<String, Long> authorityPatterns;
     private Map<String, Long> authorityResources;
 
-    public AuthoritySet(String userId) {
+    public AuthoritySet(String tokenId, String userId) {
+        this.tokenId = tokenId;
         this.userId = userId;
     }
 

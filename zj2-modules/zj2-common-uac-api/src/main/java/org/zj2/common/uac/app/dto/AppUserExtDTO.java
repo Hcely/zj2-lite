@@ -14,8 +14,8 @@ import org.zj2.lite.service.auth.AuthorityResource;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AppUserPlusDTO extends AppUserDTO {
+public class AppUserExtDTO extends AppUserDTO {
     private static final long serialVersionUID = -8367967494174773801L;
-    @AuthorityResource("")
+    @AuthorityResource
     private String userName;
 }

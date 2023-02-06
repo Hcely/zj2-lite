@@ -7,11 +7,10 @@ import org.zj2.lite.service.auth.AuthenticationSign;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
-import org.zj2.lite.service.context.TokenType;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AuthenticationWebFilter
+ * AuthenticationWebFilter
  *
  * @author peijie.ye
  * @date 2022/12/4 14:25
@@ -34,51 +33,46 @@ public abstract class AbsRequestContextServerFilter<T> {
     private void handleJWT(T request, String token, String method, String uri, String attrIp, String device) {
         AuthenticationJWT jwt = JWTValidUtil.parse(token);
         if (jwt == null) { throw ZRBuilder.failureErr("无效token格式").setStatus(403); }
-        AuthenticationContext.setContext(jwt.getUserId(), jwt.getUserName(), jwt.getAppCode(), jwt.getOrgCode());
+        AuthenticationContext.set(jwt);
         ServiceRequestContext requestContext = new ServiceRequestContext();
         requestContext.setRequest(request);
-        requestContext.setTokenType(TokenType.JWT);
-        requestContext.setToken(token);
-        requestContext.setNamespace(jwt.getNamespace());
-        requestContext.setTokenTime(jwt.getExpireAt());
         requestContext.setMethod(method);
         requestContext.setUri(uri);
         requestContext.setAttrIp(attrIp);
         requestContext.setDevice(device);
-        ServiceRequestContext.setContext(requestContext);
+        ServiceRequestContext.set(requestContext);
     }
 
     private void handleSign(T request, String token, String method, String uri, String attrIp, String device) {
         AuthenticationSign sign = ServerSignUtil.parse(token);
         if (sign == null) { throw ZRBuilder.failureErr("无效签名格式").setStatus(403); }
+        String tokenId = getValue(request, ServiceConstants.JWT_TOKEN_ID);
         String userId = getValue(request, ServiceConstants.JWT_USER_ID);
-        String username = getValue(request, ServiceConstants.JWT_USERNAME);
+        String userName = getValue(request, ServiceConstants.JWT_USERNAME);
         String orgCode = getValue(request, ServiceConstants.JWT_ORG_CODE);
-        AuthenticationContext.setContext(userId, username, sign.getAppCode(), orgCode);
+        AuthenticationContext.set(sign, tokenId, userId, userName, orgCode);
         ServiceRequestContext requestContext = new ServiceRequestContext();
         requestContext.setRequest(request);
-        requestContext.setTokenType(TokenType.SIGN);
-        requestContext.setToken(sign.getSign());
-        requestContext.setTokenTime(sign.getTimestamp());
         requestContext.setMethod(method);
         requestContext.setUri(uri);
         requestContext.setAttrIp(attrIp);
         requestContext.setDevice(device);
-        ServiceRequestContext.setContext(requestContext);
+        ServiceRequestContext.set(requestContext);
     }
 
     private void handleNoToken(T request, String method, String uri, String attrIp, String device) {
-        String userId = getValue(request, ServiceConstants.JWT_USER_ID);
-        String username = getValue(request, ServiceConstants.JWT_USERNAME);
-        String appCode = getValue(request, ServiceConstants.JWT_APP_CODE);
-        String orgCode = getValue(request, ServiceConstants.JWT_ORG_CODE);
-        AuthenticationContext.setContext(userId, username, appCode, orgCode);
+        AuthenticationContext authenticationContext = new AuthenticationContext();
+        authenticationContext.setUserId(getValue(request, ServiceConstants.JWT_USER_ID));
+        authenticationContext.setUserName(getValue(request, ServiceConstants.JWT_USERNAME));
+        authenticationContext.setAppCode(getValue(request, ServiceConstants.JWT_APP_CODE));
+        authenticationContext.setOrgCode(getValue(request, ServiceConstants.JWT_ORG_CODE));
+        AuthenticationContext.set(authenticationContext);
         ServiceRequestContext requestContext = new ServiceRequestContext();
         requestContext.setMethod(method);
         requestContext.setUri(uri);
         requestContext.setAttrIp(attrIp);
         requestContext.setDevice(device);
-        ServiceRequestContext.setContext(requestContext);
+        ServiceRequestContext.set(requestContext);
     }
 
     protected abstract String getValue(T request, String key);

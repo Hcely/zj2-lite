@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.zj2.lite.service.constant.ServiceConstants;
 
 import java.io.Serializable;
 
@@ -21,30 +22,30 @@ public class AuthenticationJWT implements Serializable {
     /**
      *
      */
-    @JSONField(name = "tid")
+    @JSONField(name = ServiceConstants.JWT_TOKEN_ID)
     private String tokenId;
     /**
      * 用户id
      */
-    @JSONField(name = "uid")
+    @JSONField(name = ServiceConstants.JWT_USER_ID)
     private String userId;
 
     /**
      * 用户名称
      */
-    @JSONField(name = "uname")
+    @JSONField(name = ServiceConstants.JWT_USERNAME)
     private String userName;
 
     /**
      * appCode
      */
-    @JSONField(name = "app")
+    @JSONField(name = ServiceConstants.JWT_APP_CODE)
     private String appCode;
 
     /**
      * orgCode
      */
-    @JSONField(name = "org")
+    @JSONField(name = ServiceConstants.JWT_ORG_CODE)
     private String orgCode;
 
     /**

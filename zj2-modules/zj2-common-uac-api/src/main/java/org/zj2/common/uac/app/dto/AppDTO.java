@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.zj2.lite.common.annotation.JProperty;
 import org.zj2.lite.common.util.StrUtil;
+import org.zj2.lite.service.auth.AuthorityResource;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -49,6 +50,7 @@ public class AppDTO implements Serializable {
     /**
      * 应用密钥
      */
+    @AuthorityResource
     private String appSecret;
 
     /**

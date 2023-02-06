@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AppOrgPlusDTO extends AppOrgDTO {
+public class AppOrgExtDTO extends AppOrgDTO {
     private static final long serialVersionUID = -1870168449246953800L;
     private String orgName;
 

@@ -7,7 +7,7 @@ import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
-import org.zj2.lite.common.context.ZContext;
+import org.zj2.lite.common.context.ZContexts;
 
 @Activate(group = CommonConstants.PROVIDER, order = -99999)
 public class DubboContextFilter implements Filter {
@@ -16,7 +16,7 @@ public class DubboContextFilter implements Filter {
         try {
             return invoker.invoke(invocation);
         } finally {
-            ZContext.clearContext();
+            ZContexts.clearContext();
         }
     }
 

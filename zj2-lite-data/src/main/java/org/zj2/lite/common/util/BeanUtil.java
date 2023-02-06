@@ -2,11 +2,12 @@ package org.zj2.lite.common.util;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanInstantiationException;
 import org.zj2.lite.common.annotation.JProperty;
 import org.zj2.lite.common.bean.BeanDescriptor;
 import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,12 +20,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * <br>CreateDate 三月 24,2022
+ *
  * @author peijie.ye
  */
 public class BeanUtil {
-
     public static <R, T> List<T> copyToList(Collection<R> coll, Class<T> targetType) {
         return CollUtil.toList(coll, e -> toBean(e, targetType));
     }
@@ -162,6 +162,11 @@ public class BeanUtil {
     }
 
     public static <T> T newInstance(Class<T> type) {
-        return BeanUtils.instantiateClass(type);
+        if (type.isInterface() || type.isArray() || type.isAnnotation() || type.isEnum() || Modifier.isAbstract(
+                type.getModifiers())) {
+            throw new BeanInstantiationException(type, "can not create instance");
+        }
+        //noinspection unchecked
+        return (T) PropertyUtil.getBeanDescriptor(type).newInstance();
     }
 }

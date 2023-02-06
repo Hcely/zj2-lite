@@ -1,4 +1,4 @@
-package org.zj2.lite.net.util;
+package org.zj2.lite.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.zj2.lite.common.Destroyable;
 import org.zj2.lite.common.Releasable;
 import org.zj2.lite.common.function.BeanIntConsumer;
 import org.zj2.lite.common.function.BeanLongConsumer;
+import org.zj2.lite.common.util.BeanUtil;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- *  RingArrayStream
+ * RingArrayStream
  *
  * @author peijie.ye
  * @date 2023/1/17 12:40
@@ -49,6 +50,14 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
     private volatile int streamState;
     private final byte[] states;
     private final Releasable[] references;
+
+    public RingArrayStream(int capacity, Class<T> enumType) {
+        this(1, capacity, enumType);
+    }
+
+    public RingArrayStream(int stepCount, int capacity, final Class<T> enumType) {
+        this(stepCount, capacity, () -> BeanUtil.newInstance(enumType));
+    }
 
     public RingArrayStream(int capacity, Supplier<T> enumCreator) {
         this(1, capacity, enumCreator);

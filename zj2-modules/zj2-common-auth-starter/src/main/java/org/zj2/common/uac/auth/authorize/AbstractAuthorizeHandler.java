@@ -8,7 +8,7 @@ import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.spring.SpringBeanRef;
 
 /**
- *  DataPropertyAuthorityHandler
+ * DataPropertyAuthorityHandler
  *
  * @author peijie.ye
  * @date 2023/1/2 22:53
@@ -18,19 +18,15 @@ public abstract class AbstractAuthorizeHandler<T> {
 
     public abstract void authorize(T value);
 
-    protected AuthoritySet getAuthorityResources() {
-        AuthenticationContext cxt = AuthenticationContext.current();
+    protected AuthoritySet getAuthoritySet() {
+        final String tokenId = AuthenticationContext.currentTokenId();
         final String userId = AuthenticationContext.currentUserId();
-        if (StringUtils.isEmpty(userId)) { return new AuthoritySet(userId); }
+        if (StringUtils.isEmpty(tokenId)) { return new AuthoritySet(tokenId, userId); }
         AuthorityApi authorityApi = authorityApiRef.get();
-        if (authorityApi == null) { return new AuthoritySet(userId); }
-        final String appCode = cxt.getAppCode();
-        final String orgCode = cxt.getOrgCode();
-        String key = AuthoritySet.getCacheKey(appCode, orgCode, userId);
-        AuthoritySet authorityResources = CacheUtil.DEF_CACHE.getCache(key, userId,
-                e -> authorityApi.getUserAuthorities(appCode, orgCode, userId));
-        //
-        return authorityResources == null ? new AuthoritySet(userId) : authorityResources;
+        if (authorityApi == null) { return new AuthoritySet(tokenId, userId); }
+        AuthoritySet authorityResources = CacheUtil.DEF_CACHE.get(AuthoritySet.class, tokenId,
+                authorityApi::getAuthorities, 180_000);
+        return authorityResources == null ? new AuthoritySet(tokenId, userId) : authorityResources;
     }
 
 }

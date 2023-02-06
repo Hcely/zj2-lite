@@ -17,6 +17,7 @@ public interface ServiceConstants {
     String UPDATE_USER = "updateUser";
     String UPDATE_USER_NAME = "updateUserName";
     //
+    String JWT_TOKEN_ID = "tid";
     String JWT_USER_ID = "uid";
     String JWT_USERNAME = "uname";
     String JWT_APP_CODE = "app";

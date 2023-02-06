@@ -8,6 +8,7 @@ import org.zj2.lite.common.entity.result.ZResp;
 import org.zj2.lite.common.entity.result.ZResult;
 import org.zj2.lite.common.entity.result.ZStatusMsg;
 import org.zj2.lite.common.util.StrUtil;
+import org.zj2.lite.message.MessageUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import java.util.List;
  */
 public class ZRBuilder implements Serializable {
     private static final long serialVersionUID = -2497487035627586056L;
+    private static final String NAMESPACE = "message";
+
 
     public static ZRBuilder builder() {
         return new ZRBuilder();
@@ -102,11 +105,12 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder module(String module) {
-        this.module = module;
+        this.module = of(module);
         return this;
     }
 
     public ZRBuilder msg(String msg) {
+        msg = of(msg);
         if (StringUtils.isNotEmpty(module) && StringUtils.isNotEmpty(msg)) {
             msg0(StrUtil.concat(module, '-', msg));
         } else {
@@ -121,6 +125,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0));
         } else {
@@ -132,6 +137,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1));
         } else {
@@ -143,6 +149,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2));
         } else {
@@ -154,6 +161,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3));
         } else {
@@ -165,6 +173,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3, arg4));
         } else {
@@ -176,6 +185,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object... args) {
+        msgFormat = of(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, args));
         } else {
@@ -187,35 +197,39 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder addError(String msg) {
+        return addError0(of(msg));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object arg0) {
+        return addError(StrUtil.format(of(msgFormat), arg0));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1) {
+        return addError0(StrUtil.format(of(msgFormat), arg0, arg1));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2) {
+        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
+        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2, arg3));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
+        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2, arg3, arg4));
+    }
+
+    public ZRBuilder addError(String msgFormat, Object... args) {
+        return addError0(StrUtil.format(of(msgFormat), args));
+    }
+
+    private ZRBuilder addError0(String msg) {
         if (StringUtils.isNotEmpty(msg)) {
             if (errors == null) { errors = new ArrayList<>(5); }
             errors.add(msg);
         }
         return this;
-    }
-
-    public ZRBuilder addError(String msgFormat, Object arg0) {
-        return addError(StrUtil.format(msgFormat, arg0));
-    }
-
-    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1) {
-        return addError(StrUtil.format(msgFormat, arg0, arg1));
-    }
-
-    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2) {
-        return addError(StrUtil.format(msgFormat, arg0, arg1, arg2));
-    }
-
-    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
-        return addError(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3));
-    }
-
-    public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        return addError(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3, arg4));
-    }
-
-    public ZRBuilder addError(String msgFormat, Object... args) {
-        return addError(StrUtil.format(msgFormat, args));
     }
 
     public ZRBuilder errorSeparator(String errorSeparator) {
@@ -329,5 +343,10 @@ public class ZRBuilder implements Serializable {
         } else {
             return msg;
         }
+    }
+
+    protected String of(String msg) {
+        String newMsg = MessageUtil.get(NAMESPACE, msg);
+        return StringUtils.defaultIfEmpty(newMsg, msg);
     }
 }

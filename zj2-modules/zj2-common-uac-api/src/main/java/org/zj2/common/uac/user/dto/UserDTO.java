@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.zj2.lite.service.auth.AuthorityResource;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -41,11 +42,13 @@ public class UserDTO implements Serializable {
     /**
      * 用户手机
      */
+    @AuthorityResource
     private String userMobile;
 
     /**
      * 用户邮件
      */
+    @AuthorityResource
     private String userEmail;
 
     /**

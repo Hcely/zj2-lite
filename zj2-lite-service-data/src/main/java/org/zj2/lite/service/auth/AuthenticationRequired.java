@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AuthenticationRequired {
-    TokenType[] allowToken() default {TokenType.JWT};
+    TokenType[] requiredType() default {TokenType.JWT};
 }

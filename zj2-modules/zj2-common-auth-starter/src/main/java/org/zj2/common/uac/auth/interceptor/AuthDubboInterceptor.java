@@ -9,11 +9,12 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 import org.zj2.common.uac.auth.util.AuthUtil;
+import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 import org.zj2.lite.service.context.TokenType;
 
 /**
- *  DubboAuthenticationInterceptor
+ * DubboAuthenticationInterceptor
  *
  * @author peijie.ye
  * @date 2022/12/9 2:19
@@ -22,20 +23,11 @@ import org.zj2.lite.service.context.TokenType;
 public class AuthDubboInterceptor extends AbstractAuthInterceptor implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        authenticate();
+        ServiceRequestContext requestContext = ServiceRequestContext.current();
+        if (!requestContext.isFiltered()) {
+            authenticateSign(requestContext, AuthenticationContext.current());
+        }
         return invoker.invoke(invocation);
-    }
-
-    protected void authenticate() {
-        ServiceRequestContext context = ServiceRequestContext.current();
-        if (context.isFiltered()) { return; }
-        context.setFiltered(true);
-        //
-        if (StringUtils.isEmpty(context.getToken())) { throw AuthUtil.unAuthenticationErr("缺失认证信息"); }
-        TokenType type = context.getTokenType();
-        if (type == TokenType.JWT) { throw AuthUtil.unAuthenticationErr("无效签名"); }
-        authenticateSign(context);
-        context.setAuthenticated(true);
     }
 }
 

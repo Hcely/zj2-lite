@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.zj2.lite.common.context.ZContext;
+import org.zj2.lite.common.context.ZContexts;
 import org.zj2.lite.common.util.CollUtil;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     @TraceCrossThread //skywalking 链路跟踪
     public static class AsyncCommand implements Runnable {
         private final Runnable command;
-        private final ZContext context;
+        private final ZContexts context;
         @Getter
         protected final String tid;
 
@@ -162,7 +162,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         }
 
         public AsyncCommand(Runnable command) {
-            this.context = ZContext.copyContext();
+            this.context = ZContexts.copyContexts();
             this.command = command;
             this.tid = TraceContext.traceId();
         }
@@ -171,7 +171,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         @SneakyThrows
         public void run() {
             Throwable error = null;
-            ZContext oldContext = ZContext.setContext(context);
+            ZContexts oldContext = ZContexts.setContexts(context);
             try {
                 run0();
             } catch (Throwable e) {// NOSONAR
@@ -179,7 +179,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
                 LOGGER.error("[异步任务执行异常]", e);
                 throw e;
             } finally {
-                ZContext.setContext(oldContext);
+                ZContexts.setContexts(oldContext);
             }
         }
 

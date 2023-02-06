@@ -17,7 +17,7 @@ import org.zj2.lite.helper.CommonBizHelper;
         AuthOrgEmployeeCheckHandler.class,//
         AuthAppOrgCheckHandler.class,//
         AuthAppUserCheckHandler.class,//
-        AuthTokenHandler.class//
+        AuthCreateTokenHandler.class//
 })
 public class AuthNamePwHelper extends CommonBizHelper<AuthContext> {
 }

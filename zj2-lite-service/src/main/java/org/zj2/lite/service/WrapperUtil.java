@@ -101,7 +101,7 @@ class WrapperUtil {
         if (column != null) { result.set(column, AuthenticationContext.currentUserId()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) { result.set(column, AuthenticationContext.currentUserName()); }
+        if (column != null) { result.set(column, AuthenticationContext.currentUsername()); }
         return result;
     }
 

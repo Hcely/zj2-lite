@@ -116,6 +116,4 @@ public class OrgEmployeeDTO implements Serializable {
      * 是否删除
      */
     private Integer isDeleted;
-
-
 }

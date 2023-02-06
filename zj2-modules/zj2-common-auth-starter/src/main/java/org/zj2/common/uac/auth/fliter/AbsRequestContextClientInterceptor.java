@@ -8,15 +8,16 @@ import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.service.context.ServiceRequestContext;
 
 /**
- *  DubboConsumerContextFilter
+ * DubboConsumerContextFilter
  *
  * @author peijie.ye
  * @date 2022/12/9 0:43
  */
 public abstract class AbsRequestContextClientInterceptor<T> {
     protected void setContext(T request, String method, String uri) {
+        setValue(request, ServiceConstants.JWT_TOKEN_ID, AuthenticationContext.currentTokenId());
         setValue(request, ServiceConstants.JWT_USER_ID, AuthenticationContext.currentUserId());
-        setValue(request, ServiceConstants.JWT_USERNAME, AuthenticationContext.currentUserName());
+        setValue(request, ServiceConstants.JWT_USERNAME, AuthenticationContext.currentUsername());
         setValue(request, ServiceConstants.JWT_APP_CODE, AuthenticationContext.currentAppCode());
         setValue(request, ServiceConstants.JWT_ORG_CODE, AuthenticationContext.currentOrgCode());
         //

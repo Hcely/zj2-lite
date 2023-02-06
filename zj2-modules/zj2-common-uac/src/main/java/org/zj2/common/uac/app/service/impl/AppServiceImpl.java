@@ -22,7 +22,7 @@ import org.zj2.lite.service.context.AuthenticationContext;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AppServiceImpl
+ * AppServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -131,12 +131,14 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
 
     @Override
     public ZListResp<AppDTO> pageQuery(AppQuery query) {
-        return null;
+        return pageQuery(query, q -> query(
+                wrapper(true).like(AppDTO::getAppCode, q.getAppCode()).like(AppDTO::getAppName, q.getAppName())
+                        .orderByDesc(AppDTO::getAppId)));
     }
 
     private static final String SECRET_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
-    public static String randomAppSecret() {
+    private static String randomAppSecret() {
         StringBuilder sb = new StringBuilder(32);
         final int bound = SECRET_CHARS.length();
         for (int i = 0; i < 32; ++i) {
@@ -145,7 +147,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
         return sb.toString();
     }
 
-    public static boolean validSecret(String value) {
+    private static boolean validSecret(String value) {
         if (StringUtils.length(value) < 20) { return false; }
         for (int i = 0, len = value.length(); i < len; ++i) {
             if (!validSecretChar(value.charAt(i))) { return false; }

@@ -14,7 +14,7 @@ import org.zj2.lite.service.auth.AuthoritySet;
 public class AuthorizeUriHandler extends AbstractAuthorizeHandler<String> {
     @Override
     public void authorize(String authorityResource) {
-        final AuthoritySet authorities = getAuthorityResources();
+        final AuthoritySet authorities = getAuthoritySet();
         if (authorities.notContainsAuthority(authorityResource)) {
             throw AuthUtil.unAuthenticationErr("没有功能权限");
         }

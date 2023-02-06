@@ -1,4 +1,4 @@
-package org.zj2.common.uac.user.dto.req;
+package org.zj2.common.uac.org.dto.req;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,19 +6,19 @@ import lombok.Setter;
 import org.zj2.lite.service.entity.request.PageRequest;
 
 /**
- * UserQuery
+ * OrgEmployeeQuery
  *
  * @author peijie.ye
- * @date 2023/1/2 18:13
+ * @date 2023/2/6 15:12
  */
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserQuery extends PageRequest {
-    private static final long serialVersionUID = 8771726132728176145L;
+public class OrgEmployeeQuery extends PageRequest {
+    private static final long serialVersionUID = -3989100865488824766L;
+    private String orgCode;
     private String userMobile;
-    private String useremail;
+    private String userEmail;
     private String userName;
-    private Integer activateFlag;
     private Integer enableFlag;
 }

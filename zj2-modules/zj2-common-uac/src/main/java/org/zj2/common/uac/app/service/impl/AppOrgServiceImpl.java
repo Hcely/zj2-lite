@@ -2,7 +2,7 @@ package org.zj2.common.uac.app.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppOrgDTO;
-import org.zj2.common.uac.app.dto.AppOrgPlusDTO;
+import org.zj2.common.uac.app.dto.AppOrgExtDTO;
 import org.zj2.common.uac.app.dto.req.AppOrgQuery;
 import org.zj2.common.uac.app.entity.AppOrg;
 import org.zj2.common.uac.app.mapper.AppOrgMapper;
@@ -14,7 +14,7 @@ import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 
 /**
- *  AppOrgServiceImpl
+ * AppOrgServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -73,7 +73,7 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     }
 
     @Override
-    public ZListResp<AppOrgPlusDTO> pageQuery(AppOrgQuery query) {
-        return null;
+    public ZListResp<AppOrgExtDTO> pageQuery(AppOrgQuery query) {
+        return pageQuery(query, mapper::query);
     }
 }

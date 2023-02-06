@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.zj2.lite.service.entity.request.PageRequest;
 
 /**
- *  AppUserQuery
+ * AppUserQuery
  *
  * @author peijie.ye
  * @date 2023/1/2 18:17
@@ -16,5 +16,7 @@ import org.zj2.lite.service.entity.request.PageRequest;
 @NoArgsConstructor
 public class AppUserQuery extends PageRequest {
     private static final long serialVersionUID = 3074366372946185647L;
-
+    private String appCode;
+    private String userName;
+    private Integer enableFlag;
 }
