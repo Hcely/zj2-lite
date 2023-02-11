@@ -19,7 +19,7 @@ import org.zj2.common.uac.user.dto.req.UserCreateReq;
 import org.zj2.common.uac.user.service.UserService;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.util.ZRBuilder;
 
 import java.time.LocalDateTime;
@@ -63,7 +63,7 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
     private void loadOrg(OrgEmployeeContext context) {
         String orgCode = context.getOrgCode();
         if (StringUtils.isEmpty(orgCode)) {
-            orgCode = AuthenticationContext.currentOrgCode();
+            orgCode = AuthContext.currentOrgCode();
             context.setOrgCode(orgCode);
         }
         OrgDTO org = orgService.getByCode(orgCode);

@@ -1,5 +1,7 @@
 package org.zj2.lite.service.auth;
 
+import org.zj2.lite.common.entity.Ternary;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *  AuthorityRequired
+ * AuthorityRequired
  *
  * @author peijie.ye
  * @date 2023/1/2 18:22
@@ -16,7 +18,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AuthorityResource {
-    String SUPPER_AUTHORITY = "_$SUPPER$_";
-
     String value() default "";
+
+    String name() default "";
+
+    Ternary requiredUriAuthority() default Ternary.DEFAULT;
+
+    Ternary requiredPropertyAuthority() default Ternary.DEFAULT;
+
+    String[] propertyAuthority() default {};
+
+    Ternary requiredDataAuthority() default Ternary.DEFAULT;
+
+    String dataAuthority() default "";
 }

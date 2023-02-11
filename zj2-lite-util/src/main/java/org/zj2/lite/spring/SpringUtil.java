@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  SpringUtil
+ * SpringUtil
  *
  * @author peijie.ye
  * @date 2022/11/19 23:20
@@ -72,12 +72,18 @@ public class SpringUtil implements ApplicationContextAware {
         return context.getBeansOfType(aClass);
     }
 
-    public static Object getBean(String s) throws BeansException {
-        return context.getBean(s);
+    public static Object getBean(String name) throws BeansException {
+        return context.getBean(name);
     }
 
-    public static <T> T getBean(Class<T> aClass) throws BeansException {
-        return context.getBean(aClass);
+    @SuppressWarnings("all")
+    public static <T> T getBean(Class<T> type) throws BeansException {
+        if (type.isArray()) {
+            Map beans = context.getBeansOfType(type.getComponentType());
+            return (T) CollUtil.toArray(beans.values(), type.getComponentType());
+        } else {
+            return context.getBean(type);
+        }
     }
 
     public static Class<?> getAopTargetClass(Object proxy) {

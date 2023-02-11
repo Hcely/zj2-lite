@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PatternUtil;
-import org.zj2.lite.common.util.StrUtil;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,6 +23,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 public class AuthoritySet implements Serializable {
+    public static final String SUPPER_AUTHORITY = "_$SUPPER$_";
     private static final long serialVersionUID = 3292141917083713905L;
     private String tokenId;
     private String userId;
@@ -35,23 +35,21 @@ public class AuthoritySet implements Serializable {
         this.userId = userId;
     }
 
-    public AuthoritySet addAuthority(Authority authority) {
+    public AuthoritySet addAuthority(String authority, long expireTime) {
         if (authority == null) { return this; }
-        String name = authority.getName();
-        if (StringUtils.isEmpty(name)) { return this; }
-        long expireTime = authority.getExpireTime();
+        if (StringUtils.isEmpty(authority)) { return this; }
         if (expireTime > 0 && expireTime < System.currentTimeMillis()) { return this; }
-        if (name.indexOf('*') != -1) {
+        if (authority.indexOf('*') != -1) {
             if (authorityPatterns == null) { authorityPatterns = new HashMap<>(); }
-            authorityPatterns.put(name, expireTime);
+            authorityPatterns.put(authority, expireTime);
         } else {
             if (authorityResources == null) { authorityResources = new LinkedHashMap<>(); }
-            authorityResources.put(name, expireTime);
+            authorityResources.put(authority, expireTime);
         }
         return this;
     }
 
-    private boolean checkEmptyAuthorities() {
+    private boolean isEmptyAuthorities() {
         return CollUtil.isEmpty(authorityResources) && CollUtil.isEmpty(authorityPatterns);
     }
 
@@ -61,7 +59,7 @@ public class AuthoritySet implements Serializable {
 
     public boolean containsAuthority(String authority) {
         if (StringUtils.isEmpty(authority)) { return false; }
-        if (checkEmptyAuthorities()) { return false; }
+        if (isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
         if (containsSupperAuthority(currentTime)) { return true; }
         return containsAuthority0(System.currentTimeMillis(), authority);
@@ -69,7 +67,7 @@ public class AuthoritySet implements Serializable {
 
     public boolean containsAllAuthorities(Collection<String> authorities) {
         if (CollUtil.isEmpty(authorities)) { return true; }
-        if (checkEmptyAuthorities()) { return false; }
+        if (isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
         if (containsSupperAuthority(currentTime)) { return true; }
         for (String e : authorities) {
@@ -80,7 +78,7 @@ public class AuthoritySet implements Serializable {
 
     public boolean containsAnyAuthorities(Collection<String> authorities) {
         if (CollUtil.isEmpty(authorities)) { return true; }
-        if (checkEmptyAuthorities()) { return false; }
+        if (isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
         if (containsSupperAuthority(currentTime)) { return true; }
         for (String e : authorities) {
@@ -94,12 +92,12 @@ public class AuthoritySet implements Serializable {
     }
 
     private boolean containsSupperAuthority(long currentTime) {
-        final Long expireTime = CollUtil.get(authorityResources, AuthorityResource.SUPPER_AUTHORITY);
+        final Long expireTime = CollUtil.get(authorityResources, SUPPER_AUTHORITY);
         return expireTime != null && (expireTime <= 0 || expireTime > currentTime);
     }
 
     private boolean containsAuthority0(long currentTime, String authority) {
-        if (StringUtils.isEmpty(authority) || StringUtils.equals(authority, AuthorityResource.SUPPER_AUTHORITY)) {
+        if (StringUtils.isEmpty(authority) || StringUtils.equals(authority, SUPPER_AUTHORITY)) {
             return false;
         }
         Long expireTime = CollUtil.get(authorityResources, authority);

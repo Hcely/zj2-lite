@@ -13,7 +13,7 @@ import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.cache.CacheUtil;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
@@ -57,7 +57,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     private void fillReqParams(SysConfigSaveReq req) {
         String appCode = req.getAppCode();
         if (StringUtils.isEmpty(appCode)) {
-            appCode = AuthenticationContext.currentAppCode();
+            appCode = AuthContext.currentAppCode();
         } else if (StringUtils.equalsIgnoreCase(SysConfigDTO.COMMON_APP_CODE, appCode)) {
             appCode = SysConfigDTO.COMMON_APP_CODE;
         }
@@ -77,7 +77,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
     private SysConfigDTO saveConfig0(SysConfigSaveReq req) {
         SysConfigDTO config = get(req.getAppCode(), req.getConfigCode());
         if (config == null) {
-            AuthenticationContext.current().setAppCode(req.getAppCode());
+            AuthContext.current().setAppCode(req.getAppCode());
             config = new SysConfigDTO();
             config.setConfigCode(req.getConfigCode());
             config.setAppCode(req.getAppCode());

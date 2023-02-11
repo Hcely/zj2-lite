@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.NumNextReq;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 
 import java.io.Serializable;
 
@@ -59,7 +59,7 @@ public class NumRule {
 
     protected NumNextReq buildReq() {
         NumNextReq req = new NumNextReq();
-        req.setAppCode(AuthenticationContext.currentAppCode());
+        req.setAppCode(AuthContext.currentAppCode());
         req.setNumRuleCode(numRuleCode);
         SysNumRuleDTO rule = NumRuleUtil.getNumRule(numRuleCode);
         if (rule == null) {

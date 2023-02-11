@@ -14,7 +14,7 @@ import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
@@ -42,7 +42,7 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
         boolean exist = exists(wrapper().eq(OrgDTO::getOrgCode, req.getOrgCode()));
         if (exist) { throw ZRBuilder.failureErr("机构已存在"); }
         // 插入机构
-        AuthenticationContext.current().setOrgCode(req.getOrgCode());
+        AuthContext.current().setOrgCode(req.getOrgCode());
         OrgDTO org = new OrgDTO();
         org.setOrgCode(req.getOrgCode());
         org.setOrgName(req.getOrgName());

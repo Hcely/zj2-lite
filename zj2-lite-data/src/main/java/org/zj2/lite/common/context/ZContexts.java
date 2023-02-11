@@ -24,7 +24,7 @@ public class ZContexts {
             contexts = new ZContext[len];
             for (int i = 0; i < len; ++i) {
                 ZContext c = tmp[i];
-                contexts[i] = c == null ? null : c.clone();
+                contexts[i] = c == null ? null : c.copy();
             }
         } else {
             contexts = EMPTY_CONTEXT;

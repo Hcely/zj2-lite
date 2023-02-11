@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * @author peijie.ye
  * @date 2022/11/28 0:54
  */
-public class Md5Sign implements Sign {//NOSONAR
+public class Md5Sign implements DigestSign {//NOSONAR
     public static final Md5Sign INSTANCE = new Md5Sign();
 
     @Override

@@ -3,7 +3,7 @@ package org.zj2.common.uac.auth.service.helper;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.codec.Base64Util;
-import org.zj2.lite.service.auth.AuthenticationJWT;
+import org.zj2.lite.service.auth.AuthorizationJWT;
 import org.zj2.lite.sign.HMacSHA256Sign;
 
 /**
@@ -27,7 +27,7 @@ public class JWTBuildUtil {
         }
     }
 
-    public static String build(String secret, AuthenticationJWT token) {
+    public static String build(String secret, AuthorizationJWT token) {
         StringBuilder sb = new StringBuilder(256);
         sb.append(JWT_HEADER);
         URL_ENCODER.encode(sb, JSON.toJSONBytes(token));

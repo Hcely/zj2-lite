@@ -19,7 +19,7 @@ import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.common.util.PatternUtil;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.service.cache.CacheUtil;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
@@ -65,7 +65,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> impl
         boolean exist = exists(wrapper().eq(AppDTO::getAppCode, req.getAppCode()));
         if (exist) { throw ZRBuilder.failureErr("应用编码已存在"); }
         //
-        AuthenticationContext.current().setAppCode(req.getAppCode());
+        AuthContext.current().setAppCode(req.getAppCode());
         AppDTO app = new AppDTO();
         app.setAppCode(req.getAppCode());
         app.setAppName(req.getAppName());

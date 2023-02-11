@@ -3,6 +3,7 @@ package org.zj2.lite.codec;
 import org.springframework.util.DigestUtils;
 
 import java.lang.ref.SoftReference;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -64,12 +65,14 @@ public class CodecUtil {
     public static String encodeHex(byte[] bytes) {
         if (bytes == null || bytes.length == 0) { return ""; }
         char[] charHex = CHAR_HEX;
-        StringBuilder sb = new StringBuilder(bytes.length << 1);
-        for (byte b : bytes) {
-            sb.append(charHex[(b >>> 4) & 15]);
-            sb.append(charHex[b & 15]);
+        int len = bytes.length;
+        char[] sb = new char[bytes.length << 1];
+        for (int i = 0, n = 0; i < len; ++i, n += 2) {
+            byte b = bytes[i];
+            sb[n] = charHex[(b >>> 4) & 15];
+            sb[n + 1] = charHex[b & 15];
         }
-        return sb.toString();
+        return new String(sb);
     }
 
     public static StringBuilder encodeHex(StringBuilder sb, byte[] bytes) {

@@ -12,7 +12,7 @@ import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.common.util.NumUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.constant.ServiceConstants;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.entity.request.wrapper.PropCondition;
 import org.zj2.lite.service.entity.request.wrapper.UpdateField;
 import org.zj2.lite.service.entity.request.wrapper.ZQueryWrapper;
@@ -98,10 +98,10 @@ class WrapperUtil {
         if (column != null) { result.set(column, LocalDateTime.now()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) { result.set(column, AuthenticationContext.currentUserId()); }
+        if (column != null) { result.set(column, AuthContext.currentUserId()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) { result.set(column, AuthenticationContext.currentUsername()); }
+        if (column != null) { result.set(column, AuthContext.currentUsername()); }
         return result;
     }
 

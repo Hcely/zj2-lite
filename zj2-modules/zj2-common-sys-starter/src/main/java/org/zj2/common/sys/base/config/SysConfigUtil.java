@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.common.sys.base.dto.SysConfigDTO;
 import org.zj2.common.sys.base.service.SysConfigApi;
 import org.zj2.lite.service.cache.CacheUtil;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.spring.SpringBeanRef;
 
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class SysConfigUtil {
 
     public static SysConfigDTO config(String configCode) {
         if (StringUtils.isEmpty(configCode)) { return EMPTY_CONFIG; }
-        String appCode = AuthenticationContext.currentAppCode();
+        String appCode = AuthContext.currentAppCode();
         SysConfigDTO config = null;
         if (StringUtils.isNotEmpty(appCode)) {
             String cacheKey = getConfigKey(appCode, configCode);

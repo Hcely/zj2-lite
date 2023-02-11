@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * @author peijie.ye
  * @date 2022/12/4 20:54
  */
-public class HMacSHA256Sign implements Sign {
+public class HMacSHA256Sign implements DigestSign {
     public static final String ALGORITHM = "HmacSHA256";
     private final String secret;
     private final SecretKeySpec secretKey;

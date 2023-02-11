@@ -6,7 +6,7 @@ import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
 import org.zj2.common.uac.auth.service.AuthenticationApi;
 import org.zj2.common.uac.auth.service.helper.AuthNamePwHelper;
-import org.zj2.lite.service.auth.AuthenticationJWT;
+import org.zj2.lite.service.auth.AuthorizationJWT;
 
 /**
  *  AuthenticationServiceImpl
@@ -20,7 +20,7 @@ public class AuthenticationServiceImpl implements AuthenticationApi {
     private AuthNamePwHelper authNamePwHelper;
 
     @Override
-    public AuthenticationJWT authenticateNamePw(AuthNamePwReq req) {
+    public AuthorizationJWT authenticateNamePw(AuthNamePwReq req) {
         AuthContext context = new AuthContext(req);
         authNamePwHelper.handle(context);
         return context.getToken();

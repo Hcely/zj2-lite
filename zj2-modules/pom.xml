@@ -21,6 +21,7 @@
         <module>zj2-common-sys</module>
         <module>zj2-common-sys-api</module>
         <module>zj2-common-sys-starter</module>
+        <module>zj2-common-uac-starter</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -32,6 +33,11 @@
             <dependency>
                 <groupId>org.zj2.lite.module</groupId>
                 <artifactId>zj2-common-auth-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

@@ -45,7 +45,7 @@
         <rocketMq.version>2.2.2</rocketMq.version>
         <skywalking.version>8.13.0</skywalking.version>
         <springfox.version>3.0.0</springfox.version>
-        <swagger.version>2.1.2</swagger.version>
+        <swagger.version>1.5.20</swagger.version>
         <jwt.version>4.2.1</jwt.version>
         <dubbo.version>3.1.3</dubbo.version>
         <janino.version>3.1.9</janino.version>
@@ -161,7 +161,7 @@
                 <version>${springfox.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger.core.v3</groupId>
+                <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger.version}</version>
             </dependency>

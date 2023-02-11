@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zj2.common.uac.app.dto.AppClientDTO;
 import org.zj2.common.uac.app.dto.AppDTO;
-import org.zj2.common.uac.app.entity.App;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.service.JWTokenService;
 import org.zj2.common.uac.org.dto.OrgDTO;
@@ -18,7 +17,7 @@ import org.zj2.common.uac.user.service.UserService;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
-import org.zj2.lite.service.auth.AuthenticationJWT;
+import org.zj2.lite.service.auth.AuthorizationJWT;
 
 import java.time.LocalDateTime;
 
@@ -39,7 +38,7 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
 
     @Override
     public void handle(AuthContext context) {
-        AuthenticationJWT token = buildToken(context);
+        AuthorizationJWT token = buildToken(context);
         context.setToken(token);
         if (StringUtils.isNotEmpty(token.getNamespace())) {
             jwtokenService.setToken(token.getAppCode(), token.getUserId(), token.getNamespace(), token.getToken(),
@@ -49,12 +48,12 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
         addLoginLog(context);
     }
 
-    private AuthenticationJWT buildToken(AuthContext context) {
+    private AuthorizationJWT buildToken(AuthContext context) {
         UserDTO user = context.getUser();
         AppDTO app = context.getApp();
         AppClientDTO client = context.getClient();
         OrgDTO org = context.getOrg();
-        AuthenticationJWT token = new AuthenticationJWT();
+        AuthorizationJWT token = new AuthorizationJWT();
         token.setTokenId(IdWorker.getIdStr());
         token.setUserId(user.getUserId());
         token.setUserName(user.getUserName());

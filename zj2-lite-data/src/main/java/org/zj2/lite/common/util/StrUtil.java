@@ -8,6 +8,7 @@ import org.zj2.lite.common.text.StrFormatterManager;
 /**
  * StrUtil
  * <br>CreateDate 六月 20,2020
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -17,12 +18,17 @@ public class StrUtil {
         return value == null ? "" : value.toString();
     }
 
+    public static String toStrIfNull(Object value) {
+        return value == null ? null : value.toString();
+    }
+
     public static StrFormatter getFormatter(String format) {
         return StrFormatterManager.DEFAULT.getFormatter(format);
     }
 
     /**
      * 字符串格式化
+     *
      * @param format 格式：xxx{}xxx{}xxx{}xxx 或者 xxx{2}xxx{0}xxx{1}xxx 或者 xxx%sxxx%sxxx%sxxx
      * @return
      */
@@ -52,6 +58,7 @@ public class StrUtil {
 
     /**
      * 字符串格式化
+     *
      * @param format xxxx{field1}xxx{field2}xxx{field3}xxx
      * @param obj
      * @return
@@ -132,38 +139,29 @@ public class StrUtil {
         return str != null && str.length() > 0;
     }
 
-    public static boolean equals(String value1, String value2) {
-        if (value1 == null) {
-            return isEmpty(value2);
-        } else if (value2 == null) {
-            return isEmpty(value1);
-        } else {
-            return value1.equals(value2);
-        }
+    public static String substring(CharSequence str, int startIdx) {
+        return isEmpty(str) ? "" : substring(str, startIdx, str.length());
     }
 
-    public static boolean equalsIgnoreCase(String value1, String value2) {
-        if (isEmpty(value1) && isEmpty(value2)) { return true; }
-        int len = length(value1);
-        int len2 = length(value2);
-        if (len != len2) { return false; }
-        for (int i = 0; i < len; ++i) {
-            int ch1 = value1.charAt(i);
-            int ch2 = value2.charAt(i);
-            if (ch1 == ch2) { continue; }
-            if (ch1 < 128 && ch2 < 128) {
-                if (Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        return StringUtils.equalsIgnoreCase(value1, value2);
+    public static String substring(CharSequence str, int startIdx, int endIdx) {
+        if (isEmpty(str)) { return ""; }
+        int len = str.length();
+        if (startIdx >= len) { return ""; }
+        startIdx = Math.max(startIdx, 0);
+        endIdx = Math.min(endIdx, len);
+        if (startIdx >= endIdx) { return ""; }
+        return str.subSequence(startIdx, endIdx).toString();
     }
 
-    public static boolean equals(String value1, String value2, int start2, int end2) {
+    public static boolean equals(CharSequence value1, CharSequence value2) {
+        return equals(value1, value2, 0, length(value2));
+    }
+
+    public static boolean equalsIgnoreCase(CharSequence value1, CharSequence value2) {
+        return equalsIgnoreCase(value1, value2, 0, length(value2));
+    }
+
+    public static boolean equals(CharSequence value1, CharSequence value2, int start2, int end2) {
         final int len = end2 - start2;
         if (len != length(value1)) { return false; }
         if (len == 0) { return true; }
@@ -173,7 +171,7 @@ public class StrUtil {
         return true;
     }
 
-    public static boolean equalsIgnoreCase(String value1, String value2, int start2, int end2) {
+    public static boolean equalsIgnoreCase(CharSequence value1, CharSequence value2, int start2, int end2) {
         final int len = end2 - start2;
         if (len != StringUtils.length(value1)) { return false; }
         if (len == 0) { return true; }

@@ -270,13 +270,21 @@ public class CollUtil {
     }
 
     public static <K, V> List<K> toList(V[] array, Function<V, K> func) {
+        return toList(array, func, false);
+    }
+
+    public static <K, V> List<K> toList(V[] array, Function<V, K> func, boolean ignoreEmpty) {
         if (isEmpty(array)) { return new ArrayList<>(); }
-        return transToTarget(array, new ArrayList<>(array.length), func, false);
+        return transToTarget(array, new ArrayList<>(array.length), func, ignoreEmpty);
     }
 
     public static <K, V> Set<K> toSet(V[] array, Function<V, K> func) {
+        return toSet(array, func, false);
+    }
+
+    public static <K, V> Set<K> toSet(V[] array, Function<V, K> func, boolean ignoreEmpty) {
         if (isEmpty(array)) { return new LinkedHashSet<>(); }
-        return transToTarget(array, new LinkedHashSet<>(array.length), func, false);
+        return transToTarget(array, new LinkedHashSet<>(array.length), func, ignoreEmpty);
     }
 
     public static <K, V> List<K> toList(Collection<V> coll, Function<V, K> func) {
@@ -367,6 +375,15 @@ public class CollUtil {
             }
         }
         return result;
+    }
+
+
+    public static <V> V[] defaultIfEmpty(V[] array, V[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
+
+    public static <V, C extends Collection<V>> C defaultIfEmpty(C coll, C defaultColl) {
+        return isEmpty(coll) ? defaultColl : coll;
     }
 
     public static <K, V> Map<K, V> toMap(Collection<V> coll, Function<V, K> keyFunc) {
@@ -511,6 +528,42 @@ public class CollUtil {
         return true;
     }
 
+    public static int size(Object[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(byte[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(boolean[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(char[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(short[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(float[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(int[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(long[] array) {
+        return array == null ? 0 : array.length;
+    }
+
+    public static int size(double[] array) {
+        return array == null ? 0 : array.length;
+    }
+
     public static int size(Collection<?> coll) {
         return coll == null ? 0 : coll.size();
     }
@@ -527,7 +580,71 @@ public class CollUtil {
         return array == null || array.length == 0;
     }
 
+    public static boolean isEmpty(byte[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(boolean[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(char[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(short[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(float[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(long[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(double[] array) {
+        return array == null || array.length == 0;
+    }
+
     public static boolean isNotEmpty(Object[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(byte[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(boolean[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(char[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(short[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(float[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(int[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(long[] array) {
+        return !isEmpty(array);
+    }
+
+    public static boolean isNotEmpty(double[] array) {
         return !isEmpty(array);
     }
 

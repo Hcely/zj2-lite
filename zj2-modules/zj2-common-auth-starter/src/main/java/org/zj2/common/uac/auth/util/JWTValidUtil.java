@@ -6,14 +6,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.codec.Base64Util;
 import org.zj2.lite.codec.ByteArrayBuf;
 import org.zj2.lite.codec.CodecUtil;
-import org.zj2.lite.service.auth.AuthenticationJWT;
+import org.zj2.lite.service.auth.AuthorizationJWT;
 import org.zj2.lite.sign.HMacSHA256Sign;
 import org.zj2.lite.util.ZRBuilder;
 
 import java.nio.charset.StandardCharsets;
 
 /**
- *  JWTUtil
+ * JWTUtil
  *
  * @author peijie.ye
  * @date 2022/12/4 14:32
@@ -24,7 +24,7 @@ public class JWTValidUtil {
     private static final int JWT_HEADER_LENGTH = 37;
     private static final int AUTH_HEADER_LENGTH = 44;
     private static final String JWT_HEADER = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.";
-    private static final String AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.";
+    private static final String AUTH_HEADER = "Bearer " + JWT_HEADER;
     private static final Base64Util.Encoder URL_ENCODER = new Base64Util.Encoder(true, false);
 
     public static boolean isJWT(String token) {
@@ -33,7 +33,7 @@ public class JWTValidUtil {
                 token.startsWith(JWT_HEADER) || token.startsWith(AUTH_HEADER));
     }
 
-    public static AuthenticationJWT parse(String token) {
+    public static AuthorizationJWT parse(String token) {
         int length = StringUtils.length(token);
         if (length < JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) { return null; }
         if (token.charAt(length - JWT_SIGN_LENGTH) == '.') { return null; }
@@ -48,10 +48,10 @@ public class JWTValidUtil {
             if (CodecUtil.isAllowFastMode(payloadLength)) {
                 ByteArrayBuf buf = CodecUtil.getBuffer().buf1.reset();
                 int wroteLen = Base64Util.DECODER.decode(token, headerLength, payloadLength, buf.buffer(), 0);
-                return JSON.parseObject(buf.buffer(), 0, wroteLen, StandardCharsets.UTF_8, AuthenticationJWT.class);
+                return JSON.parseObject(buf.buffer(), 0, wroteLen, StandardCharsets.UTF_8, AuthorizationJWT.class);
             } else {
                 byte[] data = Base64Util.DECODER.decode(token, headerLength, payloadLength);
-                return JSON.parseObject(data, 0, data.length, StandardCharsets.UTF_8, AuthenticationJWT.class);
+                return JSON.parseObject(data, 0, data.length, StandardCharsets.UTF_8, AuthorizationJWT.class);
             }
         } catch (Throwable e) {//NOSONAR
             log.error("解析token异常:" + token, e);

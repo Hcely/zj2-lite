@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.zj2.common.sys.base.dto.NumNextContext;
 import org.zj2.lite.helper.handler.BizVHandler;
-import org.zj2.lite.service.context.AuthenticationContext;
+import org.zj2.lite.service.context.AuthContext;
 
 /**
  *  SequenceBakHandler
@@ -26,7 +26,7 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
     private void putAppCode(NumNextContext context) {
         String appCode = context.getAppCode();
         if (StringUtils.isEmpty(appCode)) {
-            appCode = AuthenticationContext.currentAppCode();
+            appCode = AuthContext.currentAppCode();
             context.setAppCode(appCode);
         }
         if (StringUtils.isEmpty(appCode)) { return; }
@@ -37,7 +37,7 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
     private void putOrgCode(NumNextContext context) {
         String orgCode = context.getOrgCode();
         if (StringUtils.isEmpty(orgCode)) {
-            orgCode = AuthenticationContext.currentOrgCode();
+            orgCode = AuthContext.currentOrgCode();
             context.setOrgCode(orgCode);
         }
         if (StringUtils.isEmpty(orgCode)) { return; }

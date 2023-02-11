@@ -8,7 +8,7 @@ import org.zj2.common.uac.user.mapper.UserLogMapper;
 import org.zj2.common.uac.user.service.UserLogService;
 import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.service.BaseServiceImpl;
-import org.zj2.lite.service.context.ServiceRequestContext;
+import org.zj2.lite.service.context.RequestContext;
 import org.zj2.lite.util.TransactionSyncUtil;
 
 /**
@@ -24,8 +24,8 @@ public class UserLogServiceImpl extends BaseServiceImpl<UserLogMapper, UserLog, 
         // 初始化参数
         if (log.getLogTime() == null) { log.setLogTime(DateUtil.now()); }
         log.setLogRemark(StringUtils.abbreviate(log.getLogRemark(), 250));
-        log.setLogAddrIp(StringUtils.abbreviate(ServiceRequestContext.currentAttrIp(), 100));
-        log.setLogDevice(StringUtils.abbreviate(ServiceRequestContext.currentDevice(), 250));
+        log.setLogAddrIp(StringUtils.abbreviate(RequestContext.currentAttrIp(), 100));
+        log.setLogDevice(StringUtils.abbreviate(RequestContext.currentDevice(), 250));
         // 事务提交
         TransactionSyncUtil.afterCommit(log, this::add);
     }
