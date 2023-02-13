@@ -31,10 +31,10 @@ public class WebAuthInterceptor extends AbstractAuthInterceptor {
         if (authContext != null) {
             authContext.setUriResource(UriResourceManager.get(joinPoint));
             authenticate(requestContext, authContext);// 认证
-            authoriseUri(requestContext, authContext);// 授权
+            authorizeBefore(requestContext, authContext);// 授权
         }
         Object result = joinPoint.proceed();
-        if (authContext != null) { authoriseProperties(authContext, result); }
+        if (authContext != null) { authorizeAfter(requestContext, authContext, result); }
         return result;
     }
 }

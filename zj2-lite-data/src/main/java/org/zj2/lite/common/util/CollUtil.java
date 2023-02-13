@@ -2,6 +2,9 @@ package org.zj2.lite.common.util;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.zj2.lite.common.function.ByteConsumer;
+import org.zj2.lite.common.function.IdxKeyValueConsumer;
+import org.zj2.lite.common.function.IntBeanConsumer;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -23,7 +26,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -94,7 +100,7 @@ public class CollUtil {
         }
     }
 
-    public static <T> void foreach(Collection<T> coll, CollForeachConsumer<? super T> action) {
+    public static <T> void foreach(Collection<T> coll, IntBeanConsumer<? super T> action) {
         if (isNotEmpty(coll) && action != null) {
             int idx = 0;
             for (T e : coll) {
@@ -115,7 +121,7 @@ public class CollUtil {
         }
     }
 
-    public static <K, V> void foreach(Map<K, V> map, MapForeachConsumer<K, V> consumer) {
+    public static <K, V> void foreach(Map<K, V> map, IdxKeyValueConsumer<K, V> consumer) {
         if (consumer != null && isNotEmpty(map)) {
             int idx = 0;
             for (Map.Entry<K, V> e : map.entrySet()) {
@@ -126,13 +132,37 @@ public class CollUtil {
         }
     }
 
+    public static void foreach(byte[] array, ByteConsumer action) {
+        if (array != null && action != null) {
+            for (byte e : array) { action.accept(e); }
+        }
+    }
+
+    public static void foreach(int[] array, IntConsumer action) {
+        if (array != null && action != null) {
+            for (int e : array) { action.accept(e); }
+        }
+    }
+
+    public static void foreach(long[] array, LongConsumer action) {
+        if (array != null && action != null) {
+            for (long e : array) { action.accept(e); }
+        }
+    }
+
+    public static void foreach(double[] array, DoubleConsumer action) {
+        if (array != null && action != null) {
+            for (double e : array) { action.accept(e); }
+        }
+    }
+
     public static <T> void foreach(T[] array, Consumer<? super T> action) {
         if (array != null && action != null) {
             for (T e : array) { if (e != null) { action.accept(e); } }
         }
     }
 
-    public static <T> void foreach(T[] array, CollForeachConsumer<? super T> action) {
+    public static <T> void foreach(T[] array, IntBeanConsumer<? super T> action) {
         if (array != null && action != null) {
             for (int i = 0, len = array.length; i < len; ++i) {
                 T e = array[i];
@@ -163,7 +193,7 @@ public class CollUtil {
         }
     }
 
-    public static <T> void descForeach(Collection<T> coll, CollForeachConsumer<? super T> action) {//NOSONAR
+    public static <T> void descForeach(Collection<T> coll, IntBeanConsumer<? super T> action) {//NOSONAR
         if (action == null) { return; }
         int size = size(coll);
         if (size == 0) { return; }
@@ -214,7 +244,6 @@ public class CollUtil {
         }
     }
 
-
     public static <T> Foreacher<T, T> foreach(T object) {
         return new Foreacher<>(object);
     }
@@ -223,7 +252,6 @@ public class CollUtil {
     public static <T> Foreacher<T, T> foreach(Collection<T> coll) {
         return new Foreacher(coll).next(e -> coll);
     }
-
 
     public static <T> List<T> sort(List<T> coll, Comparator<T> comparator) {
         if (coll == null) {
@@ -912,13 +940,5 @@ public class CollUtil {
         public void remove() {
             it.remove();
         }
-    }
-
-    public interface CollForeachConsumer<T> {
-        void accept(int idx, T obj);
-    }
-
-    public interface MapForeachConsumer<K, V> {
-        void accept(int idx, K key, V value);
     }
 }

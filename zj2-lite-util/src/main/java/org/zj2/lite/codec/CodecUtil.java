@@ -3,7 +3,6 @@ package org.zj2.lite.codec;
 import org.springframework.util.DigestUtils;
 
 import java.lang.ref.SoftReference;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**

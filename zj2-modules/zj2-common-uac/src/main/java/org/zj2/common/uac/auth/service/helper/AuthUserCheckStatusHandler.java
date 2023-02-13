@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @date 2022/12/3 7:59
  */
 @Component
-public class AuthUserCheckHandler implements BizVHandler<AuthContext> {
+public class AuthUserCheckStatusHandler implements BizVHandler<AuthContext> {
     @Override
     public void handle(AuthContext context) {
         UserDTO user = context.getUser();

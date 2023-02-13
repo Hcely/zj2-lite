@@ -27,8 +27,13 @@ public class DubboServerAuthInterceptor extends AbstractAuthInterceptor implemen
         AuthContext authContext = initAuthContext(requestContext);
         if (authContext != null) {
             authenticate(requestContext, authContext, REQUIRED_TYPE);
+            authorizeBefore(requestContext, authContext);
         }
-        return invoker.invoke(invocation);
+        Result result = invoker.invoke(invocation);
+        if (authContext != null) {
+            authorizeAfter(requestContext, authContext, result == null ? null : result.getValue());
+        }
+        return result;
     }
 }
 

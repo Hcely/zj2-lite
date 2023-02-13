@@ -7,7 +7,7 @@ import org.zj2.lite.service.auth.AuthorizationJWT;
 import org.zj2.lite.sign.HMacSHA256Sign;
 
 /**
- *  JWTUtil
+ * JWTUtil
  *
  * @author peijie.ye
  * @date 2022/12/4 14:32
@@ -31,7 +31,7 @@ public class JWTBuildUtil {
         StringBuilder sb = new StringBuilder(256);
         sb.append(JWT_HEADER);
         URL_ENCODER.encode(sb, JSON.toJSONBytes(token));
-        byte[] signData = HMacSHA256Sign.signISO(secret, sb, sb.length());
+        byte[] signData = HMacSHA256Sign.signISO(secret, sb, 0, sb.length());
         sb.append('.');
         return URL_ENCODER.encode(sb, signData).toString();
     }

@@ -32,9 +32,12 @@ public class AuthManager {
     public static AuthoritySet getAuthoritySet(AuthContext context) {
         final String tokenId = context.getTokenId();
         final String userId = context.getUserId();
-        if (StringUtils.isEmpty(tokenId)) { return new AuthoritySet(tokenId, userId); }
-        AuthorityApi authorityApi = authorityApiRef.get();
+        final AuthorityApi authorityApi = authorityApiRef.get();
         if (authorityApi == null) { return new AuthoritySet(tokenId, userId); }
+        //
+        if (StringUtils.isEmpty(tokenId) || !context.isAuthenticated()) {
+            return new AuthoritySet(tokenId, userId);
+        }
         AuthoritySet authorityResources = CacheUtil.DEF_CACHE.get(AuthoritySet.class, tokenId,
                 authorityApi::getAuthorities, 180_000);
         return authorityResources == null ? new AuthoritySet(tokenId, userId) : authorityResources;

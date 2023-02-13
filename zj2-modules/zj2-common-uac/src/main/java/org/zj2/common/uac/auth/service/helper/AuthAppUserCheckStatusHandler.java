@@ -19,7 +19,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @date 2022/12/3 7:59
  */
 @Component
-public class AuthAppUserCheckHandler implements Supportable<AuthContext>, BizVHandler<AuthContext> {
+public class AuthAppUserCheckStatusHandler implements Supportable<AuthContext>, BizVHandler<AuthContext> {
     @Autowired
     private AppUserService appUserService;
 

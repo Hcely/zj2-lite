@@ -19,7 +19,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @date 2022/12/3 9:20
  */
 @Component
-public class AuthNamePwHandler implements BizVHandler<AuthContext> {
+public class AuthFindUserHandler implements BizVHandler<AuthContext> {
     @Autowired
     private UserService userService;
 

@@ -18,7 +18,7 @@ import org.zj2.lite.service.context.TokenType;
  */
 @Component
 @Order(1)
-public class ServerSignFactory implements AuthorizationFactory {
+public class AuthorizationServerSignFactory implements AuthorizationFactory {
     @Override
     public boolean supports(String authorization) {
         return ServerSignUtil.isDigest(authorization);
@@ -37,6 +37,7 @@ public class ServerSignFactory implements AuthorizationFactory {
         context.setUserName(requestContext.getRequestParamStr(ServiceConstants.JWT_USERNAME));
         context.setAppCode(sign.getAppCode());
         context.setOrgCode(requestContext.getRequestParamStr(ServiceConstants.JWT_ORG_CODE));
+        context.setClientCode(requestContext.getRequestParamStr(ServiceConstants.JWT_CLIENT_CODE));
         context.setDataAuthority(requestContext.getRequestParamStr(ServiceConstants.DATA_AUTHORITY));
         return context;
     }

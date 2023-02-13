@@ -17,7 +17,7 @@ import org.zj2.lite.service.context.TokenType;
  */
 @Component
 @Order(0)
-public class JWTFactory implements AuthorizationFactory {
+public class AuthorizationJWTFactory implements AuthorizationFactory {
     @Override
     public boolean supports(String authorization) {
         return JWTValidUtil.isJWT(authorization);
@@ -37,6 +37,7 @@ public class JWTFactory implements AuthorizationFactory {
         context.setUserName(jwt.getUserName());
         context.setAppCode(jwt.getAppCode());
         context.setOrgCode(jwt.getOrgCode());
+        context.setClientCode(jwt.getClientCode());
         return context;
     }
 }

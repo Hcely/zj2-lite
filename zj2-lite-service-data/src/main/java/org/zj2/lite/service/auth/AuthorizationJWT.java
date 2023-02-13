@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.zj2.lite.service.constant.ServiceConstants;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class AuthorizationJWT implements Serializable {
     private static final long serialVersionUID = 20221127222539L;
@@ -49,6 +51,12 @@ public class AuthorizationJWT implements Serializable {
     private String orgCode;
 
     /**
+     * clientCode
+     */
+    @JSONField(name = ServiceConstants.JWT_CLIENT_CODE)
+    private String clientCode;
+
+    /**
      * 到期时间
      */
     @JSONField(name = "iat")
@@ -60,18 +68,9 @@ public class AuthorizationJWT implements Serializable {
     @JSONField(name = "ns")
     private String namespace;
 
-    @JSONField(name = "at")
-    private Integer authorityType;
-
     /**
      * 用户token
      */
     @JSONField(serialize = false, deserialize = false)
     private String token;
-
-    @Override
-    public String toString() {
-        return "{userId=" + userId + ", userName=" + userName + ", appCode=" + appCode + ", orgCode=" + orgCode
-                + ", expireAt=" + expireAt + ", namespace=" + namespace + '}';
-    }
 }

@@ -16,13 +16,13 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AuthLocalAppOrgHandler
+ * AuthLocalAppOrgHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 8:35
  */
 @Component
-public class AuthLocalAppOrgHandler implements BizVHandler<AuthContext> {
+public class AuthLoadAppOrgHandler implements BizVHandler<AuthContext> {
     @Autowired
     private AppService appService;
     @Autowired
@@ -39,8 +39,11 @@ public class AuthLocalAppOrgHandler implements BizVHandler<AuthContext> {
     }
 
     private void loadApp(AuthContext context, AuthReq req) {
-        if (StringUtils.isEmpty(req.getAppCode())) { return; }
-        AppDTO app = appService.getByCode(req.getAppCode());
+        String appCode = req.getAppCode();
+        if (StringUtils.isEmpty(appCode)) {
+            appCode = AppDTO.COMMON_APP_CODE;
+        }
+        AppDTO app = appService.getByCode(appCode);
         if (app == null) { throw ZRBuilder.failureErr("应用不存在"); }
         if (BooleanUtil.isFalse(app.getEnableFlag())) { throw ZRBuilder.failureErr("应用被禁用"); }
         context.setApp(app);
@@ -59,7 +62,13 @@ public class AuthLocalAppOrgHandler implements BizVHandler<AuthContext> {
     }
 
     private void loadOrg(AuthContext context, AuthReq req) {
-        if (StringUtils.isEmpty(req.getOrgCode())) { return; }
+        if (StringUtils.isEmpty(req.getOrgCode())) {
+            AppDTO app = context.getApp();
+            if (app != null && BooleanUtil.isTrue(app.getRequiredOrg())) {
+                throw ZRBuilder.failureErr("机构不存在");
+            }
+            return;
+        }
         OrgDTO org = orgService.get(req.getOrgCode());
         if (org == null) { throw ZRBuilder.failureErr("机构不存在"); }
         if (BooleanUtil.isFalse(org.getEnableFlag())) { throw ZRBuilder.failureErr("机构被禁用"); }

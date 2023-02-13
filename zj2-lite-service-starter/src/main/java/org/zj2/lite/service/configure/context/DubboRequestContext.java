@@ -2,6 +2,7 @@ package org.zj2.lite.service.configure.context;
 
 import lombok.Getter;
 import org.apache.dubbo.rpc.Invocation;
+import org.apache.dubbo.rpc.Invoker;
 import org.zj2.lite.service.constant.RequestMethods;
 import org.zj2.lite.service.context.RequestContext;
 
@@ -13,15 +14,18 @@ import org.zj2.lite.service.context.RequestContext;
  */
 public class DubboRequestContext extends RequestContext {
     @Getter
-    protected final Invocation request;
+    protected final Invoker<?> invoker;
+    @Getter
+    protected final Invocation invocation;
 
-    protected DubboRequestContext(Invocation request) {
-        this.request = request;
+    protected DubboRequestContext(Invoker<?> invoker, Invocation invocation) {
+        this.invoker = invoker;
+        this.invocation = invocation;
         this.method = RequestMethods.DUBBO;
     }
 
     @Override
-    protected void setRootUri(String rootUri) {
+    public void setRootUri(String rootUri) {
         super.setRootUri(rootUri);
     }
 
@@ -42,16 +46,16 @@ public class DubboRequestContext extends RequestContext {
 
     @Override
     public Object request() {
-        return request;
+        return invocation;
     }
 
     @Override
     public Object getRequestParam(String key) {
-        return request.getAttachment(key);
+        return invocation.getAttachment(key);
     }
 
     @Override
     public void setRequestParam(String key, Object param) {
-        request.setAttachment(key, param);
+        invocation.setAttachment(key, param);
     }
 }

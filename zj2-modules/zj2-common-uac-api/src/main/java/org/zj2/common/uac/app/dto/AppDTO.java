@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class AppDTO implements Serializable {
-    public static final String COMMON_APP_CODE = "COMMON";
+    public static final String COMMON_APP_CODE = "common";
     protected static final String APP_CONFIG = "appConfig";
     private static final long serialVersionUID = 1L;
 
@@ -53,6 +53,18 @@ public class AppDTO implements Serializable {
     @AuthorityResource
     private String appSecret;
 
+    /**
+     * 要求机构
+     */
+    @JProperty(json = APP_CONFIG)
+    private Integer requiredOrg;
+
+    /**
+     * 要求客户端
+     */
+    @JProperty(json = APP_CONFIG)
+    private Integer requiredClient;
+    
     /**
      * 应用配置
      */

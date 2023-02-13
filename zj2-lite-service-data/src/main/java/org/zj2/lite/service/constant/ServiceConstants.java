@@ -32,6 +32,7 @@ public class ServiceConstants {
     public static final String JWT_USERNAME = "uname";
     public static final String JWT_APP_CODE = "app";
     public static final String JWT_ORG_CODE = "org";
+    public static final String JWT_CLIENT_CODE = "ccd";
     //
     public static final String AUTHORIZATION = "Authorization";
     public static final String DATA_AUTHORITY = "Data-Range";

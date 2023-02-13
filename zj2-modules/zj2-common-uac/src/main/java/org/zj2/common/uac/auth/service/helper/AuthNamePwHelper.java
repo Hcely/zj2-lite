@@ -11,12 +11,12 @@ import org.zj2.lite.helper.CommonBizHelper;
  * @date 2022/12/3 9:25
  */
 @BizReference({//
-        AuthNamePwHandler.class,//
-        AuthUserCheckHandler.class,//
-        AuthLocalAppOrgHandler.class,//
-        AuthOrgEmployeeCheckHandler.class,//
-        AuthAppOrgCheckHandler.class,//
-        AuthAppUserCheckHandler.class,//
+        AuthFindUserHandler.class,//
+        AuthLoadAppOrgHandler.class,//
+        AuthUserCheckStatusHandler.class,//
+        AuthOrgEmployeeCheckStatusHandler.class,//
+        AuthAppOrgCheckStatusHandler.class,//
+        AuthAppUserCheckStatusHandler.class,//
         AuthCreateTokenHandler.class//
 })
 public class AuthNamePwHelper extends CommonBizHelper<AuthContext> {

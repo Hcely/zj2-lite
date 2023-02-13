@@ -1,7 +1,6 @@
-package org.zj2.common.uac.auth.server;
+package org.zj2.common.uac.auth.server.authorization;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zj2.common.uac.auth.server.hider.PropertyValueHider;
 import org.zj2.common.uac.auth.util.AuthManager;
@@ -14,8 +13,10 @@ import org.zj2.lite.service.auth.AuthorityResource;
 import org.zj2.lite.service.auth.AuthoritySet;
 import org.zj2.lite.service.auth.UriResource;
 import org.zj2.lite.service.context.AuthContext;
+import org.zj2.lite.service.context.RequestContext;
+import org.zj2.lite.service.context.TokenType;
+import org.zj2.lite.spring.SpringBeanRef;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,14 +26,21 @@ import java.util.Set;
  * @date 2023/1/2 22:53
  */
 @Component
-public class AuthorizePropertyHandler implements AuthorizeHandler<Object> {
-    @Autowired(required = false)
-    private List<PropertyValueHider> shredders;
+public class AuthorizePropertyHandler extends AuthorizeAbstractHandler implements AuthorizeAfterHandler {
+    private static final SpringBeanRef<PropertyValueHider[]> HIDERS_REF = new SpringBeanRef<>(
+            PropertyValueHider[].class);
 
     @Override
-    public void authorize(AuthContext context, Object bean) {
-        final AuthoritySet authorities = AuthManager.getAuthoritySet(context);
-        PropertyUtil.scanProperties(bean, new AuthorizePropertyScanHandler(this, context, authorities));
+    public boolean supports(RequestContext requestContext, AuthContext authContext, UriResource uriResource) {
+        if (authContext.getTokenType() == TokenType.SERVER_SIGN) { return false; }
+        return uriResource.isRequiredPropertyAuthority();
+    }
+
+    @Override
+    public void authorize(RequestContext requestContext, AuthContext authContext, UriResource uriResource,
+            Object result) {
+        final AuthoritySet authorities = getAuthoritySet(requestContext, authContext);
+        PropertyUtil.scanProperties(result, new AuthorizePropertyScanHandler(this, authContext, authorities));
     }
 
     private static class AuthorizePropertyScanHandler implements BeanPropertyScanHandler {
@@ -52,7 +60,7 @@ public class AuthorizePropertyHandler implements AuthorizeHandler<Object> {
             String propertyAuthority = handler.getPropertyAuthority(cxt);
             Object value;
             if (handler.isRequiredAuthority(context, propertyAuthority) && (value = cxt.propertyValue()) != null) {
-                if (authorities.notContainsAuthority(propertyAuthority)) {
+                if (!context.isAuthenticated() || authorities.notContainsAuthority(propertyAuthority)) {
                     Object newValue = handler.hidePropertyValue(cxt.propertyName(), value);
                     cxt.propertyValue(newValue);
                 }
@@ -66,8 +74,11 @@ public class AuthorizePropertyHandler implements AuthorizeHandler<Object> {
         if (!cxt.isPropertyOfBean()) { return null; }
         AuthorityResource resource = cxt.propertyAnnotation(AuthorityResource.class);
         if (resource == null) { return null; }
-        String authority = StringUtils.defaultIfEmpty(resource.name(), resource.value());
-        return StringUtils.isEmpty(authority) ? cxt.propertyName() : authority;
+        String authority = resource.name();
+        if (StringUtils.isNotEmpty(authority)) { return authority; }
+        authority = resource.value();
+        if (StringUtils.isNotEmpty(authority)) { return authority; }
+        return cxt.propertyName();
     }
 
     protected boolean isRequiredAuthority(AuthContext context, String propertyAuthority) {
@@ -84,10 +95,11 @@ public class AuthorizePropertyHandler implements AuthorizeHandler<Object> {
         if (!(value instanceof String)) { return null; }
         String valueStr = value.toString();
         if (StringUtils.isEmpty(valueStr)) { return value; }
-        if (CollUtil.isNotEmpty(shredders)) {
-            for (PropertyValueHider shredder : shredders) {
-                if (shredder.supports(propertyName)) {
-                    return shredder.hide(valueStr);
+        PropertyValueHider[] hiders = HIDERS_REF.get();
+        if (CollUtil.isNotEmpty(hiders)) {
+            for (PropertyValueHider hider : hiders) {
+                if (hider.supports(propertyName)) {
+                    return hider.hide(valueStr);
                 }
             }
         }

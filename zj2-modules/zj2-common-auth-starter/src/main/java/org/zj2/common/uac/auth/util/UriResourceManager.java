@@ -185,12 +185,6 @@ public class UriResourceManager {
                     CollUtil.isEmpty(propertyAuthorities) ? CollUtil.emptySet() : CollUtil.newSet(propertyAuthorities));
             resource.setDataAuthority(getDataAuthority(authorityResource, parentResource));
             if (StringUtils.isEmpty(resource.getDataAuthority())) { resource.setRequiredDataAuthority(false); }
-            //
-            if (!resource.isRequiredAuthentication()) {
-                resource.setRequiredAuthentication(
-                        resource.isRequiredUriAuthority() || resource.isRequiredPropertyAuthority()
-                                || resource.isRequiredDataAuthority());
-            }
         }
     }
 

@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.server.authenticate;
+package org.zj2.common.uac.auth.server.authorization;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

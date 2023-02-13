@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 /**
- *  HMacSHA256Sign
+ * HMacSHA256Sign
  *
  * @author peijie.ye
  * @date 2022/12/4 20:54
@@ -56,13 +56,13 @@ public class HMacSHA256Sign implements DigestSign {
         }
     }
 
-    public static byte[] signISO(String secret, CharSequence value, int length) {
+    public static byte[] signISO(String secret, CharSequence value, int startIdx, int endIdx) {
         try {
             Mac sha256 = Mac.getInstance(HMacSHA256Sign.ALGORITHM);
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.ISO_8859_1),
                     HMacSHA256Sign.ALGORITHM);
             sha256.init(secretKey);
-            for (int i = 0; i < length; ++i) { sha256.update((byte) value.charAt(i)); }
+            for (int i = startIdx; i < endIdx; ++i) { sha256.update((byte) value.charAt(i)); }
             return sha256.doFinal();
         } catch (Exception e) {
             return ArrayUtils.EMPTY_BYTE_ARRAY;

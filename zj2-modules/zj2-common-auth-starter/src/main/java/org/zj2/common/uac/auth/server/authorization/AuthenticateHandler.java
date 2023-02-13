@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.server.authenticate;
+package org.zj2.common.uac.auth.server.authorization;
 
 import org.zj2.lite.common.Supportable;
 import org.zj2.lite.service.context.AuthContext;

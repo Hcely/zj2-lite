@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.context.ThreadContext;
 import org.zj2.lite.common.context.ZContext;
+import org.zj2.lite.service.auth.AuthoritySet;
 import org.zj2.lite.service.auth.UriResource;
 
 /**
@@ -59,32 +59,18 @@ public class AuthContext extends ZContext {
     }
 
     protected TokenType tokenType;
-    private String token;
-    private long tokenTime;
+    protected String token;
+    protected long tokenTime;
     protected String tokenId;
-    private String namespace;
+    protected String namespace;
     protected String userId;
     protected String userName;
     protected String appCode;
     protected String orgCode;
+    protected String clientCode;
     protected String dataAuthority;
-    private UriResource uriResource;
+    protected UriResource uriResource;
     protected boolean authenticated = false;
-
-    public AuthContext(AuthContext context) {
-        this.tokenType = context.tokenType;
-        this.token = context.token;
-        this.tokenTime = context.tokenTime;
-        this.tokenId = context.tokenId;
-        this.namespace = context.namespace;
-        this.userId = context.userId;
-        this.userName = context.userName;
-        this.appCode = context.appCode;
-        this.dataAuthority = context.dataAuthority;
-        this.orgCode = context.orgCode;
-        this.uriResource = context.uriResource;
-        this.authenticated = context.authenticated;
-    }
 
     public String getDataAuthority() {
         if (StringUtils.isNotEmpty(dataAuthority)) {
@@ -110,6 +96,10 @@ public class AuthContext extends ZContext {
 
     public String getAppCode() {
         return appCode == null ? "" : appCode;
+    }
+
+    public String getClientCode() {
+        return clientCode == null ? "" : clientCode;
     }
 
     public String getOrgCode() {

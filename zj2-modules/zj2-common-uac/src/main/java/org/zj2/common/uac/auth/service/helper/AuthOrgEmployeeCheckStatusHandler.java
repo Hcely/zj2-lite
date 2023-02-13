@@ -14,13 +14,13 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AuthUserCheckHandler
+ * AuthUserCheckHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 7:59
  */
 @Component
-public class AuthOrgEmployeeCheckHandler implements Supportable<AuthContext>, BizVHandler<AuthContext> {
+public class AuthOrgEmployeeCheckStatusHandler implements Supportable<AuthContext>, BizVHandler<AuthContext> {
     @Autowired
     private OrgEmployeeService orgEmployeeService;
 
@@ -31,8 +31,8 @@ public class AuthOrgEmployeeCheckHandler implements Supportable<AuthContext>, Bi
 
     @Override
     public void handle(AuthContext context) {
-        UserDTO user = context.getUser();
         OrgDTO org = context.getOrg();
+        UserDTO user = context.getUser();
         OrgEmployeeDTO employee = orgEmployeeService.getEmployee(org.getOrgCode(), user.getUserId());
         if (employee == null) {
             throw ZRBuilder.failureErr("非机构职员");

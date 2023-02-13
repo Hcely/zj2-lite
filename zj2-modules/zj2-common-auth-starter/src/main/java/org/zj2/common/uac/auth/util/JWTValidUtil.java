@@ -60,7 +60,7 @@ public class JWTValidUtil {
     }
 
     public static boolean valid(String secret, String token) {
-        byte[] signData = HMacSHA256Sign.signISO(secret, token, token.length() - JWT_SIGN_LENGTH);
+        byte[] signData = HMacSHA256Sign.signISO(secret, token, 0, token.length() - JWT_SIGN_LENGTH);
         return StringUtils.endsWithIgnoreCase(token, URL_ENCODER.encode(signData));
     }
 }

@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zj2.lite.common.Destroyable;
 import org.zj2.lite.common.Releasable;
-import org.zj2.lite.common.function.BeanIntConsumer;
-import org.zj2.lite.common.function.BeanLongConsumer;
+import org.zj2.lite.common.function.IntBeanConsumer;
+import org.zj2.lite.common.function.LongBeanConsumer;
 import org.zj2.lite.common.util.BeanUtil;
 
 import java.lang.invoke.MethodHandles;
@@ -101,19 +101,19 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return add0(value, handler, true);
     }
 
-    public boolean add(int value, BeanIntConsumer<T> handler) {
+    public boolean add(int value, IntBeanConsumer<T> handler) {
         return add0(value, handler, false);
     }
 
-    public boolean tryAdd(int value, BeanIntConsumer<T> handler) {
+    public boolean tryAdd(int value, IntBeanConsumer<T> handler) {
         return add0(value, handler, true);
     }
 
-    public boolean add(long value, BeanLongConsumer<T> handler) {
+    public boolean add(long value, LongBeanConsumer<T> handler) {
         return add0(value, handler, false);
     }
 
-    public boolean tryAdd(long value, BeanLongConsumer<T> handler) {
+    public boolean tryAdd(long value, LongBeanConsumer<T> handler) {
         return add0(value, handler, true);
     }
 
@@ -130,11 +130,11 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return false;
     }
 
-    private boolean add0(long value, BeanLongConsumer<T> handler, boolean tryNext) {
+    private boolean add0(long value, LongBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
         if (pos > FAILURE_POS) {
             try {
-                handler.accept(get(pos), value);
+                handler.accept(value, get(pos));
             } finally {
                 publish(pos);
             }
@@ -143,11 +143,11 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return false;
     }
 
-    private boolean add0(int value, BeanIntConsumer<T> handler, boolean tryNext) {
+    private boolean add0(int value, IntBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
         if (pos > FAILURE_POS) {
             try {
-                handler.accept(get(pos), value);
+                handler.accept(value, get(pos));
             } finally {
                 publish(pos);
             }
