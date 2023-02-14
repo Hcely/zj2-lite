@@ -133,8 +133,7 @@ public class UriResourceManager {
     private static UriResource buildResource(Class<?> clazz, Method method, String methodName, Class<?>[] paramTypes) {
         UriResource0 resource = new UriResource0();
         if (method == null) {
-            method = ReflectUtil.getMethod(clazz, methodName, paramTypes);
-            if (method == null) { method = ReflectUtil.findMethod(clazz, methodName, paramTypes); }
+            method = ReflectUtil.findMethod(clazz, methodName, paramTypes);
         }
         resource.setName(UriNameUtil.getMethodName(clazz, methodName, paramTypes));
         resource.setUriPath(UriNameUtil.getUriPath(clazz, method));

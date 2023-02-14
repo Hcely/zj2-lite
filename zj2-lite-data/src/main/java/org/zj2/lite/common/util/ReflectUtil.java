@@ -1,5 +1,6 @@
 package org.zj2.lite.common.util;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
@@ -12,7 +13,12 @@ import java.lang.reflect.Method;
  */
 public class ReflectUtil {
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
-        Method method = getMethod0(clazz, methodName, paramTypes);
+        if (clazz == null || StringUtils.isEmpty(methodName)) { return null; }
+        return getMethod0(clazz, methodName, paramTypes == null ? ArrayUtils.EMPTY_CLASS_ARRAY : paramTypes);
+    }
+
+    private static Method getMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+        Method method = getPublicMethod0(clazz, methodName, paramTypes);
         if (method != null) { return method; }
         Class<?> type = clazz.getSuperclass();
         while (type != null && type != Object.class) {
@@ -23,7 +29,7 @@ public class ReflectUtil {
         return null;
     }
 
-    private static Method getMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+    private static Method getPublicMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
         try {
             return clazz.getMethod(methodName, paramTypes);
         } catch (NoSuchMethodException ignored) {
@@ -31,7 +37,7 @@ public class ReflectUtil {
         }
     }
 
-    private static Method getDeclaredMethod0(Class<?> clazz, String methodName, Class<?>... paramTypes) {
+    private static Method getDeclaredMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
         try {
             return clazz.getDeclaredMethod(methodName, paramTypes);
         } catch (NoSuchMethodException ignored) {
@@ -40,34 +46,40 @@ public class ReflectUtil {
     }
 
     public static Method findMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
-        if (clazz == null) { return null; }
-        Method method = findMethod0(clazz, methodName, paramTypes);
-        if (method != null) { return method; }
-        Class<?>[] iTypes = clazz.getInterfaces();
-        for (Class<?> iType : iTypes) {
-            method = findMethod(iType, methodName, paramTypes);
-            if (method != null) { return method; }
-        }
-        return findMethod(clazz.getSuperclass(), methodName, paramTypes);
+        if (clazz == null || StringUtils.isEmpty(methodName)) { return null; }
+        paramTypes = paramTypes == null ? ArrayUtils.EMPTY_CLASS_ARRAY : paramTypes;
+        Method method = getMethod0(clazz, methodName, paramTypes);
+        return method != null ? method : findMethod0(clazz, methodName, paramTypes);
     }
 
     private static Method findMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+        if (clazz == null) { return null; }
+        Method method = matchMethod0(clazz, methodName, paramTypes);
+        if (method != null) { return method; }
+        Class<?>[] iTypes = clazz.getInterfaces();
+        for (Class<?> iType : iTypes) {
+            if ((method = matchMethod0(iType, methodName, paramTypes)) != null) { return method; }
+        }
+        if (clazz.isInterface()) { return null; }
+        return findMethod0(clazz.getSuperclass(), methodName, paramTypes);
+    }
+
+    private static Method matchMethod0(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
         for (Method m : clazz.getDeclaredMethods()) {
-            if (StringUtils.equals(m.getName(), methodName) && matchParamTypes(m, paramTypes)) {
-                return m;
-            }
+            if (matchParamTypes(m, methodName, paramTypes)) { return m; }
         }
         return null;
     }
 
-    private static boolean matchParamTypes(Method m, Class<?>[] paramTypes) {
-        int size = paramTypes == null ? 0 : paramTypes.length;
-        Class<?>[] methodParamTypes = m.getParameterTypes();
-        if (methodParamTypes.length != size) { return false; }
+    private static boolean matchParamTypes(Method m, String methodName, Class<?>[] paramTypes) {
+        if (!StringUtils.equals(m.getName(), methodName)) { return false; }
+        Class<?>[] targetParamTypes = m.getParameterTypes();
+        int size = paramTypes.length;
+        if (targetParamTypes.length != size) { return false; }
         for (int i = 0; i < size; ++i) {
-            Class<?> methodParamType = methodParamTypes[i];
+            Class<?> targetParamType = targetParamTypes[i];
             Class<?> paramType = paramTypes[i];
-            if (methodParamType != paramType && methodParamType.isAssignableFrom(paramType)) {
+            if (targetParamType != paramType && targetParamType.isAssignableFrom(paramType)) {
                 return false;
             }
         }
