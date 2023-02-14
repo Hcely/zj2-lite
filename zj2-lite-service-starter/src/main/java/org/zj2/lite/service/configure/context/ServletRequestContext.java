@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.zj2.lite.service.constant.ServiceConstants;
-import org.zj2.lite.service.context.RequestContext;
+import org.zj2.lite.service.context.BaseRequestContext;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author peijie.ye
  * @date 2023/2/10 14:20
  */
-public class ServletRequestContext extends RequestContext {
+public class ServletRequestContext extends BaseRequestContext {
     @Getter
     protected final ServletRequest request;
 
@@ -24,38 +24,16 @@ public class ServletRequestContext extends RequestContext {
     }
 
     @Override
-    public void setRootUri(String rootUri) {
-        this.rootUri = rootUri;
-    }
-
-    @Override
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    @Override
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    @Override
-    public void setAttrIp(String attrIp) {
-        this.attrIp = attrIp;
-    }
-
-    @Override
-    public void setDevice(String device) {
-        this.device = device;
-    }
-
-    @Override
-    public Object request() {
+    public Object rawRequest() {
         return request;
     }
 
     @Override
     public Object getRequestParam(String key) {
-        Object value = request.getAttribute(key);
+        Object value = super.getRequestParam(key);
+        if (value != null) { return value; }
+        //
+        value = request.getAttribute(key);
         if (value != null) { return value; }
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -68,10 +46,5 @@ public class ServletRequestContext extends RequestContext {
             }
         }
         return null;
-    }
-
-    @Override
-    public void setRequestParam(String key, Object param) {
-        request.setAttribute(key, param);
     }
 }

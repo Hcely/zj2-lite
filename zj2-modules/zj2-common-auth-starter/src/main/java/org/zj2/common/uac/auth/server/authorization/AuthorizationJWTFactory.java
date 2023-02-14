@@ -2,9 +2,11 @@ package org.zj2.common.uac.auth.server.authorization;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.auth.util.AuthManager;
+import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.common.uac.auth.util.JWTValidUtil;
 import org.zj2.lite.service.auth.AuthorizationJWT;
+import org.zj2.lite.service.auth.helper.AuthorizationFactory;
+import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.context.RequestContext;
 import org.zj2.lite.service.context.TokenType;
@@ -26,7 +28,7 @@ public class AuthorizationJWTFactory implements AuthorizationFactory {
     @Override
     public AuthContext create(RequestContext requestContext, String authorization) {
         AuthorizationJWT jwt = JWTValidUtil.parse(authorization);
-        if (jwt == null) { throw AuthManager.unAuthorityErr("无效token格式"); }
+        if (jwt == null) { throw AuthUtil.unAuthorityErr("无效token格式"); }
         AuthContext context = new AuthContext();
         context.setTokenType(TokenType.JWT);
         context.setToken(jwt.getToken());
@@ -37,6 +39,7 @@ public class AuthorizationJWTFactory implements AuthorizationFactory {
         context.setUserName(jwt.getUserName());
         context.setAppCode(jwt.getAppCode());
         context.setOrgCode(jwt.getOrgCode());
+        context.setServiceName(ServiceConstants.serviceName());
         context.setClientCode(jwt.getClientCode());
         return context;
     }

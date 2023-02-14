@@ -1,10 +1,12 @@
 package org.zj2.lite.service.configure;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.zj2.lite.service.configure.property.ZJ2SpringProperties;
+import org.zj2.lite.service.configure.property.ZJ2SwaggerDocProperties;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -14,7 +16,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**
- *  ZJSwaggerConfiguration
+ * ZJSwaggerConfiguration
  *
  * @author peijie.ye
  * @date 2022/12/21 18:00
@@ -23,8 +25,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 @ConditionalOnProperty(value = "zj2.doc.enabled", havingValue = "true", matchIfMissing = true)
 @EnableOpenApi
 public class ZJSwaggerConfiguration {
-    @Value("${zj2.doc.title:}")
-    private String docName = "";
+    @Autowired
+    private ZJ2SpringProperties properties;
 
     @Bean
     public Docket docket() {
@@ -34,6 +36,7 @@ public class ZJSwaggerConfiguration {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(StringUtils.defaultIfEmpty(docName, "ZJ2.0接口文档")).version("1.0").build();
+        String title = properties.getDoc().getTitle();
+        return new ApiInfoBuilder().title(StringUtils.defaultIfEmpty(title, "ZJ2.0接口文档")).version("1.0").build();
     }
 }

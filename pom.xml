@@ -17,7 +17,7 @@
         <module>zj2-lite-data</module>
         <module>zj2-lite-util</module>
         <module>zj2-lite-service</module>
-        <module>zj2-lite-service-data</module>
+        <module>zj2-lite-service-api</module>
         <module>zj2-lite-session</module>
         <module>zj2-modules</module>
         <module>zj2-lite-test</module>
@@ -76,7 +76,7 @@
             </dependency>
             <dependency>
                 <groupId>org.zj2.lite</groupId>
-                <artifactId>zj2-lite-service-data</artifactId>
+                <artifactId>zj2-lite-service-api</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

@@ -8,6 +8,7 @@ import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.entity.ByteKey;
 import org.zj2.lite.common.entity.Ternary;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.ReflectUtil;
 import org.zj2.lite.service.auth.AuthenticationIgnored;
 import org.zj2.lite.service.auth.AuthenticationRequired;
 import org.zj2.lite.service.auth.AuthorityResource;
@@ -17,6 +18,7 @@ import org.zj2.lite.service.util.UriNameUtil;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -85,6 +87,11 @@ public class UriResourceManager {
         public void setRequiredDataAuthority(boolean requiredDataAuthority) {
             super.setRequiredDataAuthority(requiredDataAuthority);
         }
+
+        @Override
+        public void setTags(Set<String> tags) {
+            super.setTags(tags);
+        }
     }
 
     public static UriResource get(ProceedingJoinPoint joinPoint) {
@@ -125,6 +132,10 @@ public class UriResourceManager {
 
     private static UriResource buildResource(Class<?> clazz, Method method, String methodName, Class<?>[] paramTypes) {
         UriResource0 resource = new UriResource0();
+        if (method == null) {
+            method = ReflectUtil.getMethod(clazz, methodName, paramTypes);
+            if (method == null) { method = ReflectUtil.findMethod(clazz, methodName, paramTypes); }
+        }
         resource.setName(UriNameUtil.getMethodName(clazz, methodName, paramTypes));
         resource.setUriPath(UriNameUtil.getUriPath(clazz, method));
         fillResourceAuthentication(resource, clazz, method);
@@ -180,10 +191,12 @@ public class UriResourceManager {
                     getRequired(authorityResource, parentResource, AuthorityResource::requiredPropertyAuthority));
             resource.setRequiredDataAuthority(
                     getRequired(authorityResource, parentResource, AuthorityResource::requiredDataAuthority));
-            String[] propertyAuthorities = getPropertyAuthorities(authorityResource, parentResource);
-            resource.setPropertyAuthorities(
-                    CollUtil.isEmpty(propertyAuthorities) ? CollUtil.emptySet() : CollUtil.newSet(propertyAuthorities));
+            Set<String> propertyAuthorities = getValues(authorityResource, parentResource,
+                    AuthorityResource::propertyAuthority);
+            resource.setPropertyAuthorities(propertyAuthorities);
             resource.setDataAuthority(getDataAuthority(authorityResource, parentResource));
+            Set<String> tags = getValues(authorityResource, parentResource, AuthorityResource::tags);
+            resource.setTags(tags);
             if (StringUtils.isEmpty(resource.getDataAuthority())) { resource.setRequiredDataAuthority(false); }
         }
     }
@@ -199,15 +212,16 @@ public class UriResourceManager {
         return true;
     }
 
-    private static String[] getPropertyAuthorities(AuthorityResource authorityResource,
-            AuthorityResource parentResource) {
-        if (authorityResource != null && CollUtil.isNotEmpty(authorityResource.propertyAuthority())) {
-            return authorityResource.propertyAuthority();
+    private static Set<String> getValues(AuthorityResource authorityResource, AuthorityResource parentResource,
+            Function<AuthorityResource, String[]> getter) {
+        String[] values;
+        if (authorityResource != null && CollUtil.isNotEmpty(values = getter.apply(authorityResource))) {//NOSONAR
+            return CollUtil.newSet(values);
         }
-        if (parentResource != null && CollUtil.isNotEmpty(parentResource.propertyAuthority())) {
-            return parentResource.propertyAuthority();
+        if (parentResource != null && CollUtil.isNotEmpty(values = getter.apply(parentResource))) {//NOSONAR
+            return CollUtil.newSet(values);
         }
-        return NoneConstants.EMPTY_STRINGS;
+        return CollUtil.emptySet();
     }
 
     private static String getDataAuthority(AuthorityResource authorityResource, AuthorityResource parentResource) {

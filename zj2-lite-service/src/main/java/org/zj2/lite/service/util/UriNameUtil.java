@@ -21,9 +21,14 @@ import java.lang.reflect.Method;
 public class UriNameUtil {
     public static String getMethodName(Class<?> clazz, String methodName, Class<?>[] paramsTypes) {
         String className = clazz.getName();
-        int capacity = className.length() + methodName.length() + 3 + 20 * CollUtil.size(paramsTypes);
+        int classNameLen = className.length();
+        int capacity = classNameLen + methodName.length() + 3 + 20 * CollUtil.size(paramsTypes);
         StringBuilder sb = new StringBuilder(capacity);
-        sb.append(className).append('.').append(methodName);
+        for (int i = 0; i < classNameLen; ++i) {
+            char ch = className.charAt(i);
+            sb.append(ch == '.' ? '/' : ch);
+        }
+        sb.append(className).append('/').append(methodName);
         if (paramsTypes == null || paramsTypes.length == 0) {
             sb.append("()");
         } else {

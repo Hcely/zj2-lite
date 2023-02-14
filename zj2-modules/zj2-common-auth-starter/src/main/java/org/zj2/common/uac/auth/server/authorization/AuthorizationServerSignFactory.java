@@ -2,9 +2,10 @@ package org.zj2.common.uac.auth.server.authorization;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.auth.util.AuthManager;
+import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.common.uac.auth.util.ServerSignUtil;
 import org.zj2.lite.service.auth.AuthorizationServerSign;
+import org.zj2.lite.service.auth.helper.AuthorizationFactory;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.context.RequestContext;
@@ -27,7 +28,7 @@ public class AuthorizationServerSignFactory implements AuthorizationFactory {
     @Override
     public AuthContext create(RequestContext requestContext, String authorization) {
         AuthorizationServerSign sign = ServerSignUtil.parse(authorization);
-        if (sign == null) { throw AuthManager.unAuthorityErr("无效签名格式"); }
+        if (sign == null) { throw AuthUtil.unAuthorityErr("无效签名格式"); }
         AuthContext context = new AuthContext();
         context.setTokenType(TokenType.SERVER_SIGN);
         context.setToken(sign.getSign());
@@ -38,6 +39,7 @@ public class AuthorizationServerSignFactory implements AuthorizationFactory {
         context.setAppCode(sign.getAppCode());
         context.setOrgCode(requestContext.getRequestParamStr(ServiceConstants.JWT_ORG_CODE));
         context.setClientCode(requestContext.getRequestParamStr(ServiceConstants.JWT_CLIENT_CODE));
+        context.setServiceName(sign.getServiceName());
         context.setDataAuthority(requestContext.getRequestParamStr(ServiceConstants.DATA_AUTHORITY));
         return context;
     }

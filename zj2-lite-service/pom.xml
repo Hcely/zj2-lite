@@ -18,7 +18,12 @@
         </dependency>
         <dependency>
             <groupId>org.zj2.lite</groupId>
-            <artifactId>zj2-lite-service-data</artifactId>
+            <artifactId>zj2-lite-service-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

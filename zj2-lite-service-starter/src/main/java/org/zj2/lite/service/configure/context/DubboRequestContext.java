@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.zj2.lite.service.constant.RequestMethods;
-import org.zj2.lite.service.context.RequestContext;
+import org.zj2.lite.service.context.BaseRequestContext;
 
 /**
  * DubboRequestContext
@@ -12,7 +12,7 @@ import org.zj2.lite.service.context.RequestContext;
  * @author peijie.ye
  * @date 2023/2/10 14:20
  */
-public class DubboRequestContext extends RequestContext {
+public class DubboRequestContext extends BaseRequestContext {
     @Getter
     protected final Invoker<?> invoker;
     @Getter
@@ -45,17 +45,14 @@ public class DubboRequestContext extends RequestContext {
     }
 
     @Override
-    public Object request() {
+    public Object rawRequest() {
         return invocation;
     }
 
     @Override
     public Object getRequestParam(String key) {
+        Object value = super.getRequestParam(key);
+        if (value != null) { return value; }
         return invocation.getAttachment(key);
-    }
-
-    @Override
-    public void setRequestParam(String key, Object param) {
-        invocation.setAttachment(key, param);
     }
 }

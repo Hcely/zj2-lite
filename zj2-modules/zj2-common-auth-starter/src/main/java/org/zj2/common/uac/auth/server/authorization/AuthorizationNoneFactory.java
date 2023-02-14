@@ -1,5 +1,6 @@
 package org.zj2.common.uac.auth.server.authorization;
 
+import org.zj2.lite.service.auth.helper.AuthorizationFactory;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.context.RequestContext;
@@ -25,6 +26,7 @@ public class AuthorizationNoneFactory implements AuthorizationFactory {
         context.setUserName(requestContext.getRequestParamStr(ServiceConstants.JWT_USERNAME));
         context.setAppCode(requestContext.getRequestParamStr(ServiceConstants.JWT_APP_CODE));
         context.setOrgCode(requestContext.getRequestParamStr(ServiceConstants.JWT_ORG_CODE));
+        context.setServiceName(ServiceConstants.serviceName());
         context.setClientCode(requestContext.getRequestParamStr(ServiceConstants.JWT_CLIENT_CODE));
         return context;
     }

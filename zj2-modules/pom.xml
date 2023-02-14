@@ -60,8 +60,7 @@
     <dependencies>
         <dependency>
             <groupId>org.zj2.lite</groupId>
-            <artifactId>zj2-lite-service-data</artifactId>
+            <artifactId>zj2-lite-service-api</artifactId>
         </dependency>
-
     </dependencies>
 </project>

@@ -2,10 +2,13 @@ package org.zj2.common.uac.auth.util;
 
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.common.uac.app.dto.AppDTO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.zj2.lite.codec.CodecUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.auth.AuthorizationServerSign;
+import org.zj2.lite.service.context.AuthContext;
+import org.zj2.lite.service.context.RequestContext;
 import org.zj2.lite.util.KeyValueParser;
 
 import java.security.MessageDigest;
@@ -16,7 +19,9 @@ import java.security.MessageDigest;
  * @author peijie.ye
  * @date 2022/12/7 17:01
  */
+@Component
 public class ServerSignUtil {
+    private static String serviceSecret;
     private static final String HEADER = "Digest ";
     private static final String ALGORITHM_MD5 = "MD5";
     //
@@ -27,17 +32,25 @@ public class ServerSignUtil {
     private static final KeyValueParser<AuthorizationServerSign> PARSER = new KeyValueParser<>(',',
             AuthorizationServerSign::new, ServerSignUtil::handleNameValue);
 
+    public ServerSignUtil(@Value("${zj2.service.secret:}") String serviceSecret) {
+        ServerSignUtil.serviceSecret = serviceSecret;//NOSONAR
+    }
+
     public static boolean isDigest(String token) {
         return StringUtils.length(token) > 30 && StringUtils.startsWithIgnoreCase(token, HEADER);
     }
 
-    public static String buildAuthorization(String appCode, String appSecret, String method, String uri) {
+    public static String buildAuthorization(AuthContext authContext, String method, String uri) {
+        return buildAuthorization(authContext.getServiceName(), serviceSecret, method, uri);
+    }
+
+    public static String buildAuthorization(String serviceName, String serviceSecret, String method, String uri) {
         String nonce = Long.toString(System.currentTimeMillis(), 36);
         StringBuilder sb = new StringBuilder(192);
-        sb.append(HEADER + KEY_ALGORITHM + "=" + ALGORITHM_MD5 + "," + KEY_USERNAME + "=\"").append(appCode);
+        sb.append(HEADER + KEY_ALGORITHM + "=" + ALGORITHM_MD5 + "," + KEY_USERNAME + "=\"").append(serviceName);
         sb.append("\"," + KEY_NONCE + "=\"").append(nonce);
         sb.append("\"," + KEY_RESPONSE + "=\"");
-        CodecUtil.encodeHex(sb, buildSignBytes(appCode, appSecret, nonce, method, uri));
+        CodecUtil.encodeHex(sb, buildSignBytes(serviceName, serviceSecret, nonce, method, uri));
         sb.append('"');
         return sb.toString();
     }
@@ -62,26 +75,35 @@ public class ServerSignUtil {
         return true;
     }
 
-    public static String buildSign(String appCode, String appSecret, long timestamp, String method, String uri) {
+    public static boolean valid(RequestContext requestContext, AuthContext authContext) {
+        String sign = buildSign(authContext.getServiceName(), serviceSecret, authContext.getTokenTime(),
+                requestContext.getMethod(), requestContext.getUri());
+        return StringUtils.equalsIgnoreCase(sign, authContext.getToken());
+    }
+
+    public static String buildSign(String serviceName, String serviceSecret, long timestamp, String method,
+            String uri) {
         return CodecUtil.encodeHex(
-                buildSignBytes(appCode, appSecret, Long.toString(timestamp, 36), method, uri));
+                buildSignBytes(serviceName, serviceSecret, Long.toString(timestamp, 36), method, uri));
     }
 
     @SneakyThrows
-    private static byte[] buildSignBytes(String appCode, String appSecret, String nonce, String method, String uri) {
+    private static byte[] buildSignBytes(String serviceName, String serviceSecret, String nonce, String method,
+            String uri) {
         StringBuilder sb = new StringBuilder(96);
         MessageDigest md5Digest = MessageDigest.getInstance(ALGORITHM_MD5);
-        appendPart1(sb, md5Digest, appCode, appSecret);
+        appendPart1(sb, md5Digest, serviceName, serviceSecret);
         sb.append(':').append(nonce).append(':');
         appendPart2(sb, md5Digest, method, uri);
         return buildSign(md5Digest, sb);
     }
 
-    private static void appendPart1(StringBuilder sb, MessageDigest md5Digest, String appCode, String appSecret) {
+    private static void appendPart1(StringBuilder sb, MessageDigest md5Digest, String serviceName,
+            String serviceSecret) {
         md5Digest.reset();
-        putDigestData(md5Digest, appCode);
+        putDigestData(md5Digest, serviceName);
         md5Digest.update((byte) ':');
-        putDigestData(md5Digest, appSecret);
+        putDigestData(md5Digest, serviceSecret);
         CodecUtil.encodeHex(sb, md5Digest.digest());
     }
 
