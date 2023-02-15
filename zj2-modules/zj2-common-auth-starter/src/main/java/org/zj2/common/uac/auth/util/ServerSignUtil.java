@@ -22,7 +22,7 @@ import java.security.MessageDigest;
  */
 @Component
 public class ServerSignUtil {
-    private static String serviceSecret;
+    private static String serviceSecret = "5jMlBEV8kH1gXSpY3Ziw";
     private static final String HEADER = "Digest ";
     private static final String ALGORITHM_MD5 = "MD5";
     //
@@ -35,6 +35,12 @@ public class ServerSignUtil {
             AuthorizationServerSign::new, ServerSignUtil::handleNameValue);
 
     public ServerSignUtil(@Value("${zj2.service.secret:}") String serviceSecret) {
+        if (StringUtils.isNotEmpty(serviceSecret)) {
+            setServiceSecret(serviceSecret);
+        }
+    }
+
+    public static void setServiceSecret(String serviceSecret) {
         ServerSignUtil.serviceSecret = serviceSecret;//NOSONAR
     }
 
@@ -44,17 +50,17 @@ public class ServerSignUtil {
 
     public static String buildAuthorization(AuthContext authContext, String method, String uri) {
         String serviceName = ServiceConstants.serviceName();
-        String rootService = StringUtils.defaultIfEmpty(authContext.getRootService(), serviceName);
-        return buildAuthorization(serviceName, serviceSecret, authContext.getAppCode(), authContext.getClientCode(),
-                rootService, method, uri);
+        return buildAuthorization(serviceName, authContext.getAppCode(), authContext.getClientCode(),
+                authContext.getRootService(), method, uri);
     }
 
-    public static String buildAuthorization(String serviceName, String serviceSecret, String appCode, String clientCode,
-            String rootService, String method, String uri) {
+    public static String buildAuthorization(String serviceName, String appCode, String clientCode, String rootService,
+            String method, String uri) {
         serviceName = StringUtils.defaultString(serviceName);
         appCode = StringUtils.defaultString(appCode);
         clientCode = StringUtils.defaultString(clientCode);
         serviceName = StringUtils.defaultString(serviceName);
+        rootService = StringUtils.defaultIfEmpty(rootService, serviceName);
         method = StringUtils.defaultString(method);
         uri = StringUtils.defaultString(uri);
         String nonce = Long.toString(System.currentTimeMillis(), 36);
@@ -64,12 +70,14 @@ public class ServerSignUtil {
         sb.append(',').append(KEY_USERNAME).append("=\"").append(serviceName).append('"');
         sb.append(',').append(KEY_NONCE).append("=\"").append(nonce).append('"');
         // realm = clientCode.appCode@rootService
-        sb.append(',').append(KEY_REALM).append("=\"").append(clientCode).append('.').append(appCode).append('@')
-                .append(rootService).append('"');
+        sb.append(',').append(KEY_REALM).append("=\"");
+        if (StringUtils.isNotEmpty(clientCode) || StringUtils.isNotEmpty(appCode)) {
+            sb.append(clientCode).append('.').append(appCode).append('@');
+        }
+        sb.append(rootService).append('"');
         //
         sb.append("," + KEY_RESPONSE + "=\"");
-        CodecUtil.encodeHex(sb,
-                buildSignBytes(serviceName, serviceSecret, appCode, clientCode, rootService, nonce, method, uri));
+        CodecUtil.encodeHex(sb, buildResponseBytes(serviceName, appCode, clientCode, rootService, nonce, method, uri));
         sb.append('"');
         return sb.toString();
     }
@@ -116,23 +124,23 @@ public class ServerSignUtil {
     }
 
     public static boolean valid(RequestContext requestContext, AuthContext authContext) {
-        String sign = buildSign(authContext.getServiceName(), serviceSecret, authContext.getAppCode(),
-                authContext.getClientCode(), authContext.getRootService(), authContext.getTokenTime(),
-                requestContext.getMethod(), requestContext.getUri());
-        return StringUtils.equalsIgnoreCase(sign, authContext.getToken());
+        String response = CodecUtil.encodeHex(
+                buildResponseBytes(authContext.getServiceName(), authContext.getAppCode(), authContext.getClientCode(),
+                        authContext.getRootService(), Long.toString(authContext.getTokenTime(), 36),
+                        requestContext.getMethod(), requestContext.getUri()));
+        return StringUtils.equalsIgnoreCase(response, authContext.getToken());
     }
 
-    public static String buildSign //NOSONAR
-    (String serviceName, String serviceSecret, String appCode, String clientCode, String rootService, long timestamp,
-            String method, String uri) {
-        return CodecUtil.encodeHex(buildSignBytes(serviceName, serviceSecret, appCode, clientCode, rootService,
-                Long.toString(timestamp, 36), method, uri));
+    public static boolean valid(AuthorizationServerSign serverSign, String method, String uri) {
+        String sign = CodecUtil.encodeHex(
+                buildResponseBytes(serverSign.getServiceName(), serverSign.getAppCode(), serverSign.getClientCode(),
+                        serverSign.getRootService(), Long.toString(serverSign.getTimestamp(), 36), method, uri));
+        return StringUtils.equalsIgnoreCase(sign, serverSign.getSign());
     }
 
     @SneakyThrows
-    public static byte[] buildSignBytes //NOSONAR
-    (String serviceName, String serviceSecret, String appCode, String clientCode, String rootService, String nonce,
-            String method, String uri) {
+    public static byte[] buildResponseBytes(String serviceName, String appCode, String clientCode, String rootService,
+            String nonce, String method, String uri) {
         StringBuilder sb = new StringBuilder(96);
         MessageDigest md5Digest = MessageDigest.getInstance(ALGORITHM_MD5);
         appendPart1(sb, md5Digest, serviceName, serviceSecret, appCode, clientCode, rootService);

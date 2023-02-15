@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  * @author peijie.ye
  * @date 2023/2/7 11:07
  */
-public class UriNameUtil {
+public class ServiceUriUtil {
     public static String getMethodName(Class<?> clazz, String methodName, Class<?>[] paramsTypes) {
         String className = clazz.getName();
         int classNameLen = className.length();

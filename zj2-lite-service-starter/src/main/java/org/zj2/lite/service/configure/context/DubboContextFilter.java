@@ -10,7 +10,7 @@ import org.apache.dubbo.rpc.RpcException;
 import org.zj2.lite.common.context.ZContexts;
 import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.RequestContext;
-import org.zj2.lite.service.util.UriNameUtil;
+import org.zj2.lite.service.util.ServiceUriUtil;
 
 @Activate(group = CommonConstants.PROVIDER, order = -99999)
 public class DubboContextFilter implements Filter {
@@ -27,7 +27,7 @@ public class DubboContextFilter implements Filter {
 
     private void initRequestContext(Invoker<?> invoker, Invocation invocation) {
         DubboRequestContext requestContext = new DubboRequestContext(invoker, invocation);
-        requestContext.setUri(UriNameUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
+        requestContext.setUri(ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
                 invocation.getParameterTypes()));
         requestContext.setRootUri(invocation.getAttachment(ServiceConstants.REQUEST_ROOT_URI));
         requestContext.setAttrIp(invocation.getAttachment(ServiceConstants.REQUEST_ATTR_IP));

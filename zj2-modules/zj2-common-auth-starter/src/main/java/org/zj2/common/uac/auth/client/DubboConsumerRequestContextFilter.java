@@ -9,7 +9,7 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 import org.zj2.lite.service.constant.RequestMethods;
-import org.zj2.lite.service.util.UriNameUtil;
+import org.zj2.lite.service.util.ServiceUriUtil;
 
 /**
  * DubboConsumerContextFilter
@@ -28,7 +28,7 @@ public class DubboConsumerRequestContextFilter extends AbsClientRequestSignInter
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        String uri = UriNameUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
+        String uri = ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
                 invocation.getParameterTypes());
         setRequestContext(invocation, RequestMethods.DUBBO, uri);
         return invoker.invoke(invocation);

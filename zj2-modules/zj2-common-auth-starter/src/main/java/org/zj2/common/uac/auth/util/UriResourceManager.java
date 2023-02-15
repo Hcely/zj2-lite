@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.entity.ByteKey;
 import org.zj2.lite.common.entity.Ternary;
 import org.zj2.lite.common.util.CollUtil;
@@ -14,11 +13,10 @@ import org.zj2.lite.service.auth.AuthenticationRequired;
 import org.zj2.lite.service.auth.AuthorityResource;
 import org.zj2.lite.service.auth.UriResource;
 import org.zj2.lite.service.context.TokenType;
-import org.zj2.lite.service.util.UriNameUtil;
+import org.zj2.lite.service.util.ServiceUriUtil;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -135,8 +133,8 @@ public class UriResourceManager {
         if (method == null) {
             method = ReflectUtil.findMethod(clazz, methodName, paramTypes);
         }
-        resource.setName(UriNameUtil.getMethodName(clazz, methodName, paramTypes));
-        resource.setUriPath(UriNameUtil.getUriPath(clazz, method));
+        resource.setName(ServiceUriUtil.getMethodName(clazz, methodName, paramTypes));
+        resource.setUriPath(ServiceUriUtil.getUriPath(clazz, method));
         fillResourceAuthentication(resource, clazz, method);
         fillResourceAuthority(resource, clazz, method);
         return resource;
