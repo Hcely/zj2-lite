@@ -139,6 +139,65 @@ public class StrUtil {
         return str != null && str.length() > 0;
     }
 
+    public static boolean isAnyNotEmpty(CharSequence str0) {
+        return isNotEmpty(str0);
+    }
+
+    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1) {
+        return isNotEmpty(str0) || isNotEmpty(str1);
+    }
+
+    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1, CharSequence str2) {
+        return isNotEmpty(str0) || isNotEmpty(str1) || isNotEmpty(str2);
+    }
+
+    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3) {
+        return isNotEmpty(str0) || isNotEmpty(str1) || isNotEmpty(str2) || isNotEmpty(str3);
+    }
+
+    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3,
+            CharSequence str4) {
+        return isNotEmpty(str0) || isNotEmpty(str1) || isNotEmpty(str2) || isNotEmpty(str3) || isNotEmpty(str4);
+    }
+
+    public static boolean isAnyNotEmpty(CharSequence... strs) {
+        if (strs == null || strs.length == 0) { return false; }
+        for (CharSequence s : strs) {
+            if (isNotEmpty(s)) { return true; }
+        }
+        return false;
+    }
+
+    public static boolean isNoneEmpty(CharSequence str0) {
+        return isNotEmpty(str0);
+    }
+
+    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1) {
+        return isNotEmpty(str0) && isNotEmpty(str1);
+    }
+
+    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1, CharSequence str2) {
+        return isNotEmpty(str0) && isNotEmpty(str1) && isNotEmpty(str2);
+    }
+
+    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3) {
+        return isNotEmpty(str0) && isNotEmpty(str1) && isNotEmpty(str2) && isNotEmpty(str3);
+    }
+
+    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3,
+            CharSequence str4) {
+        return isNotEmpty(str0) && isNotEmpty(str1) && isNotEmpty(str2) && isNotEmpty(str3) && isNotEmpty(str4);
+    }
+
+    public static boolean isNoneEmpty(CharSequence... strs) {
+        if (strs == null || strs.length == 0) { return true; }
+        for (CharSequence s : strs) {
+            if (isEmpty(s)) { return false; }
+        }
+        return true;
+    }
+
+
     public static String substring(CharSequence str, int startIdx) {
         return isEmpty(str) ? "" : substring(str, startIdx, str.length());
     }

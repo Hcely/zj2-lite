@@ -71,7 +71,7 @@ public class ServerSignUtil {
         sb.append(',').append(KEY_NONCE).append("=\"").append(nonce).append('"');
         // realm = clientCode.appCode@rootService
         sb.append(',').append(KEY_REALM).append("=\"");
-        if (StringUtils.isNotEmpty(clientCode) || StringUtils.isNotEmpty(appCode)) {
+        if (StrUtil.isAnyNotEmpty(appCode, clientCode)) {
             sb.append(clientCode).append('.').append(appCode).append('@');
         }
         sb.append(rootService).append('"');
@@ -157,7 +157,7 @@ public class ServerSignUtil {
         //
         md5Digest.update((byte) ':');
         // realm = clientCode.appCode@rootService
-        if (StringUtils.isNotEmpty(appCode) || StringUtils.isNotEmpty(clientCode)) {
+        if (StrUtil.isAnyNotEmpty(appCode, clientCode)) {
             putDigestData(md5Digest, clientCode);
             md5Digest.update((byte) '.');
             putDigestData(md5Digest, appCode);
