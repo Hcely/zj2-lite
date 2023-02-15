@@ -157,10 +157,12 @@ public class ServerSignUtil {
         //
         md5Digest.update((byte) ':');
         // realm = clientCode.appCode@rootService
-        putDigestData(md5Digest, clientCode);
-        md5Digest.update((byte) '.');
-        putDigestData(md5Digest, appCode);
-        md5Digest.update((byte) '@');
+        if (StringUtils.isNotEmpty(appCode) || StringUtils.isNotEmpty(clientCode)) {
+            putDigestData(md5Digest, clientCode);
+            md5Digest.update((byte) '.');
+            putDigestData(md5Digest, appCode);
+            md5Digest.update((byte) '@');
+        }
         putDigestData(md5Digest, rootService);
         //
         md5Digest.update((byte) ':');
