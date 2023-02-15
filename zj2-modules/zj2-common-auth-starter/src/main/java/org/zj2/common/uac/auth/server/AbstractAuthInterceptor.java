@@ -77,7 +77,7 @@ public abstract class AbstractAuthInterceptor {
         AuthenticateHandler[] handlers = AUTHENTICATE_HANDLERS_REF.get();
         if (CollUtil.isNotEmpty(handlers)) {
             for (AuthenticateHandler handler : handlers) {
-                if (handler.supports(type)) {
+                if (handler.supports(authContext)) {
                     handler.authenticate(requestContext, authContext);
                     authContext.setAuthenticated(true);
                     return;

@@ -19,8 +19,8 @@ public class AuthenticateServerSignHandler implements AuthenticateHandler {
     private static final long SIGN_TIMEOUT = 60000L * 5;
 
     @Override
-    public boolean supports(TokenType obj) {
-        return false;
+    public boolean supports(AuthContext context) {
+        return context.getTokenType() == TokenType.SERVER_SIGN;
     }
 
     @Override

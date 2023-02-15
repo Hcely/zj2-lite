@@ -11,6 +11,9 @@ import org.zj2.lite.service.context.TokenType;
  * @author peijie.ye
  * @date 2023/2/10 11:46
  */
-public interface AuthenticateHandler extends Supportable<TokenType> {
+public interface AuthenticateHandler extends Supportable<AuthContext> {
+    @Override
+    boolean supports(AuthContext context);
+
     void authenticate(RequestContext requestContext, AuthContext authContext);
 }

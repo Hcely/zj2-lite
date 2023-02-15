@@ -17,9 +17,7 @@ public abstract class AbsClientRequestSignInterceptor<T> {
         setValue(request, ServiceConstants.JWT_TOKEN_ID, authContext.getTokenId());
         setValue(request, ServiceConstants.JWT_USER_ID, authContext.getUserId());
         setValue(request, ServiceConstants.JWT_USERNAME, authContext.getUserName());
-        setValue(request, ServiceConstants.JWT_APP_CODE, authContext.getAppCode());
         setValue(request, ServiceConstants.JWT_ORG_CODE, authContext.getOrgCode());
-        setValue(request, ServiceConstants.JWT_CLIENT_CODE, authContext.getClientCode());
         //
         setValue(request, ServiceConstants.REQUEST_ROOT_URI, RequestContext.currentRootUri());
         setValue(request, ServiceConstants.REQUEST_ATTR_IP, RequestContext.currentAttrIp());

@@ -27,6 +27,7 @@ public class AuthorizationNoneFactory implements AuthorizationFactory {
         context.setAppCode(requestContext.getRequestParamStr(ServiceConstants.JWT_APP_CODE));
         context.setOrgCode(requestContext.getRequestParamStr(ServiceConstants.JWT_ORG_CODE));
         context.setServiceName(ServiceConstants.serviceName());
+        context.setRootService(ServiceConstants.serviceName());
         context.setClientCode(requestContext.getRequestParamStr(ServiceConstants.JWT_CLIENT_CODE));
         return context;
     }

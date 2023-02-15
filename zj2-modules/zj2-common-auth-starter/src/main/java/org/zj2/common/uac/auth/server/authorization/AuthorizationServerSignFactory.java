@@ -30,16 +30,18 @@ public class AuthorizationServerSignFactory implements AuthorizationFactory {
         AuthorizationServerSign sign = ServerSignUtil.parse(authorization);
         if (sign == null) { throw AuthUtil.unAuthorityErr("无效签名格式"); }
         AuthContext context = new AuthContext();
+        context.setAuthorization(sign);
         context.setTokenType(TokenType.SERVER_SIGN);
         context.setToken(sign.getSign());
         context.setTokenTime(sign.getTimestamp());
         context.setTokenId(requestContext.getRequestParamStr(ServiceConstants.JWT_TOKEN_ID));
         context.setUserId(requestContext.getRequestParamStr(ServiceConstants.JWT_USER_ID));
         context.setUserName(requestContext.getRequestParamStr(ServiceConstants.JWT_USERNAME));
-        context.setAppCode(sign.getAppCode());
         context.setOrgCode(requestContext.getRequestParamStr(ServiceConstants.JWT_ORG_CODE));
-        context.setClientCode(requestContext.getRequestParamStr(ServiceConstants.JWT_CLIENT_CODE));
+        context.setAppCode(sign.getAppCode());
+        context.setClientCode(sign.getClientCode());
         context.setServiceName(sign.getServiceName());
+        context.setRootService(sign.getRootService());
         context.setDataAuthority(requestContext.getRequestParamStr(ServiceConstants.DATA_AUTHORITY));
         return context;
     }

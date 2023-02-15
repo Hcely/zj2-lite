@@ -30,6 +30,7 @@ public class AuthorizationJWTFactory implements AuthorizationFactory {
         AuthorizationJWT jwt = JWTValidUtil.parse(authorization);
         if (jwt == null) { throw AuthUtil.unAuthorityErr("无效token格式"); }
         AuthContext context = new AuthContext();
+        context.setAuthorization(jwt);
         context.setTokenType(TokenType.JWT);
         context.setToken(jwt.getToken());
         context.setTokenTime(jwt.getExpireAt());
@@ -40,6 +41,7 @@ public class AuthorizationJWTFactory implements AuthorizationFactory {
         context.setAppCode(jwt.getAppCode());
         context.setOrgCode(jwt.getOrgCode());
         context.setServiceName(ServiceConstants.serviceName());
+        context.setRootService(ServiceConstants.serviceName());
         context.setClientCode(jwt.getClientCode());
         return context;
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.zj2.lite.codec.CodecUtil;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.auth.AuthorizationServerSign;
+import org.zj2.lite.service.constant.ServiceConstants;
 import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.context.RequestContext;
 import org.zj2.lite.util.KeyValueParser;
@@ -27,6 +28,7 @@ public class ServerSignUtil {
     //
     private static final String KEY_ALGORITHM = "algorithm";
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_REALM = "realm";
     private static final String KEY_NONCE = "nonce";
     private static final String KEY_RESPONSE = "response";
     private static final KeyValueParser<AuthorizationServerSign> PARSER = new KeyValueParser<>(',',
@@ -41,19 +43,37 @@ public class ServerSignUtil {
     }
 
     public static String buildAuthorization(AuthContext authContext, String method, String uri) {
-        return buildAuthorization(authContext.getServiceName(), serviceSecret, method, uri);
+        String serviceName = ServiceConstants.serviceName();
+        String rootService = StringUtils.defaultIfEmpty(authContext.getRootService(), serviceName);
+        return buildAuthorization(serviceName, serviceSecret, authContext.getAppCode(), authContext.getClientCode(),
+                rootService, method, uri);
     }
 
-    public static String buildAuthorization(String serviceName, String serviceSecret, String method, String uri) {
+    public static String buildAuthorization(String serviceName, String serviceSecret, String appCode, String clientCode,
+            String rootService, String method, String uri) {
+        serviceName = StringUtils.defaultString(serviceName);
+        appCode = StringUtils.defaultString(appCode);
+        clientCode = StringUtils.defaultString(clientCode);
+        serviceName = StringUtils.defaultString(serviceName);
+        method = StringUtils.defaultString(method);
+        uri = StringUtils.defaultString(uri);
         String nonce = Long.toString(System.currentTimeMillis(), 36);
-        StringBuilder sb = new StringBuilder(192);
-        sb.append(HEADER + KEY_ALGORITHM + "=" + ALGORITHM_MD5 + "," + KEY_USERNAME + "=\"").append(serviceName);
-        sb.append("\"," + KEY_NONCE + "=\"").append(nonce);
-        sb.append("\"," + KEY_RESPONSE + "=\"");
-        CodecUtil.encodeHex(sb, buildSignBytes(serviceName, serviceSecret, nonce, method, uri));
+        //
+        StringBuilder sb = new StringBuilder(256);
+        sb.append(HEADER + KEY_ALGORITHM + "=" + ALGORITHM_MD5);
+        sb.append(',').append(KEY_USERNAME).append("=\"").append(serviceName).append('"');
+        sb.append(',').append(KEY_NONCE).append("=\"").append(nonce).append('"');
+        // realm = clientCode.appCode@rootService
+        sb.append(',').append(KEY_REALM).append("=\"").append(clientCode).append('.').append(appCode).append('@')
+                .append(rootService).append('"');
+        //
+        sb.append("," + KEY_RESPONSE + "=\"");
+        CodecUtil.encodeHex(sb,
+                buildSignBytes(serviceName, serviceSecret, appCode, clientCode, rootService, nonce, method, uri));
         sb.append('"');
         return sb.toString();
     }
+
 
     public static AuthorizationServerSign parse(String authentication) {
         if (!isDigest(authentication)) { return null; }
@@ -65,7 +85,9 @@ public class ServerSignUtil {
         if (StrUtil.equalsIgnoreCase(KEY_ALGORITHM, sign, nameStart, nameEnd)) {
             return StrUtil.equalsIgnoreCase(ALGORITHM_MD5, sign, valueStart, valueEnd);
         } else if (StrUtil.equalsIgnoreCase(KEY_USERNAME, sign, nameStart, nameEnd)) {
-            result.setAppCode(StrUtil.substring(sign, valueStart, valueEnd));
+            result.setServiceName(StrUtil.substring(sign, valueStart, valueEnd));
+        } else if (StrUtil.equalsIgnoreCase(KEY_REALM, sign, nameStart, nameEnd)) {
+            handleRealm(result, sign, valueStart, valueEnd);
         } else if (StrUtil.equalsIgnoreCase(KEY_NONCE, sign, nameStart, nameEnd)) {
             String nonce = StrUtil.substring(sign, valueStart, valueEnd);
             result.setTimestamp(Long.valueOf(nonce, 36));
@@ -75,35 +97,68 @@ public class ServerSignUtil {
         return true;
     }
 
+    private static void handleRealm(AuthorizationServerSign result, CharSequence sign, int valueStart, int valueEnd) {
+        int idx = StrUtil.indexOf(sign, '.', valueStart, valueEnd);
+        if (idx != -1) {
+            result.setClientCode(StrUtil.substring(sign, valueStart, idx));
+            valueStart = idx + 1;
+        } else {
+            result.setClientCode("");
+        }
+        idx = StrUtil.indexOf(sign, '@', valueStart, valueEnd);
+        if (idx != -1) {
+            result.setAppCode(StrUtil.substring(sign, valueStart, idx));
+            valueStart = idx + 1;
+        } else {
+            result.setAppCode("");
+        }
+        result.setRootService(StrUtil.substring(sign, valueStart, valueEnd));
+    }
+
     public static boolean valid(RequestContext requestContext, AuthContext authContext) {
-        String sign = buildSign(authContext.getServiceName(), serviceSecret, authContext.getTokenTime(),
+        String sign = buildSign(authContext.getServiceName(), serviceSecret, authContext.getAppCode(),
+                authContext.getClientCode(), authContext.getRootService(), authContext.getTokenTime(),
                 requestContext.getMethod(), requestContext.getUri());
         return StringUtils.equalsIgnoreCase(sign, authContext.getToken());
     }
 
-    public static String buildSign(String serviceName, String serviceSecret, long timestamp, String method,
-            String uri) {
-        return CodecUtil.encodeHex(
-                buildSignBytes(serviceName, serviceSecret, Long.toString(timestamp, 36), method, uri));
+    public static String buildSign //NOSONAR
+    (String serviceName, String serviceSecret, String appCode, String clientCode, String rootService, long timestamp,
+            String method, String uri) {
+        return CodecUtil.encodeHex(buildSignBytes(serviceName, serviceSecret, appCode, clientCode, rootService,
+                Long.toString(timestamp, 36), method, uri));
     }
 
     @SneakyThrows
-    private static byte[] buildSignBytes(String serviceName, String serviceSecret, String nonce, String method,
-            String uri) {
+    public static byte[] buildSignBytes //NOSONAR
+    (String serviceName, String serviceSecret, String appCode, String clientCode, String rootService, String nonce,
+            String method, String uri) {
         StringBuilder sb = new StringBuilder(96);
         MessageDigest md5Digest = MessageDigest.getInstance(ALGORITHM_MD5);
-        appendPart1(sb, md5Digest, serviceName, serviceSecret);
+        appendPart1(sb, md5Digest, serviceName, serviceSecret, appCode, clientCode, rootService);
         sb.append(':').append(nonce).append(':');
         appendPart2(sb, md5Digest, method, uri);
         return buildSign(md5Digest, sb);
     }
 
-    private static void appendPart1(StringBuilder sb, MessageDigest md5Digest, String serviceName,
-            String serviceSecret) {
+    private static void appendPart1(StringBuilder sb, MessageDigest md5Digest, String serviceName, String serviceSecret,
+            String appCode, String clientCode, String rootService) {
         md5Digest.reset();
+        // username
         putDigestData(md5Digest, serviceName);
+        //
         md5Digest.update((byte) ':');
+        // realm = clientCode.appCode@rootService
+        putDigestData(md5Digest, clientCode);
+        md5Digest.update((byte) '.');
+        putDigestData(md5Digest, appCode);
+        md5Digest.update((byte) '@');
+        putDigestData(md5Digest, rootService);
+        //
+        md5Digest.update((byte) ':');
+        // password
         putDigestData(md5Digest, serviceSecret);
+        //
         CodecUtil.encodeHex(sb, md5Digest.digest());
     }
 

@@ -57,6 +57,7 @@ public class AuthContext extends ZContext {
         return THREAD_CONTEXT.set(context);
     }
 
+    protected Object authorization;
     protected TokenType tokenType;
     protected String token;
     protected long tokenTime;
@@ -68,6 +69,7 @@ public class AuthContext extends ZContext {
     protected String orgCode;
     protected String clientCode;
     protected String serviceName;
+    protected String rootService;
     protected String dataAuthority;
     protected UriResource uriResource;
     protected boolean authenticated = false;

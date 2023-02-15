@@ -27,8 +27,8 @@ public class AuthenticateJWTHandler implements AuthenticateHandler {
     private static final SpringBeanRef<JWTokenApi> TOKEN_API_REF = new SpringBeanRef<>(JWTokenApi.class);
 
     @Override
-    public boolean supports(TokenType type) {
-        return type == TokenType.SERVER_SIGN;
+    public boolean supports(AuthContext context) {
+        return context.getTokenType() == TokenType.SERVER_SIGN;
     }
 
     @Override

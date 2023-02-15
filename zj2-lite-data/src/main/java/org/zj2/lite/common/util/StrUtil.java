@@ -215,4 +215,22 @@ public class StrUtil {
     public static char lastChar(CharSequence str) {
         return str == null || str.length() == 0 ? 0 : str.charAt(str.length() - 1);
     }
+
+    public static int indexOf(CharSequence str, char ch) {
+        return str == null ? -1 : indexOf(str, ch, 0, str.length());
+    }
+
+    public static int indexOf(CharSequence str, char ch, int startIdx) {
+        return str == null ? -1 : indexOf(str, ch, startIdx, str.length());
+    }
+
+    public static int indexOf(CharSequence str, char ch, int startIdx, int endIdx) {
+        if (str == null || startIdx < 0) { return -1; }
+        endIdx = Math.min(endIdx, str.length());
+        if (startIdx >= endIdx) { return -1; }
+        for (; startIdx < endIdx; ++startIdx) {
+            if (str.charAt(startIdx) == ch) { return startIdx; }
+        }
+        return -1;
+    }
 }
