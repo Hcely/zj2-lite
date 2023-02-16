@@ -91,6 +91,51 @@
                 <version>${revision}</version>
             </dependency>
             <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-auth-plugin</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac-plugin</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac-wx</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-uac-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-sys</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-sys-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zj2.lite.module</groupId>
+                <artifactId>zj2-common-sys-plugin</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>

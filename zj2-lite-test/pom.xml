@@ -20,22 +20,18 @@
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-sys</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-uac</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-uac-starter</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>zj2-common-uac-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-auth-starter</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>zj2-common-auth-plugin</artifactId>
         </dependency>
     </dependencies>
 </project>

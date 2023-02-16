@@ -30,7 +30,7 @@ import org.zj2.lite.util.ZRBuilder;
  */
 @Service
 public class AppServiceImpl extends BaseServiceImpl<AppMapper, App, AppDTO> implements AppService {
-    @Value("${zj.app.commonSecret:ndierknN@0f;Fuowe!sd%s}")
+    @Value("${zj2.app.commonSecret:ndierknN@0f;Fuowe!sd%s}")
     private String commonAppSecret;
 
     @Override

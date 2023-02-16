@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>zj2-module-parent</artifactId>
+        <artifactId>zj2-common-module-parent</artifactId>
         <groupId>org.zj2.lite.module</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -19,15 +19,11 @@
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-sys-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-uac-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-sys-starter</artifactId>
+            <artifactId>zj2-common-sys-plugin</artifactId>
         </dependency>
     </dependencies>
 

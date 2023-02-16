@@ -27,7 +27,7 @@ import org.zj2.lite.util.ZRBuilder;
 @RequestMapping("/api/uac/auth")
 @AuthenticationIgnored
 public class LoginController {
-    @Value("${zj2.uac.appCode:common}")
+    @Value("${zj2.app.appCode:common}")
     private String appCode;
     @Autowired
     private AuthenticationApi authenticationApi;

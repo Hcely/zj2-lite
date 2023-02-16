@@ -10,53 +10,21 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.zj2.lite.module</groupId>
-    <artifactId>zj2-module-parent</artifactId>
+    <artifactId>zj2-common-module-parent</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>zj2-common-uac-api</module>
-        <module>zj2-common-auth-starter</module>
+        <module>zj2-common-auth-plugin</module>
         <module>zj2-common-uac</module>
-        <module>zj2-erp-basic-api</module>
-        <module>zj2-erp-basic</module>
         <module>zj2-common-sys</module>
         <module>zj2-common-sys-api</module>
-        <module>zj2-common-sys-starter</module>
-        <module>zj2-common-uac-starter</module>
-        <module>zj2-common-wx</module>
+        <module>zj2-common-sys-plugin</module>
+        <module>zj2-common-uac-plugin</module>
+        <module>zj2-common-uac-wx</module>
+        <module>zj2-common-uac-wx-plugin</module>
     </modules>
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-uac-api</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-auth-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-uac-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-erp-basic-api</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-sys-api</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-sys-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-        </dependencies>
+
     </dependencyManagement>
     <dependencies>
         <dependency>
