@@ -14,7 +14,6 @@ import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.entity.result.ZResult;
 import org.zj2.lite.common.entity.result.ZStatusMsg;
 import org.zj2.lite.common.util.CollUtil;
-import org.zj2.lite.message.MessageUtil;
 import org.zj2.lite.util.ZRBuilder;
 
 import java.util.List;
@@ -50,10 +49,10 @@ public class ZJErrorHandler {
         result.setSuccess(false);
         result.setStatus(ZStatusMsg.FAILURE_STATUS);
         if (CollUtil.isNotEmpty(messages)) {
-            result.setMsg(ZRBuilder.of(CollUtil.getFirst(messages)));
-            result.setMsgs(CollUtil.toList(messages, ZRBuilder::of));
+            result.setMsg(ZRBuilder.ofMsg(CollUtil.getFirst(messages)));
+            result.setMsgs(CollUtil.toList(messages, ZRBuilder::ofMsg));
         } else {
-            String msg = ZRBuilder.of("参数错误");
+            String msg = ZRBuilder.ofMsg("参数错误");
             result.setMsg(msg);
             result.setMsgs(CollUtil.singletonList(msg));
         }

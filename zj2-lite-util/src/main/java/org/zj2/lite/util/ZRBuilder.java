@@ -105,12 +105,12 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder module(String module) {
-        this.module = of(module);
+        this.module = ofMsg(module);
         return this;
     }
 
     public ZRBuilder msg(String msg) {
-        msg = of(msg);
+        msg = ofMsg(msg);
         if (StringUtils.isNotEmpty(module) && StringUtils.isNotEmpty(msg)) {
             msg0(StrUtil.concat(module, '-', msg));
         } else {
@@ -125,7 +125,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0));
         } else {
@@ -137,7 +137,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1));
         } else {
@@ -149,7 +149,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2));
         } else {
@@ -161,7 +161,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3));
         } else {
@@ -173,7 +173,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, arg0, arg1, arg2, arg3, arg4));
         } else {
@@ -185,7 +185,7 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder msg(String msgFormat, Object... args) {
-        msgFormat = of(msgFormat);
+        msgFormat = ofMsg(msgFormat);
         if (StringUtils.isEmpty(module)) {
             return msg(StrUtil.format(msgFormat, args));
         } else {
@@ -197,31 +197,31 @@ public class ZRBuilder implements Serializable {
     }
 
     public ZRBuilder addError(String msg) {
-        return addError0(of(msg));
+        return addError0(ofMsg(msg));
     }
 
     public ZRBuilder addError(String msgFormat, Object arg0) {
-        return addError(StrUtil.format(of(msgFormat), arg0));
+        return addError(StrUtil.format(ofMsg(msgFormat), arg0));
     }
 
     public ZRBuilder addError(String msgFormat, Object arg0, Object arg1) {
-        return addError0(StrUtil.format(of(msgFormat), arg0, arg1));
+        return addError0(StrUtil.format(ofMsg(msgFormat), arg0, arg1));
     }
 
     public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2) {
-        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2));
+        return addError0(StrUtil.format(ofMsg(msgFormat), arg0, arg1, arg2));
     }
 
     public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3) {
-        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2, arg3));
+        return addError0(StrUtil.format(ofMsg(msgFormat), arg0, arg1, arg2, arg3));
     }
 
     public ZRBuilder addError(String msgFormat, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
-        return addError0(StrUtil.format(of(msgFormat), arg0, arg1, arg2, arg3, arg4));
+        return addError0(StrUtil.format(ofMsg(msgFormat), arg0, arg1, arg2, arg3, arg4));
     }
 
     public ZRBuilder addError(String msgFormat, Object... args) {
-        return addError0(StrUtil.format(of(msgFormat), args));
+        return addError0(StrUtil.format(ofMsg(msgFormat), args));
     }
 
     private ZRBuilder addError0(String msg) {
@@ -345,7 +345,7 @@ public class ZRBuilder implements Serializable {
         }
     }
 
-    public static String of(String msg) {
+    public static String ofMsg(String msg) {
         String newMsg = MessageUtil.get(NAMESPACE, msg);
         return StringUtils.defaultIfEmpty(newMsg, msg);
     }
