@@ -49,8 +49,14 @@ public class ZJErrorHandler {
         ZMultiMsgResult result = new ZMultiMsgResult();
         result.setSuccess(false);
         result.setStatus(ZStatusMsg.FAILURE_STATUS);
-        result.setMsg(ZRBuilder.of(CollUtil.getFirst(messages)));
-        result.setMsgs(CollUtil.toList(messages, ZRBuilder::of));
+        if (CollUtil.isNotEmpty(messages)) {
+            result.setMsg(ZRBuilder.of(CollUtil.getFirst(messages)));
+            result.setMsgs(CollUtil.toList(messages, ZRBuilder::of));
+        } else {
+            String msg = ZRBuilder.of("参数错误");
+            result.setMsg(msg);
+            result.setMsgs(CollUtil.singletonList(msg));
+        }
         return result;
     }
 
