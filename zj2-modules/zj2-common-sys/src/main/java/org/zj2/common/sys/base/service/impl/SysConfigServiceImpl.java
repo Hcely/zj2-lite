@@ -37,7 +37,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigMapper, SysCo
         fillReqParams(req);
         checkReqParams(req);
         SysConfigDTO sysConfig = saveConfig0(req);
-        String key = SysConfigUtil.getConfigKey(sysConfig.getAppCode(), sysConfig.getConfigCode());
+        String key = SysConfigDTO.getConfigKey(sysConfig.getAppCode(), sysConfig.getConfigCode());
         CacheUtil.sendCacheSign(key);
         return sysConfig;
     }

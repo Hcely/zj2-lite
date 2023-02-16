@@ -15,7 +15,7 @@ import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  SysNumRuleServiceImpl
+ * SysNumRuleServiceImpl
  *
  * @author peijie.ye
  * @date 2022/12/24 21:00
@@ -37,7 +37,7 @@ public class SysNumRuleServiceImpl extends BaseServiceImpl<SysNumRuleMapper, Sys
             }
         }
         save(rule);
-        CacheUtil.sendCacheSign(NumRuleUtil.getRuleCacheKey(rule.getNumRuleCode()));
+        CacheUtil.sendCacheSign(SysNumRuleDTO.getRuleCacheKey(rule.getNumRuleCode()));
         return rule;
     }
 

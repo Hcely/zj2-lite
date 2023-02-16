@@ -4,7 +4,6 @@ import org.zj2.common.sys.base.dto.SequenceNo;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.service.SysNumRuleApi;
-import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.service.cache.CacheUtil;
 import org.zj2.lite.spring.SpringBeanRef;
 import org.zj2.lite.util.AsyncUtil;
@@ -12,7 +11,7 @@ import org.zj2.lite.util.TransactionSyncUtil;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  SequenceNoUtil
+ * SequenceNoUtil
  *
  * @author peijie.ye
  * @date 2022/12/12 2:30
@@ -20,14 +19,10 @@ import org.zj2.lite.util.ZRBuilder;
 public class NumRuleUtil {
     private static final SpringBeanRef<SysNumRuleApi> SEQUENCE_API_REF = new SpringBeanRef<>(SysNumRuleApi.class);
 
-    public static String getRuleCacheKey(String numRuleCode) {
-        return StrUtil.concat("NUM_RULE:", numRuleCode);
-    }
-
     static SysNumRuleDTO getNumRule(String numRuleCode) {
         final SysNumRuleApi api = SEQUENCE_API_REF.get();
         if (api == null) { throw ZRBuilder.builder("没有序号服务").buildError(); }
-        String cacheKey = getRuleCacheKey(numRuleCode);
+        String cacheKey = SysNumRuleDTO.getRuleCacheKey(numRuleCode);
         return CacheUtil.DEF_CACHE.getCache(cacheKey, numRuleCode, api::getRule, true);
     }
 

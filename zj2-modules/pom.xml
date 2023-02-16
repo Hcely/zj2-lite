@@ -21,7 +21,7 @@
         <module>zj2-common-sys-plugin</module>
         <module>zj2-common-uac-plugin</module>
         <module>zj2-common-uac-wx</module>
-        <module>zj2-common-uac-wx-plugin</module>
+        <module>zj2-common-wx-sdk</module>
     </modules>
     <dependencyManagement>
 

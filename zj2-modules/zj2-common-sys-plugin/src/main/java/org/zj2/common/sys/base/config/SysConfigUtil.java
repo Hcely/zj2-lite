@@ -10,36 +10,26 @@ import org.zj2.lite.spring.SpringBeanRef;
 import java.time.LocalDateTime;
 
 /**
- *  SysConfigUtil
+ * SysConfigUtil
  *
  * @author peijie.ye
  * @date 2022/12/12 2:45
  */
 public class SysConfigUtil {
-    private static final String COMMON_APP = "COMMON";
+    private static final String COMMON_APP = "common";
     private static final EmptyConfig EMPTY_CONFIG = new EmptyConfig();
     private static final SpringBeanRef<SysConfigApi> SEQUENCE_API_REF = new SpringBeanRef<>(SysConfigApi.class);
-
-    public static String getConfigKey(String appCode, String configCode) {
-        if (StringUtils.isEmpty(appCode)) { appCode = COMMON_APP; }
-        StringBuilder sb = new StringBuilder(StringUtils.length(appCode) + StringUtils.length(configCode) + 16);
-        sb.append("SYS_CONFIG:").append(appCode);
-        if (StringUtils.isNotEmpty(configCode)) {
-            sb.append(':').append(configCode);
-        }
-        return sb.toString();
-    }
 
     public static SysConfigDTO config(String configCode) {
         if (StringUtils.isEmpty(configCode)) { return EMPTY_CONFIG; }
         String appCode = AuthContext.currentAppCode();
         SysConfigDTO config = null;
         if (StringUtils.isNotEmpty(appCode)) {
-            String cacheKey = getConfigKey(appCode, configCode);
+            String cacheKey = SysConfigDTO.getConfigKey(appCode, configCode);
             config = CacheUtil.DEF_CACHE.getCache(cacheKey, configCode, s -> getConfig0(appCode, configCode), true);
         }
         if (config == null) {
-            String cacheKey = getConfigKey(COMMON_APP, configCode);
+            String cacheKey = SysConfigDTO.getConfigKey(COMMON_APP, configCode);
             config = CacheUtil.DEF_CACHE.getCache(cacheKey, configCode, s -> getConfig0(COMMON_APP, configCode), true);
         }
         return config == null ? EMPTY_CONFIG : config;

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.zj2.lite.common.util.StrUtil;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class SysNumRuleDTO implements Serializable {
+    public static String getRuleCacheKey(String numRuleCode) {
+        return StrUtil.concat("NUM_RULE:", numRuleCode);
+    }
 
     private static final long serialVersionUID = 1L;
 

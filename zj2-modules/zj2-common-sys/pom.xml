@@ -21,10 +21,6 @@
             <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-uac-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-sys-plugin</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

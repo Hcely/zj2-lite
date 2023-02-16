@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>zj2-common-uac-wx-plugin</artifactId>
+    <artifactId>zj2-common-wx-sdk</artifactId>
 
     <dependencies>
         <dependency>

@@ -26,8 +26,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class SysConfigDTO implements Serializable {
-    public static final String COMMON_APP_CODE = "COMMON";
+    public static final String COMMON_APP_CODE = "common";
     private static final long serialVersionUID = 1L;
+
+    public static String getConfigKey(String appCode, String configCode) {
+        if (StringUtils.isEmpty(appCode)) { appCode = COMMON_APP_CODE; }
+        StringBuilder sb = new StringBuilder(StringUtils.length(appCode) + StringUtils.length(configCode) + 16);
+        sb.append("SYS_CONFIG:").append(appCode);
+        if (StringUtils.isNotEmpty(configCode)) {
+            sb.append(':').append(configCode);
+        }
+        return sb.toString();
+    }
 
     /**
      * 系统配置id
