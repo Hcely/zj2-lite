@@ -18,7 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-uac-api</artifactId>
+            <artifactId>zj2-common-uac</artifactId>
         </dependency>
         <dependency>
             <groupId>org.zj2.lite.module</groupId>
