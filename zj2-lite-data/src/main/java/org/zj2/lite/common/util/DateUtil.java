@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- *
  * <br>CreateDate 六月 16,2022
+ *
  * @author peijie.ye
  */
 public class DateUtil {
@@ -401,6 +401,7 @@ public class DateUtil {
 
     /**
      * mysql 对应是 %v
+     *
      * @param date
      * @return
      */
@@ -410,6 +411,7 @@ public class DateUtil {
 
     /**
      * mysql 对应是 %v
+     *
      * @param date
      * @return
      */
@@ -419,6 +421,7 @@ public class DateUtil {
 
     /**
      * mysql 对应是 %v
+     *
      * @param date
      * @return
      */

@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import org.zj2.lite.common.util.StrUtil;
 
 /**
- *  ZError
+ * ZError
  *
  * @author peijie.ye
  * @date 2022/11/22 18:29
@@ -25,9 +25,12 @@ public class ZError extends RuntimeException implements ZStatusMsg, Cloneable {
     protected boolean success;//NOSONAR
     protected int status;//NOSONAR
     protected String msg;//NOSONAR
+    protected final boolean stack;
 
     private ZError(boolean ignored) {//NOSONAR
-        this(false, SYS_ERROR_STATUS, null);
+        this.success = false;
+        this.status = SYS_ERROR_STATUS;
+        this.stack = false;
         setStackTrace(new StackTraceElement[]{new StackTraceElement("bizClass", "bizMethod", "bizClassFile", -1)});
     }
 
@@ -39,6 +42,7 @@ public class ZError extends RuntimeException implements ZStatusMsg, Cloneable {
         super(cause);
         this.success = false;
         this.status = SYS_ERROR_STATUS;
+        this.stack = true;
     }
 
     public ZError(String msg) {
@@ -53,6 +57,7 @@ public class ZError extends RuntimeException implements ZStatusMsg, Cloneable {
         this.success = success;
         this.status = status;
         this.msg = msg;
+        this.stack = true;
     }
 
     public ZError setMsg(String msg) {
@@ -87,6 +92,11 @@ public class ZError extends RuntimeException implements ZStatusMsg, Cloneable {
     @Override
     public String getMessage() {
         return msg;
+    }
+
+    @Override
+    public String toString() {
+        return "ZError:" + status + "," + msg;
     }
 
     @Override

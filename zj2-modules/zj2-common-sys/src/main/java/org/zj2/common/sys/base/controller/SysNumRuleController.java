@@ -3,12 +3,14 @@ package org.zj2.common.sys.base.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.zj2.common.sys.EnableSysController;
 import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.SysNumRuleQuery;
 import org.zj2.common.sys.base.service.SysNumRuleService;
@@ -23,6 +25,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @author peijie.ye
  * @date 2023/1/1 14:54
  */
+@ConditionalOnBean(annotation = EnableSysController.class)
 @Api(tags = "sys-单号规则模块")
 @RestController
 @RequestMapping("/api/sys/numRule")

@@ -3,7 +3,9 @@ package org.zj2.lite.service.configure;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zj2.lite.common.entity.result.ZError;
@@ -14,19 +16,23 @@ import org.zj2.lite.common.util.CollUtil;
 import java.util.Set;
 
 /**
- *  ErrorHandler
+ * ErrorHandler
  *
  * @author peijie.ye
  * @date 2022/12/20 21:41
  */
-//@Component
-//@ControllerAdvice(value = "org.zj2")
+@Component
+@ControllerAdvice
 @Slf4j
 public class ZJErrorHandler {
     @ExceptionHandler(ZError.class)
     @ResponseBody
     public ZResult zerror(ZError error) {
-        log.error(error.toString(), error);
+        if (error.isStack()) {
+            log.error(error.toString(), error);
+        } else {
+            log.error(error.toString());
+        }
         return new ZResult().setSuccess(error.isSuccess()).setStatus(error.getStatus()).setMsg(error.getMsg());
     }
 

@@ -3,12 +3,14 @@ package org.zj2.common.uac.org.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.zj2.common.uac.EnableUacController;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.req.OrgEditReq;
 import org.zj2.common.uac.org.dto.req.OrgQuery;
@@ -24,6 +26,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @author peijie.ye
  * @date 2023/2/6 17:12
  */
+@ConditionalOnBean(annotation = EnableUacController.class)
 @Api(tags = "uac-机构模块")
 @RestController
 @RequestMapping("/api/uac/org")

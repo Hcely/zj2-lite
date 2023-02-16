@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.zj2.lite.common.constant.ZJ2Constants;
 import org.zj2.lite.common.entity.ByteKey;
 import org.zj2.lite.common.entity.Ternary;
 import org.zj2.lite.common.util.CollUtil;
@@ -28,7 +29,6 @@ import java.util.function.Function;
  * @date 2023/2/7 11:07
  */
 public class UriResourceManager {
-    private static final String ZJ2_PACKAGE = "org.zj2";
     private static final TokenType[] DEFAULT_TOKEN_TYPE = {TokenType.JWT};
     private static final Map<ByteKey, UriResource> resourceMap = new HashMap<>(512);
     //    private static final Map<String, UriResource> resourceKeyNameMap = new HashMap<>(512);
@@ -158,8 +158,8 @@ public class UriResourceManager {
             }
             // 读取父级的认证要求
             required = clazz.getAnnotation(AuthenticationRequired.class);
-            // 非本身服务，无需处理
-            if (required == null && !StringUtils.startsWithIgnoreCase(clazz.getName(), ZJ2_PACKAGE)) {
+            // 非本身服务，默认无需处理
+            if (required == null && !StringUtils.startsWith(clazz.getName(), ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
                 resource.setRequiredAuthentication(false);
                 return;
             }

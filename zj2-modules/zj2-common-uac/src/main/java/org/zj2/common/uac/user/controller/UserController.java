@@ -3,12 +3,14 @@ package org.zj2.common.uac.user.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.zj2.common.uac.EnableUacController;
 import org.zj2.common.uac.user.constant.UserValueTypeEnum;
 import org.zj2.common.uac.user.dto.UserDTO;
 import org.zj2.common.uac.user.dto.req.UserCreateReq;
@@ -30,6 +32,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @author peijie.ye
  * @date 2023/2/6 17:40
  */
+@ConditionalOnBean(annotation = EnableUacController.class)
 @Api(tags = "uac-用户模块")
 @RestController
 @RequestMapping("/api/uac/user")
