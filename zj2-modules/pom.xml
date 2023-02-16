@@ -22,6 +22,7 @@
         <module>zj2-common-sys-api</module>
         <module>zj2-common-sys-starter</module>
         <module>zj2-common-uac-starter</module>
+        <module>zj2-common-wx</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class LoginController {
 
     @ApiOperation("登录接口")
     @PostMapping("login")
-    public ZResp<AuthorizationJWT> login(LoginReq req) {
+    public ZResp<AuthorizationJWT> login(@Validated LoginReq req) {
         AuthNamePwReq authReq = new AuthNamePwReq();
         authReq.setName(req.getName());
         authReq.setNameExtValue(req.getNameHeader());

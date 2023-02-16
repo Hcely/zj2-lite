@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class ZRBuilder implements Serializable {
     private static final long serialVersionUID = -2497487035627586056L;
-    private static final String NAMESPACE = "message";
+    public static final String NAMESPACE = "message";
 
 
     public static ZRBuilder builder() {
@@ -345,7 +345,7 @@ public class ZRBuilder implements Serializable {
         }
     }
 
-    protected String of(String msg) {
+    public static String of(String msg) {
         String newMsg = MessageUtil.get(NAMESPACE, msg);
         return StringUtils.defaultIfEmpty(newMsg, msg);
     }

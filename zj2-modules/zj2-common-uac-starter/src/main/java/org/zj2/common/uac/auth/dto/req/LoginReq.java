@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,8 @@ public class LoginReq implements Serializable {
     private String clientCode;
     private String orgCode;
     private String nameHeader;
+    @NotEmpty(message = "账号不能为空")
     private String name;
+    @NotEmpty(message = "密码不能为空")
     private String password;
 }

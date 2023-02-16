@@ -369,7 +369,7 @@ public class CollUtil {
             boolean ignoreEmpty) {
         if (e == null) { return; }
         K value = func.apply(e);
-        if (ignoreEmpty && (value == null || (value instanceof String && !StringUtils.isEmpty(value.toString())))) {
+        if (ignoreEmpty && (value == null || (value instanceof String && StringUtils.isEmpty(value.toString())))) {
             return;
         }
         dst.add(value);

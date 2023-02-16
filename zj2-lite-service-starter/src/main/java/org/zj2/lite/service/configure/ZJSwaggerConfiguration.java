@@ -1,5 +1,8 @@
 package org.zj2.lite.service.configure;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -12,17 +15,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.zj2.lite.common.constant.ZJ2Constants;
+import org.zj2.lite.common.entity.result.ZResult;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.service.ApiDoc;
+import org.zj2.lite.service.constant.ServiceConstants;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ParameterType;
+import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,9 +45,15 @@ import java.util.Set;
 @ConditionalOnProperty(value = "zj2.doc.enabled", havingValue = "true", matchIfMissing = true)
 @EnableOpenApi
 public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPostProcessor {
+    private final List<RequestParameter> parameters;
     private String title;
     private String version;
     private Set<String> basePackages;
+
+    public ZJSwaggerConfiguration() {
+        parameters = List.of(
+                createParameter(ServiceConstants.AUTHORIZATION, "认证信息<JWT/Digest>", ParameterType.HEADER));
+    }
 
     @Bean
     public Docket defaultDocket() {
@@ -46,15 +61,16 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
         String docTitle = StringUtils.defaultIfEmpty(title, "ZJ2.0接口文档");
         String docVersion = StringUtils.defaultIfEmpty(version, "1.0");
         ApiInfo apiInfo = new ApiInfoBuilder().title(docTitle).version(docVersion).build();
-        return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo).enable(true).select().apis(requestHandler -> {
-            //noinspection deprecation
-            Class<?> type = requestHandler.declaringClass();//NOSONAR
-            String packageName = type.getPackageName();
-            if (StringUtils.startsWith(packageName, ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
-                return true;
-            }
-            return CollUtil.anyMatch(basePackages, e -> StringUtils.startsWith(packageName, e));
-        }).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).apiInfo(apiInfo).enable(true)
+                .select().apis(requestHandler -> {
+                    //noinspection deprecation
+                    Class<?> type = requestHandler.declaringClass();//NOSONAR
+                    String packageName = type.getPackageName();
+                    if (StringUtils.startsWith(packageName, ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
+                        return true;
+                    }
+                    return CollUtil.anyMatch(basePackages, e -> StringUtils.startsWith(packageName, e));
+                }).paths(PathSelectors.any()).build();
     }
 
     @Override
@@ -88,12 +104,13 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
         basePackages.add(basePackage);
     }
 
-    protected static Docket createDocket(String title, String version, String group, String basePackages) {
+    protected Docket createDocket(String title, String version, String group, String basePackages) {
         title = StringUtils.defaultIfEmpty(title, "ZJ2.0接口文档");
         version = StringUtils.defaultIfEmpty(version, "1.0");
         ApiInfo apiInfo = new ApiInfoBuilder().title(title).version(version).build();
-        return new Docket(DocumentationType.OAS_30).groupName(group).apiInfo(apiInfo).enable(true).select()
-                .apis(RequestHandlerSelectors.basePackage(basePackages)).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).groupName(group)
+                .apiInfo(apiInfo).enable(true).select().apis(RequestHandlerSelectors.basePackage(basePackages))
+                .paths(PathSelectors.any()).build();
     }
 
     private static boolean isApiDoc(String className) {
@@ -104,5 +121,9 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
         } catch (Throwable ignored) {//NOSONAR
         }
         return false;
+    }
+
+    public static RequestParameter createParameter(String name, String description, ParameterType parameterType) {
+        return new RequestParameterBuilder().name(name).description(description).in(parameterType).build();
     }
 }
