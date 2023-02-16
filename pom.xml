@@ -117,7 +117,7 @@
             </dependency>
             <dependency>
                 <groupId>org.zj2.lite.module</groupId>
-                <artifactId>zj2-common-uac-starter</artifactId>
+                <artifactId>zj2-common-wx-sdk</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

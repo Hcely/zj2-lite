@@ -13,8 +13,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.zj2.lite</groupId>
+            <artifactId>zj2-lite-service</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.zj2.lite.module</groupId>
-            <artifactId>zj2-common-uac</artifactId>
+            <artifactId>zj2-common-uac-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zj2.lite.module</groupId>
+            <artifactId>zj2-common-wx-sdk</artifactId>
         </dependency>
     </dependencies>
 </project>
