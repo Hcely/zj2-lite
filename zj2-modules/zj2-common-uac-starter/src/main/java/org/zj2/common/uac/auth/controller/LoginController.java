@@ -21,7 +21,7 @@ import org.zj2.lite.util.ZRBuilder;
  * @author peijie.ye
  * @date 2023/2/7 10:28
  */
-@Api(tags = "uac-登录模块")
+@Api(tags = "auth-登录模块")
 @RestController
 @RequestMapping("/api/uac/auth")
 @AuthenticationIgnored

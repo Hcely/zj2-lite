@@ -27,8 +27,8 @@ public class NumUtil {
     //
     public static final MathContext CEIL = new MathContext(0, RoundingMode.CEILING);
     public static final MathContext FLOOR = new MathContext(0, RoundingMode.FLOOR);
-
     public static final NumUtilPlus plus = new NumUtilPlus();
+    public static final NumMathPlus math = new NumMathPlus();
 
     public static BigDecimal add(Number num1, Number num2) {
         return add(num1, num2, null);
@@ -388,22 +388,57 @@ public class NumUtil {
             return max(value, BigDecimal.ZERO);
         }
 
-        public BigDecimal percent(Number num1, Number total) {
-            return percent(num1, total, _2);
+        public BigDecimal percent(Number num, Number total) {
+            return percent(num, total, _2);
         }
 
-        public BigDecimal percent(Number num1, Number total, MathContext context) {
+        public BigDecimal percent(Number num, Number total, MathContext context) {
             BigDecimal dTotal = of(total);
-            return lteZero(dTotal) ? null : multi(divide(num1, dTotal), 100, context);
+            return lteZero(dTotal) ? null : multi(divide(num, dTotal), 100, context);
         }
 
-        public BigDecimal multiPercent(Number num1, Number percent) {
-            return multiPercent(num1, percent, null);
+        public BigDecimal multiPercent(Number num, Number percent) {
+            return multiPercent(num, percent, null);
         }
 
-        public BigDecimal multiPercent(Number num1, Number percent, MathContext context) {
+        public BigDecimal multiPercent(Number num, Number percent, MathContext context) {
             BigDecimal dPercent = of(percent);
-            return eqZero(dPercent) ? BigDecimal.ZERO : multi(num1, NumUtil.divide(dPercent, 100), context);
+            return eqZero(dPercent) ? BigDecimal.ZERO : multi(num, NumUtil.divide(dPercent, 100), context);
+        }
+    }
+
+    public static class NumMathPlus {
+        public int max(int num1, int num2) {
+            //noinspection ManualMinMaxCalculation
+            return num1 > num2 ? num1 : num2;
+        }
+
+        public int max(int num1, int... nums) {
+            if (nums != null && nums.length > 0) {
+                for (int n : nums) {
+                    if (n > num1) { num1 = n; }
+                }
+            }
+            return num1;
+        }
+
+        public int min(int num1, int num2) {
+            //noinspection ManualMinMaxCalculation
+            return num1 < num2 ? num1 : num2;
+        }
+
+        public int min(int num1, int... nums) {
+            if (nums != null && nums.length > 0) {
+                for (int n : nums) {
+                    if (n < num1) { num1 = n; }
+                }
+            }
+            return num1;
+        }
+
+        public int between(int num, int min, int max) {
+            //noinspection ManualMinMaxCalculation
+            return num < min ? min : (num > max ? max : num);//NOSONAR
         }
     }
 }

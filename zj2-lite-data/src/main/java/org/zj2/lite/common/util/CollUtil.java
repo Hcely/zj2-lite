@@ -92,7 +92,27 @@ public class CollUtil {
         return map == null ? Collections.emptySet() : map.entrySet();
     }
 
-    public static <T> void foreach(Collection<T> coll, Consumer<? super T> action) {
+    public static <T> void foreach(Iterator<T> iterator, Consumer<T> action) {
+        if (iterator != null) {
+            while (iterator.hasNext()) {
+                T e = iterator.next();
+                if (e != null) { action.accept(e); }
+            }
+        }
+    }
+
+    public static <T> void foreach(Iterator<T> iterator, IntBeanConsumer<T> action) {
+        if (iterator != null) {
+            int idx = 0;
+            while (iterator.hasNext()) {
+                T e = iterator.next();
+                if (e != null) { action.accept(idx, e); }
+                ++idx;
+            }
+        }
+    }
+
+    public static <T> void foreach(Collection<T> coll, Consumer<T> action) {
         if (isNotEmpty(coll) && action != null) {
             for (T e : coll) {
                 if (e != null) { action.accept(e); }
@@ -100,7 +120,7 @@ public class CollUtil {
         }
     }
 
-    public static <T> void foreach(Collection<T> coll, IntBeanConsumer<? super T> action) {
+    public static <T> void foreach(Collection<T> coll, IntBeanConsumer<T> action) {
         if (isNotEmpty(coll) && action != null) {
             int idx = 0;
             for (T e : coll) {
@@ -156,13 +176,13 @@ public class CollUtil {
         }
     }
 
-    public static <T> void foreach(T[] array, Consumer<? super T> action) {
+    public static <T> void foreach(T[] array, Consumer<T> action) {
         if (array != null && action != null) {
             for (T e : array) { if (e != null) { action.accept(e); } }
         }
     }
 
-    public static <T> void foreach(T[] array, IntBeanConsumer<? super T> action) {
+    public static <T> void foreach(T[] array, IntBeanConsumer<T> action) {
         if (array != null && action != null) {
             for (int i = 0, len = array.length; i < len; ++i) {
                 T e = array[i];
@@ -171,7 +191,7 @@ public class CollUtil {
         }
     }
 
-    public static <T> void descForeach(Collection<T> coll, Consumer<? super T> action) {//NOSONAR
+    public static <T> void descForeach(Collection<T> coll, Consumer<T> action) {//NOSONAR
         if (action == null) { return; }
         int size = size(coll);
         if (size == 0) { return; }
@@ -193,7 +213,7 @@ public class CollUtil {
         }
     }
 
-    public static <T> void descForeach(Collection<T> coll, IntBeanConsumer<? super T> action) {//NOSONAR
+    public static <T> void descForeach(Collection<T> coll, IntBeanConsumer<T> action) {//NOSONAR
         if (action == null) { return; }
         int size = size(coll);
         if (size == 0) { return; }

@@ -14,4 +14,5 @@ import lombok.Setter;
 public class ZJ2SwaggerDocProperties {
     protected Boolean enabled;
     protected String title;
+    protected String version;
 }

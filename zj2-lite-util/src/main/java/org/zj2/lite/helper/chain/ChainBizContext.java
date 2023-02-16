@@ -14,7 +14,7 @@ public class ChainBizContext extends TimeConsuming {
     private final transient ChainBizContext parent;
     private final transient ChainBizHandler chainHandler;
     private final transient List<ChainBizFuncStack> handlerStacks;
-    private final transient Object nativeContext;
+    private final transient Object parentContext;
     private transient Object currentContext;
 
     ChainBizContext(ChainBizContext parent, ChainBizHandler chainHandler, Object context) {
@@ -22,7 +22,7 @@ public class ChainBizContext extends TimeConsuming {
         this.parent = parent;
         this.chainHandler = chainHandler;
         this.handlerStacks = new ArrayList<>(Math.max(chainHandler.getInitializeStackCapcity(), 0));
-        this.nativeContext = context;
+        this.parentContext = context;
         this.currentContext = context;
     }
 
@@ -53,11 +53,11 @@ public class ChainBizContext extends TimeConsuming {
     public <T> T rootContext() {
         ChainBizContext cxt = this;
         while (cxt.parent != null) { cxt = cxt.parent; }
-        return (T) cxt.nativeContext;
+        return (T) cxt.parentContext;
     }
 
-    public <T> T nativeContext() {
-        return (T) nativeContext;
+    public <T> T parentContext() {
+        return (T) parentContext;
     }
 
     public <T> T currentContext() {
