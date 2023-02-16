@@ -1,4 +1,4 @@
-package org.zj2.common.uac.org.service;
+package org.zj2.common.uac.org.api;
 
 import org.zj2.common.uac.org.dto.OrgGroupDTO;
 import org.zj2.lite.service.ApiReference;

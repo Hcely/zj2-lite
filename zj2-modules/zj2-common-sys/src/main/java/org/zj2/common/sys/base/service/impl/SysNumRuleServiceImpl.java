@@ -6,7 +6,6 @@ import org.zj2.common.sys.base.dto.SysNumRuleDTO;
 import org.zj2.common.sys.base.dto.req.SysNumRuleQuery;
 import org.zj2.common.sys.base.entity.SysNumRule;
 import org.zj2.common.sys.base.mapper.SysNumRuleMapper;
-import org.zj2.common.sys.base.sequence.NumRuleUtil;
 import org.zj2.common.sys.base.service.SysNumRuleService;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.common.util.PatternUtil;

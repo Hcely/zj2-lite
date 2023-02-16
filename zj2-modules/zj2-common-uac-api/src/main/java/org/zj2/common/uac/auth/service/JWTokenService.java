@@ -1,5 +1,7 @@
 package org.zj2.common.uac.auth.service;
 
+import org.zj2.common.uac.auth.api.JWTokenApi;
+
 /**
  *  TokenService
  *

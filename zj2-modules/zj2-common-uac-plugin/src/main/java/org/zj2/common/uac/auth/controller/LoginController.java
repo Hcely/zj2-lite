@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
 import org.zj2.common.uac.auth.dto.req.LoginReq;
-import org.zj2.common.uac.auth.service.AuthenticationApi;
+import org.zj2.common.uac.auth.api.AuthenticationApi;
 import org.zj2.lite.common.entity.result.ZResp;
 import org.zj2.lite.service.auth.AuthenticationIgnored;
 import org.zj2.lite.service.auth.AuthorizationJWT;

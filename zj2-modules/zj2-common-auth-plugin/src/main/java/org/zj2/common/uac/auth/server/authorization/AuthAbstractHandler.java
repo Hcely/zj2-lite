@@ -1,7 +1,7 @@
 package org.zj2.common.uac.auth.server.authorization;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.common.uac.auth.service.TokenAuthorityApi;
+import org.zj2.common.uac.auth.api.TokenAuthorityApi;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.service.auth.AuthoritySet;
 import org.zj2.lite.service.auth.helper.AnonymityAuthorityProvider;

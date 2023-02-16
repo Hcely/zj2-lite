@@ -1,5 +1,6 @@
 package org.zj2.common.uac.org.service;
 
+import org.zj2.common.uac.org.api.OrgApi;
 import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.req.OrgEditReq;
 import org.zj2.common.uac.org.dto.req.OrgQuery;

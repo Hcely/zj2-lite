@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
-import org.zj2.common.uac.auth.service.AuthenticationApi;
+import org.zj2.common.uac.auth.api.AuthenticationApi;
 import org.zj2.common.uac.auth.service.helper.AuthNamePwHelper;
 import org.zj2.lite.service.auth.AuthorizationJWT;
 

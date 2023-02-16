@@ -1,5 +1,6 @@
 package org.zj2.common.uac.user.service;
 
+import org.zj2.common.uac.user.api.UserApi;
 import org.zj2.common.uac.user.dto.UserDTO;
 import org.zj2.common.uac.user.dto.req.UserCreateReq;
 import org.zj2.common.uac.user.dto.req.UserEditPasswordReq;

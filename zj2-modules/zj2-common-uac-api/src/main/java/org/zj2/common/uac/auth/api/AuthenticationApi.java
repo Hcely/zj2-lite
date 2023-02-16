@@ -1,4 +1,4 @@
-package org.zj2.common.uac.auth.service;
+package org.zj2.common.uac.auth.api;
 
 import org.zj2.common.uac.auth.dto.req.AuthNamePwReq;
 import org.zj2.lite.service.ApiReference;

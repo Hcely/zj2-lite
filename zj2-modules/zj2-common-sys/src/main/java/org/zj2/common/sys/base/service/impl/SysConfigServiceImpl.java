@@ -2,7 +2,6 @@ package org.zj2.common.sys.base.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.zj2.common.sys.base.config.SysConfigUtil;
 import org.zj2.common.sys.base.dto.SysConfigDTO;
 import org.zj2.common.sys.base.dto.req.SysConfigQuery;
 import org.zj2.common.sys.base.dto.req.SysConfigSaveReq;

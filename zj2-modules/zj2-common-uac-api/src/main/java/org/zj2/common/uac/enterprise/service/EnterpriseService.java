@@ -1,5 +1,6 @@
 package org.zj2.common.uac.enterprise.service;
 
+import org.zj2.common.uac.enterprise.api.EnterpriseApi;
 import org.zj2.common.uac.enterprise.dto.EnterpriseDTO;
 import org.zj2.lite.service.BaseInnerService;
 

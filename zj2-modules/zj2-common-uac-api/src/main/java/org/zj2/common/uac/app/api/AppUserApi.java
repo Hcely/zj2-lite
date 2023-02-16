@@ -1,4 +1,4 @@
-package org.zj2.common.uac.app.service;
+package org.zj2.common.uac.app.api;
 
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.lite.service.ApiReference;

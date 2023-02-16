@@ -1,5 +1,6 @@
 package org.zj2.common.uac.app.service;
 
+import org.zj2.common.uac.app.api.AppApi;
 import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.dto.req.AppCreateSaveReq;
 import org.zj2.common.uac.app.dto.req.AppEditSecretReq;

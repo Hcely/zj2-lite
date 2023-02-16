@@ -1,5 +1,6 @@
 package org.zj2.common.uac.app.service;
 
+import org.zj2.common.uac.app.api.AppOrgApi;
 import org.zj2.common.uac.app.dto.AppOrgDTO;
 import org.zj2.common.uac.app.dto.AppOrgExtDTO;
 import org.zj2.common.uac.app.dto.req.AppOrgAddReq;

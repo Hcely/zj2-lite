@@ -1,5 +1,6 @@
 package org.zj2.common.uac.org.service;
 
+import org.zj2.common.uac.org.api.OrgGroupApi;
 import org.zj2.common.uac.org.dto.OrgGroupDTO;
 import org.zj2.lite.service.BaseInnerService;
 

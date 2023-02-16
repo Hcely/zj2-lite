@@ -1,4 +1,4 @@
-package org.zj2.common.uac.user.service;
+package org.zj2.common.uac.user.api;
 
 import org.zj2.common.uac.user.constant.UserValueTypeEnum;
 import org.zj2.common.uac.user.dto.UserDTO;

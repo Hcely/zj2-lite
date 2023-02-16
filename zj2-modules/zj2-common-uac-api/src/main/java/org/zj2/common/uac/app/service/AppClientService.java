@@ -1,5 +1,6 @@
 package org.zj2.common.uac.app.service;
 
+import org.zj2.common.uac.app.api.AppClientApi;
 import org.zj2.common.uac.app.dto.AppClientDTO;
 import org.zj2.common.uac.app.dto.req.AppClientQuery;
 import org.zj2.common.uac.app.dto.req.AppClientSaveReq;
