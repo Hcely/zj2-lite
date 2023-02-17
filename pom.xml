@@ -19,11 +19,11 @@
         <module>zj2-lite-service</module>
         <module>zj2-lite-service-api</module>
         <module>zj2-lite-session</module>
-        <module>zj2-modules</module>
         <module>zj2-lite-test</module>
         <module>zj2-lite-service-starter</module>
         <module>zj2-lite-net</module>
         <module>zj2-lite-async-task</module>
+        <module>zj2-modules</module>
     </modules>
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>

@@ -9,8 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.zj2.lite.module</groupId>
-    <artifactId>zj2-common-module-parent</artifactId>
+    <artifactId>module</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>zj2-common-uac-api</module>
@@ -22,14 +21,6 @@
         <module>zj2-common-uac-plugin</module>
         <module>zj2-common-uac-wx</module>
         <module>zj2-common-wx-sdk</module>
+        <module>zj2-common-parent</module>
     </modules>
-    <dependencyManagement>
-
-    </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.zj2.lite</groupId>
-            <artifactId>zj2-lite-service-api</artifactId>
-        </dependency>
-    </dependencies>
 </project>
