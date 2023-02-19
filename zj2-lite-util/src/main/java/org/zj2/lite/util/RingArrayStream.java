@@ -2,11 +2,12 @@ package org.zj2.lite.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zj2.lite.common.Destroyable;
-import org.zj2.lite.common.Releasable;
+import org.zj2.lite.Destroyable;
+import org.zj2.lite.Releasable;
 import org.zj2.lite.common.function.IntBeanConsumer;
 import org.zj2.lite.common.function.LongBeanConsumer;
 import org.zj2.lite.common.util.BeanUtil;
+import org.zj2.lite.common.util.Concurrent;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
  * @date 2023/1/17 12:40
  */
 @SuppressWarnings("all")
-public class RingArrayStream<T extends Releasable> implements Destroyable {
+public class RingArrayStream<T extends Releasable> implements Destroyable, Concurrent {
     private static int normalizeCapacity(int capacity) {
         if (capacity < 16) { return 16; }
         return 1 << (32 - Integer.numberOfLeadingZeros(capacity - 1));
@@ -93,31 +94,31 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return capacity;
     }
 
-    public <E> boolean add(E value, BiConsumer<T, E> handler) {
-        return add0(value, handler, false);
+    public <E> boolean publish(E value, BiConsumer<T, E> handler) {
+        return publish0(value, handler, false);
     }
 
-    public <E> boolean tryAdd(E value, BiConsumer<T, E> handler) {
-        return add0(value, handler, true);
+    public <E> boolean tryPlublish(E value, BiConsumer<T, E> handler) {
+        return publish0(value, handler, true);
     }
 
-    public boolean add(int value, IntBeanConsumer<T> handler) {
-        return add0(value, handler, false);
+    public boolean publishInt(int value, IntBeanConsumer<T> handler) {
+        return publish0(value, handler, false);
     }
 
-    public boolean tryAdd(int value, IntBeanConsumer<T> handler) {
-        return add0(value, handler, true);
+    public boolean tryPlublishInt(int value, IntBeanConsumer<T> handler) {
+        return publish0(value, handler, true);
     }
 
-    public boolean add(long value, LongBeanConsumer<T> handler) {
-        return add0(value, handler, false);
+    public boolean publishLong(long value, LongBeanConsumer<T> handler) {
+        return publish0(value, handler, false);
     }
 
-    public boolean tryAdd(long value, LongBeanConsumer<T> handler) {
-        return add0(value, handler, true);
+    public boolean tryPlublishLong(long value, LongBeanConsumer<T> handler) {
+        return publish0(value, handler, true);
     }
 
-    private <E> boolean add0(E value, BiConsumer<T, E> handler, boolean tryNext) {
+    private <E> boolean publish0(E value, BiConsumer<T, E> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
         if (pos > FAILURE_POS) {
             try {
@@ -130,7 +131,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return false;
     }
 
-    private boolean add0(long value, LongBeanConsumer<T> handler, boolean tryNext) {
+    private boolean publish0(long value, LongBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
         if (pos > FAILURE_POS) {
             try {
@@ -143,7 +144,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable {
         return false;
     }
 
-    private boolean add0(int value, IntBeanConsumer<T> handler, boolean tryNext) {
+    private boolean publish0(int value, IntBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
         if (pos > FAILURE_POS) {
             try {

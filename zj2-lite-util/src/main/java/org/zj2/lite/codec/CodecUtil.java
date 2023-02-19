@@ -16,36 +16,43 @@ public class CodecUtil {
     private static final SoftBufferThreadLocal BUFFERS = new SoftBufferThreadLocal();
     private static final char[] CHAR_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
             'F'};
+    public static final CodecPlus plus = new CodecPlus();
 
-    public static CacheBuffer getBuffer() {
-        return BUFFERS.getBuffer();
-    }
+    public static class CodecPlus {
 
-    public static boolean isAllowFastMode(int dataLength) {
-        return dataLength < ((BUFFER_SIZE - 32) * 3 / 4);
-    }
+        private CodecPlus() {
+        }
 
-    static StringBuilder fastEncrypt64(Crypto crypto, StringBuilder sb, byte[] valueData) {
-        // 快速模式，使用缓存，减少对象新建
-        CodecUtil.CacheBuffer buffer = CodecUtil.getBuffer();
-        // 加密
-        ByteArrayBuf buf = buffer.buf1.reset();
-        crypto.encrypt(valueData, buf);
-        // 64编码
-        return Base64Util.ENCODER.encode(sb, buf.buffer(), 0, buf.writePos());
-    }
+        public CacheBuffer getBuffer() {
+            return BUFFERS.getBuffer();
+        }
 
-    static String fastDecrypt64(Crypto crypto, CharSequence base64Value, int offset, int length) {
-        // 快速模式，使用缓存，减少对象新建
-        CodecUtil.CacheBuffer buffer = CodecUtil.getBuffer();
-        // 64解码
-        ByteArrayBuf buf1 = buffer.buf1.reset();
-        int wrote = Base64Util.DECODER.decode(base64Value, offset, length, buf1.buffer(), buf1.writePos());
-        buf1.addWritePos(wrote);
-        // 解密
-        ByteArrayBuf buf2 = buffer.buf2.reset();
-        crypto.decrypt(buf1, buf2);
-        return new String(buf2.buffer(), 0, buf2.writePos(), StandardCharsets.UTF_8);
+        public boolean isAllowFastMode(int dataLength) {
+            return dataLength < ((BUFFER_SIZE - 32) * 3 / 4);
+        }
+
+        public StringBuilder fastEncrypt64(Crypto crypto, StringBuilder sb, byte[] valueData) {
+            // 快速模式，使用缓存，减少对象新建
+            CodecUtil.CacheBuffer buffer = getBuffer();
+            // 加密
+            ByteArrayBuf buf = buffer.buf1.reset();
+            crypto.encrypt(valueData, buf);
+            // 64编码
+            return Base64Util.ENCODER.encode(sb, buf.buffer(), 0, buf.writePos());
+        }
+
+        public String fastDecrypt64(Crypto crypto, CharSequence base64Value, int offset, int length) {
+            // 快速模式，使用缓存，减少对象新建
+            CodecUtil.CacheBuffer buffer = getBuffer();
+            // 64解码
+            ByteArrayBuf buf1 = buffer.buf1.reset();
+            int wrote = Base64Util.DECODER.decode(base64Value, offset, length, buf1.buffer(), buf1.writePos());
+            buf1.addWritePos(wrote);
+            // 解密
+            ByteArrayBuf buf2 = buffer.buf2.reset();
+            crypto.decrypt(buf1, buf2);
+            return new String(buf2.buffer(), 0, buf2.writePos(), StandardCharsets.UTF_8);
+        }
     }
 
     public static byte[] getKeyByte16(String key) {

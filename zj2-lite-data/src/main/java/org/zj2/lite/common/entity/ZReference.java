@@ -3,7 +3,7 @@ package org.zj2.lite.common.entity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.zj2.lite.common.CodeEnum;
+import org.zj2.lite.CodeEnum;
 
 import java.io.Serializable;
 

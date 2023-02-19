@@ -1,6 +1,6 @@
 package org.zj2.lite.service.broadcast;
 
-import org.zj2.lite.common.Supportable;
+import org.zj2.lite.Supportable;
 
 /**
  *  ServerMsgListener

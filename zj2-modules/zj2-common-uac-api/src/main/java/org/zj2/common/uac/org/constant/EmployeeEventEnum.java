@@ -1,7 +1,7 @@
 package org.zj2.common.uac.org.constant;
 
 import lombok.Getter;
-import org.zj2.lite.common.CodeEnum;
+import org.zj2.lite.CodeEnum;
 
 /**
  *  UserStatusEnum

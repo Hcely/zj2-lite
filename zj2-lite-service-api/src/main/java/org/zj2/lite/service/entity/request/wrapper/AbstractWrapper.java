@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.lite.common.CodeEnum;
+import org.zj2.lite.CodeEnum;
 import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.function.PropGetter;
 import org.zj2.lite.common.util.CollUtil;

@@ -8,7 +8,7 @@ import org.zj2.common.uac.org.dto.OrgDTO;
 import org.zj2.common.uac.org.dto.OrgEmployeeDTO;
 import org.zj2.common.uac.org.service.OrgEmployeeService;
 import org.zj2.common.uac.user.dto.UserDTO;
-import org.zj2.lite.common.Supportable;
+import org.zj2.lite.Supportable;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;

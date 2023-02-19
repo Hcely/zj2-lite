@@ -191,6 +191,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     public static class ThreadTaskExecutor implements AsyncTaskExecutor {
         private final AtomicLong nextIdx;
+        private final ThreadPoolExecutor commonExecutor;
         private final ThreadPoolExecutor[] workers;
         private final int mask;
 
@@ -201,26 +202,32 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
             this.nextIdx = new AtomicLong(0);
             AsyncThreadFactory threadFactory = new AsyncThreadFactory();
             for (int i = 0; i < size; ++i) { workers[i] = new AsyncThreadExecutor(threadFactory); }
+            this.commonExecutor = new ThreadPoolExecutor(size, size << 2, 60_000, TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<>(10000_0000), threadFactory);
         }
 
         @Override
         public void execute(Runnable command, long startTimeout) {
-            execute(null, command);
+            execute(command);
         }
 
         @Override
         public Future<?> submit(Runnable command) {
-            return submit(null, command);
+            FutureTask<?> futureTask = new FutureTask<>(command, null);
+            execute(futureTask);
+            return futureTask;
         }
 
         @Override
         public <T> Future<T> submit(Callable<T> command) {
-            return submit(null, command);
+            FutureTask<T> futureTask = new FutureTask<>(command);
+            execute(futureTask);
+            return futureTask;
         }
 
         @Override
         public void execute(Runnable command) {
-            execute(null, command);
+            commonExecutor.execute(of(command));
         }
 
         public Future<?> submit(Object key, Runnable command) {
@@ -241,6 +248,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
         public void shutdown() {
             for (ThreadPoolExecutor e : workers) { e.shutdown(); }
+            commonExecutor.shutdown();
         }
 
 

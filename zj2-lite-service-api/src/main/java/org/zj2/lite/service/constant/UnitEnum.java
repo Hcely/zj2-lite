@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.zj2.lite.common.CodeEnum;
+import org.zj2.lite.CodeEnum;
 import org.zj2.lite.common.util.NumUtil;
 
 import java.io.Serializable;

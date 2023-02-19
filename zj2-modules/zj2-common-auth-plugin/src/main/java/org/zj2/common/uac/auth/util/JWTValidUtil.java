@@ -45,8 +45,8 @@ public class JWTValidUtil {
         } else { return null; }
         try {
             int payloadLength = length - JWT_SIGN_LENGTH - headerLength;
-            if (CodecUtil.isAllowFastMode(payloadLength)) {
-                ByteArrayBuf buf = CodecUtil.getBuffer().buf1.reset();
+            if (CodecUtil.plus.isAllowFastMode(payloadLength)) {
+                ByteArrayBuf buf = CodecUtil.plus.getBuffer().buf1.reset();
                 int wroteLen = Base64Util.DECODER.decode(token, headerLength, payloadLength, buf.buffer(), 0);
                 return JSON.parseObject(buf.buffer(), 0, wroteLen, StandardCharsets.UTF_8, AuthorizationJWT.class);
             } else {

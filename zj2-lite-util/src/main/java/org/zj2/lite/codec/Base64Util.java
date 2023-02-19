@@ -1,5 +1,6 @@
 package org.zj2.lite.codec;
 
+import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -56,7 +57,7 @@ public class Base64Util {
             return decode0(base64Value, srcOffset, srcLength, buf, bufOffset);
         }
 
-        int decode0(CharSequence base64Value, int srcOffset, int srcLength, byte[] buf, int bufOffset) {
+        private int decode0(CharSequence base64Value, int srcOffset, int srcLength, byte[] buf, int bufOffset) {
             int b;
             final int srcBufOffset = bufOffset;
             byte[] decodeBytes = BASE64_DECODE_BYTES;
@@ -118,6 +119,7 @@ public class Base64Util {
      * @author peijie.ye
      * @date 2022/12/5 1:02
      */
+    @Getter
     public static class Encoder {
         private final boolean urlEncode;
         private final boolean padding;
@@ -185,6 +187,5 @@ public class Base64Util {
             if (capacity * 3 < bufLength) { ++capacity; }
             return capacity << 1;
         }
-
     }
 }

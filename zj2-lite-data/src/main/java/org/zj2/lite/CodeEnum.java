@@ -1,4 +1,4 @@
-package org.zj2.lite.common;
+package org.zj2.lite;
 
 
 import org.apache.commons.lang3.reflect.FieldUtils;

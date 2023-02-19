@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -93,7 +94,7 @@ public class CollUtil {
     }
 
     public static <T> void foreach(Iterator<T> iterator, Consumer<T> action) {
-        if (iterator != null) {
+        if (iterator != null && action != null) {
             while (iterator.hasNext()) {
                 T e = iterator.next();
                 if (e != null) { action.accept(e); }
@@ -102,10 +103,30 @@ public class CollUtil {
     }
 
     public static <T> void foreach(Iterator<T> iterator, IntBeanConsumer<T> action) {
-        if (iterator != null) {
+        if (iterator != null && action != null) {
             int idx = 0;
             while (iterator.hasNext()) {
                 T e = iterator.next();
+                if (e != null) { action.accept(idx, e); }
+                ++idx;
+            }
+        }
+    }
+
+    public static <T> void foreach(Enumeration<T> enumeration, Consumer<T> action) {
+        if (enumeration != null && action != null) {
+            while (enumeration.hasMoreElements()) {
+                T e = enumeration.nextElement();
+                if (e != null) { action.accept(e); }
+            }
+        }
+    }
+
+    public static <T> void foreach(Enumeration<T> enumeration, IntBeanConsumer<T> action) {
+        if (enumeration != null && action != null) {
+            int idx = 0;
+            while (enumeration.hasMoreElements()) {
+                T e = enumeration.nextElement();
                 if (e != null) { action.accept(idx, e); }
                 ++idx;
             }
@@ -289,6 +310,10 @@ public class CollUtil {
 
     public static <T> Set<T> emptySet() {
         return Collections.emptySet();
+    }
+
+    public static <T> Iterator<T> emptyIterator() {
+        return Collections.emptyIterator();
     }
 
     public static <K, V> Map<K, V> emptyMap() {

@@ -7,7 +7,7 @@ import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.service.AppUserService;
 import org.zj2.common.uac.auth.dto.AuthContext;
 import org.zj2.common.uac.user.dto.UserDTO;
-import org.zj2.lite.common.Supportable;
+import org.zj2.lite.Supportable;
 import org.zj2.lite.common.util.BooleanUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;

@@ -2,7 +2,7 @@ package org.zj2.lite.helper.chain;
 
 import org.slf4j.Logger;
 import org.springframework.aop.support.AopUtils;
-import org.zj2.lite.common.Supportable;
+import org.zj2.lite.Supportable;
 import org.zj2.lite.common.text.StrFormatter;
 import org.zj2.lite.common.util.StrUtil;
 import org.zj2.lite.helper.entity.BizInterceptorError;

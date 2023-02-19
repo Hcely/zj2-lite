@@ -1,4 +1,4 @@
-package org.zj2.lite.common;
+package org.zj2.lite;
 
 public interface Releasable {
     default void release() {

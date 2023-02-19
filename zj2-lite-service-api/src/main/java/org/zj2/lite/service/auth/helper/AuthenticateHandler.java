@@ -1,9 +1,8 @@
 package org.zj2.lite.service.auth.helper;
 
-import org.zj2.lite.common.Supportable;
+import org.zj2.lite.Supportable;
 import org.zj2.lite.service.context.AuthContext;
 import org.zj2.lite.service.context.RequestContext;
-import org.zj2.lite.service.context.TokenType;
 
 /**
  * AuthentacateHandler
