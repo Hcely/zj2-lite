@@ -39,12 +39,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @EnableAsync
 @SuppressWarnings("all")
 public class AsyncUtil implements AsyncConfigurer, DisposableBean {
+    private static final int MAX_CORE = 1 << 6;
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncUtil.class);
     private static final ThreadTaskExecutor EXECUTOR;
 
     static {
         int coreNum = Runtime.getRuntime().availableProcessors() << 2;
-        EXECUTOR = createExecutor(Math.max(coreNum, 64));
+        EXECUTOR = createExecutor(Math.max(coreNum, MAX_CORE));
     }
 
     public static ThreadTaskExecutor createExecutor(int coreNum) {
@@ -190,19 +191,21 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
 
     public static class ThreadTaskExecutor implements AsyncTaskExecutor {
-        private final AtomicLong nextIdx;
         private final ThreadPoolExecutor commonExecutor;
         private final ThreadPoolExecutor[] workers;
         private final int mask;
 
-        public ThreadTaskExecutor(int size) {
-            size = 32 - Integer.numberOfLeadingZeros(size - 1);
-            this.workers = new ThreadPoolExecutor[size];
-            this.mask = size - 1;
-            this.nextIdx = new AtomicLong(0);
+        public ThreadTaskExecutor(int coreSize) {
+            coreSize = 32 - Integer.numberOfLeadingZeros(coreSize - 1);
+            this.workers = new ThreadPoolExecutor[coreSize];
+            this.mask = coreSize - 1;
+            //
             AsyncThreadFactory threadFactory = new AsyncThreadFactory();
-            for (int i = 0; i < size; ++i) { workers[i] = new AsyncThreadExecutor(threadFactory); }
-            this.commonExecutor = new ThreadPoolExecutor(size, size << 2, 60_000, TimeUnit.MILLISECONDS,
+            for (int i = 0; i < coreSize; ++i) {
+                workers[i] = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
+                        threadFactory);
+            }
+            this.commonExecutor = new ThreadPoolExecutor(coreSize, coreSize << 2, 60_000, TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<>(10000_0000), threadFactory);
         }
 
@@ -230,48 +233,22 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
             commonExecutor.execute(of(command));
         }
 
-        public Future<?> submit(Object key, Runnable command) {
-            FutureTask<?> futureTask = new FutureTask<>(command, null);
-            getWorkor(key).execute(futureTask);
-            return futureTask;
-        }
-
-        public <T> Future<T> submit(Object key, Callable<T> command) {
-            FutureTask<T> futureTask = new FutureTask<>(command);
-            getWorkor(key).execute(futureTask);
-            return futureTask;
-        }
-
         public void execute(Object key, Runnable command) {
-            getWorkor(key).execute(command);
+            if (key == null) {
+                execute(command);
+            } else {
+                workers[key.hashCode() & mask].execute(of(command));
+            }
         }
 
         public void shutdown() {
             for (ThreadPoolExecutor e : workers) { e.shutdown(); }
             commonExecutor.shutdown();
         }
-
-
-        private ThreadPoolExecutor getWorkor(Object key) {
-            if (key != null) { return workers[key.hashCode() & mask]; }
-            return workers[(int) (nextIdx.getAndIncrement() & mask)];
-        }
-    }
-
-
-    private static class AsyncThreadExecutor extends ThreadPoolExecutor {
-        public AsyncThreadExecutor(AsyncThreadFactory threadFactory) {
-            super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), threadFactory);
-        }
-
-        @Override
-        public void execute(Runnable command) {
-            super.execute(of(command));
-        }
     }
 
     private static class AsyncThreadFactory implements ThreadFactory {
-        private static final AtomicInteger THREAD_NUMBER = new AtomicInteger(1);
+        private static final AtomicLong THREAD_NUMBER = new AtomicLong(1);
         private final ThreadGroup group;// NOSONAR
 
         AsyncThreadFactory() {
