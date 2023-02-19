@@ -180,7 +180,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         nextStep(produceStep, pos, true);
     }
 
-    private long nextPos(StepStream<?> stream, StateStep step, int size, int timeoutCount) {//NOSONAR
+    private long nextPos(StepTaskStream<?> stream, StateStep step, int size, int timeoutCount) {//NOSONAR
         final AtomicLong readPos = step.readPos, limitPos = step.limitPos, maxPos = steps[step.prevState].readPos;
         long rPos, nPos, lPos = limitPos.get(), newLPos;
         for (int tryCount = 0; ; ) {
@@ -253,8 +253,12 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         if (notifyNextStep) { steps[nextState].tryNotify(); }
     }
 
+    public StepTaskStream<T> stream(int stepIdx) {
+        return new StepTaskStream<>(this, steps[stepIdx + 1]);
+    }
+
     public void consume(int stepIdx, Consumer<T> consumer) {
-        new StepStream<>(this, steps[stepIdx + 1]).consume(consumer);
+        stream(stepIdx).consume(consumer);
     }
 
     private static class StateStep {
@@ -314,18 +318,18 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         }
     }
 
-    private static class StepStream<T extends Releasable> {
+    public static class StepTaskStream<T extends Releasable> {
         private static final int NOTIFY_COUNT = (1 << 8) - 1;
         private final RingArrayStream<T> stream;
         private final StateStep step;
         private long endPos;
 
-        private StepStream(RingArrayStream<T> stream, StateStep step) {
+        private StepTaskStream(RingArrayStream<T> stream, StateStep step) {
             this.stream = stream;
             this.step = step;
         }
 
-        private void consume(final Consumer<T> consumer) {
+        public void consume(final Consumer<T> consumer) {
             final RingArrayStream<T> localStream = this.stream;
             final StateStep localStep = this.step;
             final Object[] references = localStream.references;
