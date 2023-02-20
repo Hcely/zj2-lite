@@ -43,7 +43,7 @@ public class TaskReaderStream<T> implements TaskStream<T>, Concurrent {
                     Collection<T> coll;
                     if (reader.hasMore() && CollUtil.isNotEmpty(coll = reader.read())) {//NOSONAR
                         success = hasMore = true;
-                        bufferQueue.addAll(coll);
+                        CollUtil.addAll(bufferQueue, coll);
                     } else {
                         success = hasMore = false;
                     }

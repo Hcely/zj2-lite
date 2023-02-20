@@ -394,10 +394,13 @@ public class CollUtil {
             boolean ignoreEmpty) {
         if (e == null) { return; }
         K value = func.apply(e);
-        if (ignoreEmpty && (value == null || (value instanceof String && StringUtils.isEmpty(value.toString())))) {
-            return;
+        if (!ignoreEmpty || !isEmpty(value)) {
+            dst.add(value);
         }
-        dst.add(value);
+    }
+
+    private static boolean isEmpty(Object value) {
+        return value == null || (value instanceof CharSequence && ((CharSequence) value).length() == 0);
     }
 
     public static <K, V> Map<K, List<V>> groupingBy(Collection<V> coll, Function<V, K> func) {
@@ -521,28 +524,20 @@ public class CollUtil {
         return result;
     }
 
-    public static <T> List<T> addAll(List<T> list, Collection<T> values) {
-        if (list != null) {
-            if (values != null) {
-                list.addAll(values);
-            }
-            return list;
-        } else if (values != null) {
-            return values instanceof List ? (List<T>) values : new ArrayList<>(values);
-        }
-        return new ArrayList<>();
+    public static <T> Collection<T> addAll(Collection<T> list, Collection<T> values) {
+        return addAll(list, values, false);
     }
 
-    public static <T> Set<T> addAll(Set<T> set, Collection<T> values) {
-        if (set != null) {
-            if (values != null) {
-                set.addAll(values);
+    public static <T> Collection<T> addAll(Collection<T> list, Collection<T> values, boolean ignoreEmpty) {
+        if (list == null) { list = new ArrayList<>(); }
+        if (values != null) {
+            for (T value : values) {
+                if (!ignoreEmpty || !isEmpty(value)) {
+                    list.add(value);
+                }
             }
-            return set;
-        } else if (values != null) {
-            return values instanceof Set ? (Set<T>) values : new LinkedHashSet<>(values);
         }
-        return new LinkedHashSet<>();
+        return list;
     }
 
     public static boolean isAllNull(Object... array) {
