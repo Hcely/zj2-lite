@@ -5,6 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zj2.lite.IBuilder;
 import org.zj2.lite.common.util.Concurrent;
+import org.zj2.lite.util.stream.DataArrayStream;
+import org.zj2.lite.util.stream.DataCollectionStream;
+import org.zj2.lite.util.stream.DataFixedStream;
+import org.zj2.lite.util.stream.DataOffsetReader;
+import org.zj2.lite.util.stream.DataPageReader;
+import org.zj2.lite.util.stream.DataStream;
 import org.zj2.lite.util.AsyncUtil;
 
 import java.util.Collection;
@@ -42,7 +48,7 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
         private Logger logger;
         private String taskName;
         private int workerCount;
-        private TaskStream<T> stream;
+        private DataStream<T> stream;
         private Consumer<T> consumer;
         private Executor executor;
         private TaskListener<T> taskListener;
@@ -71,27 +77,27 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
             return this;
         }
 
-        public Builder<T> stream(TaskStream<T> stream) {
+        public Builder<T> stream(DataStream<T> stream) {
             this.stream = stream;
             return this;
         }
 
         @SafeVarargs
         public final Builder<T> stream(T... array) {
-            return stream(new TaskArrayStream<>(array));
+            return stream(new DataArrayStream<>(array));
         }
 
         public Builder<T> stream(Collection<T> coll) {
-            return stream(new TaskCollectionStream<>(coll));
+            return stream(new DataCollectionStream<>(coll));
         }
 
-        public Builder<T> stream(TaskPageReader.PageQuery<T> query, int pageSize) {
-            return stream(new TaskPageReader<>(query, pageSize).stream());
+        public Builder<T> stream(DataPageReader.PageQuery<T> query, int pageSize) {
+            return stream(new DataPageReader<>(query, pageSize).stream());
         }
 
-        public <I extends Comparable> Builder<T> stream(Class<I> offsetType, TaskOffsetReader.OffsetQuery<I, T> query,
-                TaskOffsetReader.OffsetGetter<I, T> offsetGetter, int pageSize) {
-            return stream(new TaskOffsetReader<>(query, offsetGetter, pageSize).stream());
+        public <I extends Comparable> Builder<T> stream(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
+                DataOffsetReader.OffsetGetter<I, T> offsetGetter, int pageSize) {
+            return stream(new DataOffsetReader<>(query, offsetGetter, pageSize).stream());
         }
 
         public Builder<T> consumer(Consumer<T> consumer) {
@@ -131,7 +137,7 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
     private int taskSize;
     private int workerCount;
     private Executor executor;
-    private TaskStream<T> stream;
+    private DataStream<T> stream;
     private Consumer<T> consumer;
     private TaskListener<T> taskListener;
     //
@@ -165,10 +171,10 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
         this.executor = executor;
     }
 
-    protected void setStream(TaskStream<T> stream) {
+    protected void setStream(DataStream<T> stream) {
         this.stream = stream;
-        if (stream instanceof TaskFixedStream) {
-            taskSize = ((TaskFixedStream<T>) stream).size();
+        if (stream instanceof DataFixedStream) {
+            taskSize = ((DataFixedStream<T>) stream).size();
         } else {
             taskSize = -1;
         }
@@ -226,7 +232,7 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
         }
     }
 
-    private static <T> TaskStream<T> createConcurrentStream(TaskStream<T> stream) {
+    private static <T> DataStream<T> createConcurrentStream(DataStream<T> stream) {
         return stream instanceof Concurrent ? stream : new TaskStreamWrapper<>(stream);
     }
 
@@ -272,7 +278,7 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
         }
     }
 
-    protected TaskWorker[] createWorkers(TaskStream<T> stream, int workerCount) {
+    protected TaskWorker[] createWorkers(DataStream<T> stream, int workerCount) {
         TaskWorker[] result = new TaskWorker[workerCount];
         for (int i = 0; i < workerCount; ++i) {
             result[i] = createWorker(i, stream, consumer);
@@ -280,7 +286,7 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
         return result;
     }
 
-    protected TaskWorker createWorker(int workerIdx, TaskStream<T> stream, Consumer<T> consumer) {
+    protected TaskWorker createWorker(int workerIdx, DataStream<T> stream, Consumer<T> consumer) {
         return new TaskWorker(workerIdx, this, stream, consumer);
     }
 }

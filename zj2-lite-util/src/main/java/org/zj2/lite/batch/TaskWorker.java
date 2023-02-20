@@ -1,5 +1,6 @@
 package org.zj2.lite.batch;
 
+import org.zj2.lite.util.stream.DataStream;
 import org.zj2.lite.util.AsyncUtil;
 
 import java.util.function.Consumer;
@@ -14,12 +15,12 @@ import java.util.function.Consumer;
 class TaskWorker extends AsyncUtil.AsyncCommand {
     protected final int workerIdx;
     protected final BatchTask batchTask;
-    protected final TaskStream stream;
+    protected final DataStream stream;
     protected final Consumer consumer;
     protected int taskCount;
 
 
-    TaskWorker(int workerIdx, BatchTask batchTask, TaskStream stream, Consumer consumer) {
+    TaskWorker(int workerIdx, BatchTask batchTask, DataStream stream, Consumer consumer) {
         this.workerIdx = workerIdx;
         this.batchTask = batchTask;
         this.stream = stream;
@@ -41,7 +42,7 @@ class TaskWorker extends AsyncUtil.AsyncCommand {
 
     protected void executeTasks() {
         final BatchTask batchTask = this.batchTask;
-        final TaskStream stream = this.stream;
+        final DataStream stream = this.stream;
         final Consumer consumer = this.consumer;
         Object task;
         while ((task = stream.next()) != null) {

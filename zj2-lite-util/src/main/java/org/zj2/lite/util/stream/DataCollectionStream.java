@@ -1,5 +1,6 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
+import org.zj2.lite.Resettable;
 import org.zj2.lite.common.util.CollUtil;
 
 import java.util.Collection;
@@ -11,13 +12,13 @@ import java.util.Iterator;
  * @author peijie.ye
  * @date 2023/2/17 11:53
  */
-public class TaskCollectionStream<T> implements TaskFixedStream<T> {
-    private final Iterator<T> iterator;
-    private final int size;
+public class DataCollectionStream<T> implements DataFixedStream<T>, Resettable {
+    private final Collection<T> coll;
+    private Iterator<T> iterator;
 
-    public TaskCollectionStream(Collection<T> coll) {
+    public DataCollectionStream(Collection<T> coll) {
+        this.coll = coll;
         this.iterator = coll == null ? CollUtil.emptyIterator() : coll.iterator();
-        this.size = CollUtil.size(coll);
     }
 
     @Override
@@ -31,6 +32,11 @@ public class TaskCollectionStream<T> implements TaskFixedStream<T> {
 
     @Override
     public int size() {
-        return size;
+        return CollUtil.size(coll);
+    }
+
+    @Override
+    public void reset() {
+        this.iterator = coll == null ? CollUtil.emptyIterator() : coll.iterator();
     }
 }

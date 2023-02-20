@@ -1,4 +1,4 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
 import java.util.Collection;
 
@@ -8,12 +8,12 @@ import java.util.Collection;
  * @author peijie.ye
  * @date 2023/2/17 13:13
  */
-public interface TaskReader<T> {
+public interface DataReader<T> {
     Collection<T> read();
 
     boolean hasMore();
 
-    default TaskStream<T> stream() {
-        return new TaskReaderStream<>(this);
+    default DataStream<T> stream() {
+        return new DataReaderStream<>(this);
     }
 }

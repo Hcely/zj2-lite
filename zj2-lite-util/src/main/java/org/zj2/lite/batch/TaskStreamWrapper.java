@@ -1,6 +1,7 @@
 package org.zj2.lite.batch;
 
 import org.zj2.lite.common.util.Concurrent;
+import org.zj2.lite.util.stream.DataStream;
 
 /**
  * TaskStreamWrrapper
@@ -8,10 +9,10 @@ import org.zj2.lite.common.util.Concurrent;
  * @author peijie.ye
  * @date 2023/2/17 16:24
  */
-class TaskStreamWrapper<T> implements TaskStream<T>, Concurrent {
-    private final TaskStream<T> stream;
+class TaskStreamWrapper<T> implements DataStream<T>, Concurrent {
+    private final DataStream<T> stream;
 
-    TaskStreamWrapper(TaskStream<T> stream) {
+    TaskStreamWrapper(DataStream<T> stream) {
         this.stream = stream;
     }
 

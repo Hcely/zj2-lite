@@ -28,7 +28,6 @@ public class NumUtil {
     public static final MathContext CEIL = new MathContext(0, RoundingMode.CEILING);
     public static final MathContext FLOOR = new MathContext(0, RoundingMode.FLOOR);
     public static final NumUtilPlus plus = new NumUtilPlus();
-    public static final NumMathPlus math = new NumMathPlus();
 
     public static BigDecimal add(Number num1, Number num2) {
         return add(num1, num2, null);
@@ -191,20 +190,22 @@ public class NumUtil {
         return bNum1.compareTo(bNum2) > 0 ? bNum1 : bNum2;
     }
 
-    public static BigDecimal max(Number... nums) {
-        if (nums == null || nums.length == 0) { return null; }
-        BigDecimal result = null;
-        for (Number e : nums) {
-            if (e != null) { result = result == null ? of(e, false) : max(result, e); }
+    public static BigDecimal max(Number num1, Number... nums) {
+        BigDecimal result = of(num1, false);
+        if (nums != null && nums.length > 0) {
+            for (Number e : nums) {
+                if (e != null) { result = result == null ? of(e, false) : max(result, e); }
+            }
         }
         return result;
     }
 
-    public static BigDecimal min(Number... nums) {
-        if (nums == null || nums.length == 0) { return null; }
-        BigDecimal result = null;
-        for (Number e : nums) {
-            if (e != null) { result = result == null ? of(e, false) : min(result, e); }
+    public static BigDecimal min(Number num1, Number... nums) {
+        BigDecimal result = of(num1, false);
+        if (nums != null && nums.length > 0) {
+            for (Number e : nums) {
+                if (e != null) { result = result == null ? of(e, false) : min(result, e); }
+            }
         }
         return result;
     }
@@ -385,7 +386,7 @@ public class NumUtil {
 
         public BigDecimal subNoNegate(Number num1, Number num2, MathContext context) {
             BigDecimal value = sub(num1, num2, context);
-            return max(value, BigDecimal.ZERO);
+            return NumUtil.max(value, BigDecimal.ZERO);
         }
 
         public BigDecimal percent(Number num, Number total) {
@@ -405,9 +406,7 @@ public class NumUtil {
             BigDecimal dPercent = of(percent);
             return eqZero(dPercent) ? BigDecimal.ZERO : multi(num, NumUtil.divide(dPercent, 100), context);
         }
-    }
 
-    public static class NumMathPlus {
         public int max(int num1, int num2) {
             //noinspection ManualMinMaxCalculation
             return num1 > num2 ? num1 : num2;
@@ -439,6 +438,24 @@ public class NumUtil {
         public int between(int num, int min, int max) {
             //noinspection ManualMinMaxCalculation
             return num < min ? min : (num > max ? max : num);//NOSONAR
+        }
+
+        public int floorLog2(int i) {
+            return i < 1 ? 0 : (31 - Integer.numberOfLeadingZeros(i));
+        }
+
+        public int ceilLog2(int i) {
+            return i < 1 ? 0 : (32 - Integer.numberOfLeadingZeros(i - 1));
+        }
+
+        public int ceilPower2(int i) {
+            return 1 << ceilLog2(i);
+        }
+
+        public int ceilMultipleOf(int i, int multiple) {
+            if (i < multiple) { return multiple; }
+            int value = (i / multiple) * multiple;
+            return value < i ? (value + multiple) : value;
         }
     }
 }

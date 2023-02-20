@@ -1,4 +1,4 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
 /**
  * TaskFixedStream
@@ -6,6 +6,6 @@ package org.zj2.lite.batch;
  * @author peijie.ye
  * @date 2023/2/17 16:43
  */
-public interface TaskFixedStream<T> extends TaskStream<T> {
+public interface DataFixedStream<T> extends DataStream<T> {
     int size();
 }

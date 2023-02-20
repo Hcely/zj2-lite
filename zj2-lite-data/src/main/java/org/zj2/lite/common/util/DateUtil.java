@@ -14,8 +14,10 @@ import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 /**
  * <br>CreateDate 六月 16,2022
@@ -23,7 +25,6 @@ import java.util.TimeZone;
  * @author peijie.ye
  */
 public class DateUtil {
-
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_TIME_FORMATTER0 = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -38,6 +39,15 @@ public class DateUtil {
             FAST_DATE_TIME_0_FORMATTER, FAST_JSON_FORMATTER, FAST_MONTH_FORMATTER};
     // 无效值
     public static final LocalDateTime $INVALID = LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0);
+
+    public static <T> Comparator<T> comparing(Function<T, LocalDateTime> dateGetter) {
+        return (o1, o2) -> {
+            if (o1 == o2) { return 0; }
+            if (o1 == null) { return -1; }
+            if (o2 == null) { return 1; }
+            return compare(dateGetter.apply(o1), dateGetter.apply(o2));
+        };
+    }
 
     public static boolean isValid(Date date) {
         return date != null && date.getTime() != 0;

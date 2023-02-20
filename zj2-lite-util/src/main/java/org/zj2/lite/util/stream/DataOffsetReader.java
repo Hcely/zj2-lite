@@ -1,4 +1,4 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
 import org.zj2.lite.common.util.CollUtil;
 
@@ -11,16 +11,16 @@ import java.util.Collection;
  * @date 2023/2/17 15:28
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class TaskOffsetReader<I extends Comparable, T> extends TaskAbstarctReader<T> {
+public class DataOffsetReader<I extends Comparable, T> extends DataAbstarctReader<T> {
     private final OffsetQuery<I, T> query;
     private final OffsetGetter<I, T> offsetGetter;
     private I offset;
 
-    public TaskOffsetReader(OffsetQuery<I, T> query, OffsetGetter<I, T> offsetGetter, int pageSize) {
+    public DataOffsetReader(OffsetQuery<I, T> query, OffsetGetter<I, T> offsetGetter, int pageSize) {
         this(query, offsetGetter, null, pageSize);
     }
 
-    public TaskOffsetReader(OffsetQuery<I, T> query, OffsetGetter<I, T> offsetGetter, I offset, int pageSize) {
+    public DataOffsetReader(OffsetQuery<I, T> query, OffsetGetter<I, T> offsetGetter, I offset, int pageSize) {
         super(pageSize);
         this.query = query;
         this.offsetGetter = offsetGetter;

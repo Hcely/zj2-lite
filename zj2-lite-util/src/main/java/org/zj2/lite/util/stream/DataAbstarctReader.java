@@ -1,4 +1,4 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
 import org.zj2.lite.common.util.CollUtil;
 
@@ -10,11 +10,11 @@ import java.util.Collection;
  * @author peijie.ye
  * @date 2023/2/17 15:31
  */
-public abstract class TaskAbstarctReader<T> implements TaskReader<T> {
+public abstract class DataAbstarctReader<T> implements DataReader<T> {
     private boolean hasMore;
     private final int pageSize;
 
-    public TaskAbstarctReader(int pageSize) {
+    public DataAbstarctReader(int pageSize) {
         this.pageSize = pageSize;
         this.hasMore = true;
     }

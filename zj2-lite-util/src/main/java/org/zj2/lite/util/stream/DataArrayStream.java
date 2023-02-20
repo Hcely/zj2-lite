@@ -1,6 +1,7 @@
-package org.zj2.lite.batch;
+package org.zj2.lite.util.stream;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.zj2.lite.Resettable;
 
 /**
  * TaskArray
@@ -8,11 +9,11 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author peijie.ye
  * @date 2023/2/17 11:57
  */
-public class TaskArrayStream<T> implements TaskFixedStream<T> {
+public class DataArrayStream<T> implements DataFixedStream<T>, Resettable {
     private final Object[] array;
     private int idx = 0;
 
-    public TaskArrayStream(Object[] array) {
+    public DataArrayStream(Object[] array) {
         this.array = array == null ? ArrayUtils.EMPTY_OBJECT_ARRAY : array;
     }
 
@@ -30,5 +31,10 @@ public class TaskArrayStream<T> implements TaskFixedStream<T> {
     @Override
     public int size() {
         return array.length;
+    }
+
+    @Override
+    public void reset() {
+        idx = 0;
     }
 }

@@ -1,6 +1,4 @@
-package org.zj2.lite.batch;
-
-import org.zj2.lite.common.util.CollUtil;
+package org.zj2.lite.util.stream;
 
 import java.util.Collection;
 
@@ -10,15 +8,15 @@ import java.util.Collection;
  * @author peijie.ye
  * @date 2023/2/17 15:16
  */
-public class TaskPageReader<T> extends TaskAbstarctReader<T> {
+public class DataPageReader<T> extends DataAbstarctReader<T> {
     private int pageNumber;
     private final PageQuery<T> query;
 
-    public TaskPageReader(PageQuery<T> query, int pageSize) {
+    public DataPageReader(PageQuery<T> query, int pageSize) {
         this(query, 1, pageSize);
     }
 
-    public TaskPageReader(PageQuery<T> query, int pageNumber, int pageSize) {
+    public DataPageReader(PageQuery<T> query, int pageNumber, int pageSize) {
         super(pageSize);
         this.pageNumber = pageNumber;
         this.query = query;

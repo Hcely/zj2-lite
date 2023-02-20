@@ -8,6 +8,7 @@ import org.zj2.lite.common.function.IntBeanConsumer;
 import org.zj2.lite.common.function.LongBeanConsumer;
 import org.zj2.lite.common.util.BeanUtil;
 import org.zj2.lite.common.util.Concurrent;
+import org.zj2.lite.common.util.NumUtil;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -66,7 +67,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
 
     public RingArrayStream(int stepCount, int capacity, Supplier<T> enumCreator) {
         assert stepCount < Byte.MAX_VALUE;
-        capacity = normalizeCapacity(capacity);
+        capacity = NumUtil.plus.ceilPower2(capacity < 16 ? 16 : capacity);
         this.capacity = capacity;
         this.mask = capacity - 1;
         this.produceStep = new StateStep(0, capacity, stepCount);

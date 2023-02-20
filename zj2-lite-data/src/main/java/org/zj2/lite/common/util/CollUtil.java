@@ -1,7 +1,6 @@
 package org.zj2.lite.common.util;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.function.ByteConsumer;
 import org.zj2.lite.common.function.IdxKeyValueConsumer;
 import org.zj2.lite.common.function.IntBeanConsumer;

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.zj2.lite.common.context.ZContexts;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.NumUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -42,10 +42,20 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     private static final int MAX_CORE = 1 << 6;
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncUtil.class);
     private static final ThreadTaskExecutor EXECUTOR;
+    private static final ThreadPoolExecutor[] WORKERS;
+    private static final int MASK;
 
     static {
         int coreNum = Runtime.getRuntime().availableProcessors() << 2;
-        EXECUTOR = createExecutor(Math.max(coreNum, MAX_CORE));
+        coreNum = Math.max(NumUtil.plus.ceilPower2(coreNum < 8 ? 8 : coreNum), MAX_CORE);
+        EXECUTOR = createExecutor(coreNum);
+        WORKERS = new ThreadPoolExecutor[coreNum];
+        MASK = coreNum - 1;
+        AsyncThreadFactory threadFactory = new AsyncThreadFactory();
+        for (int i = 0; i < coreNum; ++i) {
+            WORKERS[i] = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
+                    threadFactory);
+        }
     }
 
     public static ThreadTaskExecutor createExecutor(int coreNum) {
@@ -60,6 +70,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     @Override
     public void destroy() {
         EXECUTOR.shutdown();
+        for (ThreadPoolExecutor e : WORKERS) { e.shutdown(); }
     }
 
     public static boolean isAsyncThread() {
@@ -80,7 +91,13 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     }
 
     public static void execute(final Object key, final Runnable command) {
-        if (command != null) { EXECUTOR.execute(key, command); }
+        if (command != null) {
+            if (key == null) {
+                EXECUTOR.execute(command);
+            } else {
+                WORKERS[key.hashCode() & MASK].execute(of(command));
+            }
+        }
     }
 
     /**
@@ -100,7 +117,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     public static void executeAfterCommit(final Object key, final Runnable command) {
         if (command == null) { return; }
         if (TransactionSyncUtil.isTransactionActive()) {
-            TransactionSyncUtil.afterCommit(of(command), cmd -> execute(key, command));
+            TransactionSyncUtil.afterCommit(of(command), cmd -> execute(key, cmd));
         } else {
             execute(command);
         }
@@ -192,19 +209,11 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     public static class ThreadTaskExecutor implements AsyncTaskExecutor {
         private final ThreadPoolExecutor commonExecutor;
-        private final ThreadPoolExecutor[] workers;
-        private final int mask;
 
         public ThreadTaskExecutor(int coreSize) {
-            coreSize = 32 - Integer.numberOfLeadingZeros(coreSize - 1);
-            this.workers = new ThreadPoolExecutor[coreSize];
-            this.mask = coreSize - 1;
+            coreSize = NumUtil.plus.ceilPower2(coreSize < 8 ? 8 : coreSize);
             //
             AsyncThreadFactory threadFactory = new AsyncThreadFactory();
-            for (int i = 0; i < coreSize; ++i) {
-                workers[i] = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
-                        threadFactory);
-            }
             this.commonExecutor = new ThreadPoolExecutor(coreSize, coreSize << 2, 60_000, TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<>(10000_0000), threadFactory);
         }
@@ -233,16 +242,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
             commonExecutor.execute(of(command));
         }
 
-        public void execute(Object key, Runnable command) {
-            if (key == null) {
-                execute(command);
-            } else {
-                workers[key.hashCode() & mask].execute(of(command));
-            }
-        }
-
         public void shutdown() {
-            for (ThreadPoolExecutor e : workers) { e.shutdown(); }
             commonExecutor.shutdown();
         }
     }
