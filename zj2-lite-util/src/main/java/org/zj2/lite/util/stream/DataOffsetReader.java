@@ -33,7 +33,7 @@ public class DataOffsetReader<I extends Comparable, T> extends DataAbstarctReade
         for (T data : CollUtil.of(coll)) {
             if (data != null) {
                 I newOffset = offsetGetter.get(data);
-                if (isLessThen(offset, newOffset)) {
+                if (lt(offset, newOffset)) {
                     offset = newOffset;
                 }
             }
@@ -41,12 +41,15 @@ public class DataOffsetReader<I extends Comparable, T> extends DataAbstarctReade
         return coll;
     }
 
-
-    protected boolean isLessThen(I offset, I newOffset) {
+    private boolean lt(I offset, I newOffset) {
         if (offset == null) { return true; }
         if (newOffset == null) { return false; }
         if (offset == newOffset) { return false; }
-        return offset.compareTo(newOffset) < 0;
+        return compare(offset, newOffset) < 0;
+    }
+
+    protected int compare(I offset, I newOffset) {
+        return offset.compareTo(newOffset);
     }
 
     public interface OffsetQuery<I extends Comparable, T> {

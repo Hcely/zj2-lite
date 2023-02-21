@@ -12,6 +12,7 @@ import org.zj2.lite.util.stream.DataOffsetReader;
 import org.zj2.lite.util.stream.DataPageReader;
 import org.zj2.lite.util.stream.DataStream;
 import org.zj2.lite.util.AsyncUtil;
+import org.zj2.lite.util.stream.DataStreams;
 
 import java.util.Collection;
 import java.util.concurrent.Executor;
@@ -91,13 +92,22 @@ public class BatchTask<T> extends AsyncUtil.AsyncCommand {
             return stream(new DataCollectionStream<>(coll));
         }
 
+        public Builder<T> stream(DataPageReader.PageQuery<T> query) {
+            return stream(DataStreams.of(query));
+        }
+
         public Builder<T> stream(DataPageReader.PageQuery<T> query, int pageSize) {
-            return stream(new DataPageReader<>(query, pageSize).stream());
+            return stream(DataStreams.of(query, pageSize));
+        }
+
+        public <I extends Comparable> Builder<T> stream(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
+                DataOffsetReader.OffsetGetter<I, T> offsetGetter) {
+            return stream(DataStreams.of(offsetType, query, offsetGetter));
         }
 
         public <I extends Comparable> Builder<T> stream(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
                 DataOffsetReader.OffsetGetter<I, T> offsetGetter, int pageSize) {
-            return stream(new DataOffsetReader<>(query, offsetGetter, pageSize).stream());
+            return stream(DataStreams.of(offsetType, query, offsetGetter, pageSize));
         }
 
         public Builder<T> consumer(Consumer<T> consumer) {

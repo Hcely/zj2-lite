@@ -18,7 +18,11 @@ public class DataCollectionStream<T> implements DataFixedStream<T>, Resettable {
 
     public DataCollectionStream(Collection<T> coll) {
         this.coll = coll;
-        this.iterator = coll == null ? CollUtil.emptyIterator() : coll.iterator();
+        reset();
+    }
+
+    public Collection<T> getColl() {
+        return coll;
     }
 
     @Override
