@@ -1,13 +1,8 @@
 package org.zj2.lite.util.stream;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.zj2.lite.util.AbstractDump;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 /**
  * SortDataStream
@@ -15,7 +10,7 @@ import java.util.Random;
  * @author peijie.ye
  * @date 2023/2/20 12:47
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked", "EqualsWhichDoesntCheckParameterClass"})
 public class SortCombineDataStream<T extends Comparable> extends AbstractDump<SortCombineDataStream.Node>
         implements DataStream<T> {
 
@@ -88,7 +83,6 @@ public class SortCombineDataStream<T extends Comparable> extends AbstractDump<So
             return h == nh ? 0 : h.compareTo(nh);
         }
 
-        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         @Override
         public boolean equals(Object o) {//NOSONAR
             return o == this || stream == o;

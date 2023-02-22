@@ -1,4 +1,6 @@
-package org.zj2.common.wx.access;
+package org.zj2.common.wx.app;
+
+import java.util.List;
 
 /**
  * WXAppProvider
@@ -7,4 +9,5 @@ package org.zj2.common.wx.access;
  * @date 2023/2/19 21:18
  */
 public interface WXAppProvider {
+    List<WXApp> get();
 }

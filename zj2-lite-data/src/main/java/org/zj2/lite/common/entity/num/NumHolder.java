@@ -1,8 +1,6 @@
 package org.zj2.lite.common.entity.num;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.zj2.lite.common.util.NumUtil;
 
 import java.math.BigDecimal;
@@ -11,12 +9,10 @@ import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
 /**
- *
  * <br>CreateDate 七月 19,2022
+ *
  * @author peijie.ye
  */
-@Getter
-@Setter
 @NoArgsConstructor
 public class NumHolder extends Number {
     private static final long serialVersionUID = 20220719163940L;
@@ -34,42 +30,59 @@ public class NumHolder extends Number {
         this.value = value == null ? BigDecimal.ZERO : value;
     }
 
-    public NumHolder add(Number value) {
-        return add(value, null);
+    public NumHolder setValue(Number value) {
+        return setValue(value, null);
     }
 
-    public NumHolder add(Number value, MathContext context) {
-        if (value != null) {
-            if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
-            this.value = NumUtil.add(this.value, value, context);
+    public NumHolder setValue(Number value, MathContext context) {
+        this.value = NumUtil.of(value, context);
+        return this;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public BigDecimal getValue(MathContext context) {
+        return NumUtil.of(value, context);
+    }
+
+    public NumHolder add(Number v) {
+        return add(v, null);
+    }
+
+    public NumHolder add(Number v, MathContext context) {
+        if (v != null) {
+            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+            this.value = NumUtil.add(this.value, v, context);
         }
         return this;
     }
 
-    public NumHolder sub(Number value) {
-        return sub(value, null);
+    public NumHolder sub(Number v) {
+        return sub(v, null);
     }
 
-    public NumHolder sub(Number value, MathContext context) {
-        if (value != null) {
-            if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
-            this.value = NumUtil.sub(this.value, value, context);
+    public NumHolder sub(Number v, MathContext context) {
+        if (v != null) {
+            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+            this.value = NumUtil.sub(this.value, v, context);
         }
         return this;
     }
 
-    public NumHolder multi(Number value) {
-        return multi(value, null);
+    public NumHolder multi(Number v) {
+        return multi(v, null);
     }
 
-    public NumHolder multi(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
-        this.value = NumUtil.multi(this.value, value, context);
+    public NumHolder multi(Number v, MathContext context) {
+        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        this.value = NumUtil.multi(this.value, v, context);
         return this;
     }
 
-    public NumHolder divide(Number value) {
-        return divide(value, null);
+    public NumHolder divide(Number v) {
+        return divide(v, null);
     }
 
     public NumHolder divide(Number value, MathContext context) {
@@ -88,13 +101,13 @@ public class NumHolder extends Number {
         return this;
     }
 
-    public NumHolder operate(Number value, BiFunction<BigDecimal, Number, BigDecimal> operator) {
-        return operate(value, operator, null);
+    public NumHolder operate(Number v, BiFunction<BigDecimal, Number, BigDecimal> operator) {
+        return operate(v, operator, null);
     }
 
-    public NumHolder operate(Number value, BiFunction<BigDecimal, Number, BigDecimal> operator, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
-        this.value = operator.apply(this.value, value);
+    public NumHolder operate(Number v, BiFunction<BigDecimal, Number, BigDecimal> operator, MathContext context) {
+        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        this.value = operator.apply(this.value, v);
         if (context != null) { this.value = NumUtil.of(this.value, context); }
         return this;
     }
@@ -104,13 +117,6 @@ public class NumHolder extends Number {
         return this;
     }
 
-    public BigDecimal numValue() {
-        return value;
-    }
-
-    public BigDecimal numValue(MathContext context) {
-        return NumUtil.of(value, context);
-    }
 
     @Override
     public int intValue() {

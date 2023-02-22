@@ -1,4 +1,4 @@
-package org.zj2.common.wx.access;
+package org.zj2.common.wx.app;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

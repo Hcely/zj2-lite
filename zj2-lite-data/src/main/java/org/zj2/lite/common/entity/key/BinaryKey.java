@@ -1,4 +1,4 @@
-package org.zj2.lite.common.entity;
+package org.zj2.lite.common.entity.key;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -9,18 +9,18 @@ import java.util.Arrays;
  * @author peijie.ye
  * @date 2023/2/7 12:07
  */
-public class ByteKey implements Serializable, Comparable<ByteKey> {
+public class BinaryKey implements Serializable, Comparable<BinaryKey> {
     private static final long serialVersionUID = -8982811006868337951L;
     private int writeOff;
     private final byte[] keys;
     private transient int hashcode;
 
-    public ByteKey(int size) {
+    public BinaryKey(int size) {
         this.keys = new byte[size];
         this.hashcode = 0;
     }
 
-    public ByteKey write(int b) {
+    public BinaryKey write(int b) {
         if (writeOff < keys.length) {
             keys[writeOff] = (byte) b;
             ++writeOff;
@@ -28,7 +28,7 @@ public class ByteKey implements Serializable, Comparable<ByteKey> {
         return this;
     }
 
-    public ByteKey append(int v) {
+    public BinaryKey append(int v) {
         write(0xFF & (v >>> 24));
         write(0xFF & (v >>> 16));
         write(0xFF & (v >>> 8));
@@ -36,7 +36,7 @@ public class ByteKey implements Serializable, Comparable<ByteKey> {
         return this;
     }
 
-    public ByteKey append(long v) {
+    public BinaryKey append(long v) {
         write((int) (0xFF & (v >>> 56)));
         write((int) (0xFF & (v >>> 48)));
         write((int) (0xFF & (v >>> 40)));
@@ -48,7 +48,7 @@ public class ByteKey implements Serializable, Comparable<ByteKey> {
         return this;
     }
 
-    public ByteKey flush() {
+    public BinaryKey flush() {
         writeOff = keys.length;
         hashcode = Arrays.hashCode(keys);
         return this;
@@ -60,7 +60,7 @@ public class ByteKey implements Serializable, Comparable<ByteKey> {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        ByteKey byteKey = (ByteKey) o;
+        BinaryKey byteKey = (BinaryKey) o;
         return Arrays.equals(keys, byteKey.keys);
     }
 
@@ -76,7 +76,7 @@ public class ByteKey implements Serializable, Comparable<ByteKey> {
     }
 
     @Override
-    public int compareTo(ByteKey o) {
+    public int compareTo(BinaryKey o) {
         return Arrays.compare(keys, o.keys);
     }
 }

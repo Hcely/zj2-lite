@@ -5,7 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.zj2.lite.common.constant.ZJ2Constants;
-import org.zj2.lite.common.entity.ByteKey;
+import org.zj2.lite.common.entity.key.BinaryKey;
 import org.zj2.lite.common.entity.Ternary;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.ReflectUtil;
@@ -30,7 +30,7 @@ import java.util.function.Function;
  */
 public class UriResourceManager {
     private static final TokenType[] DEFAULT_TOKEN_TYPE = {TokenType.JWT};
-    private static final Map<ByteKey, UriResource> resourceMap = new HashMap<>(512);
+    private static final Map<BinaryKey, UriResource> resourceMap = new HashMap<>(512);
     //    private static final Map<String, UriResource> resourceKeyNameMap = new HashMap<>(512);
 
     private static class UriResource0 extends UriResource {
@@ -115,7 +115,7 @@ public class UriResourceManager {
     }
 
     private static UriResource get(Class<?> clazz, Method method, String methodName, Class<?>[] paramTypes) {
-        ByteKey key = getMethodKey(clazz, methodName, paramTypes);
+        BinaryKey key = getMethodKey(clazz, methodName, paramTypes);
         UriResource resource = resourceMap.get(key);
         if (resource == null) {
             synchronized (resourceMap) {
@@ -231,8 +231,8 @@ public class UriResourceManager {
         return "";
     }
 
-    private static ByteKey getMethodKey(Class<?> clazz, String methodName, Class<?>[] paramsTypes) {
-        ByteKey key = new ByteKey(16);
+    private static BinaryKey getMethodKey(Class<?> clazz, String methodName, Class<?>[] paramsTypes) {
+        BinaryKey key = new BinaryKey(16);
         key.append(clazz.hashCode()).append(methodName.hashCode());
         if (paramsTypes != null && paramsTypes.length > 0) {
             key.append(getParamHash(paramsTypes));

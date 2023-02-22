@@ -20,7 +20,6 @@ public interface NoneConstants {
     String[] EMPTY_STRINGS = ArrayUtils.EMPTY_STRING_ARRAY;//NOSONAR
     Object[] EMPTY_OBJECTS = ArrayUtils.EMPTY_OBJECT_ARRAY;//NOSONAR
 
-
     final class NoneNumber extends BigDecimal {
         private static final long serialVersionUID = -6427710248936140416L;
 
