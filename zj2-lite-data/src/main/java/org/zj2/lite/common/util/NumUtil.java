@@ -273,12 +273,12 @@ public class NumUtil {
         if (num == null) { return ""; }
         String numStr = toStr(num, context);
         int len = numStr.length();
-        int idx = numStr.indexOf('.');
+        int idx = numStr.indexOf('.' );
         if (idx == -1) { idx = len; }
         int i = 0;
         StringBuilder sb = new StringBuilder(len + StringUtils.length(unit) + 8);
         for (int l = idx % 3; i < idx; l = 3) {
-            if (l == 3 && sb.length() > 0) { sb.append(','); }
+            if (l == 3 && sb.length() > 0) { sb.append(',' ); }
             for (int n = 0; n < l && i < idx; ++i, ++n) { sb.append(numStr.charAt(i)); }
         }
         for (; i < len; ++i) { sb.append(numStr.charAt(i)); }
@@ -450,6 +450,24 @@ public class NumUtil {
 
         public int ceilPower2(int i) {
             return 1 << ceilLog2(i);
+        }
+
+        public int ceilPower4(int i) {
+            int shift = ceilLog2(i);
+            if (shift == 0) { return 1; }
+            return 1 << ceilMultipleOf(shift, 2);
+        }
+
+        public int ceilPower8(int i) {
+            int shift = ceilLog2(i);
+            if (shift == 0) { return 1; }
+            return 1 << ceilMultipleOf(shift, 3);
+        }
+
+        public int ceilPower16(int i) {
+            int shift = ceilLog2(i);
+            if (shift == 0) { return 1; }
+            return 1 << ceilMultipleOf(shift, 4);
         }
 
         public int ceilMultipleOf(int i, int multiple) {

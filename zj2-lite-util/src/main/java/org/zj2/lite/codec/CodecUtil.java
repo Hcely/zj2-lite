@@ -31,17 +31,18 @@ public class CodecUtil {
             return dataLength < ((BUFFER_SIZE - 32) * 3 / 4);
         }
 
-        public StringBuilder fastEncrypt64(Crypto crypto, StringBuilder sb, byte[] valueData) {
+        StringBuilder fastEncrypt64(Crypto crypto, StringBuilder sb, byte[] valueData) {
             // 快速模式，使用缓存，减少对象新建
             CodecUtil.CacheBuffer buffer = getBuffer();
             // 加密
             ByteArrayBuf buf = buffer.buf1.reset();
-            crypto.encrypt(valueData, buf);
+            int written = crypto.encrypt(valueData, 0, valueData.length, buf.buffer(), 0);
+            buf.addWritePos(written);
             // 64编码
-            return Base64Util.ENCODER.encode(sb, buf.buffer(), 0, buf.writePos());
+            return Base64Util.ENCODER.encode(sb, buf.buffer(), 0, written);
         }
 
-        public String fastDecrypt64(Crypto crypto, CharSequence base64Value, int offset, int length) {
+        String fastDecrypt64(Crypto crypto, CharSequence base64Value, int offset, int length) {
             // 快速模式，使用缓存，减少对象新建
             CodecUtil.CacheBuffer buffer = getBuffer();
             // 64解码
@@ -50,8 +51,9 @@ public class CodecUtil {
             buf1.addWritePos(wrote);
             // 解密
             ByteArrayBuf buf2 = buffer.buf2.reset();
-            crypto.decrypt(buf1, buf2);
-            return new String(buf2.buffer(), 0, buf2.writePos(), StandardCharsets.UTF_8);
+            int written = crypto.decrypt(buf1.buffer(), 0, buf1.writePos(), buf2.buffer(), 0);
+            buf2.addWritePos(written);
+            return new String(buf2.buffer(), 0, written, StandardCharsets.UTF_8);
         }
     }
 

@@ -1,81 +1,70 @@
 package org.zj2.lite.codec;
 
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.zj2.lite.common.util.CollUtil;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
- *  CipherCrypto
+ * AbstractCrypto
  *
  * @author peijie.ye
- * @date 2022/11/23 23:37
+ * @date 2023/2/23 23:56
  */
-public class AesCrypto implements Crypto {
-    private final Cipher encrypt;
-    private final Cipher decrypt;
-
-    public AesCrypto() {
-        this(null, null);
+public abstract class AesCrypto implements Crypto {
+    public static AesCrypto of128(AesMode aesMode) {
+        return of128(aesMode, null);
     }
 
-    public AesCrypto(AesMode mode) {
-        this(mode, null);
+    public static AesCrypto of128(AesMode aesMode, CryptPadding padding) {
+        return new Aes128Crypto(aesMode, padding);
     }
 
-    @SneakyThrows
-    public AesCrypto(AesMode mode, CryptPadding padding) {
-        //noinspection StringBufferReplaceableByString
-        String transformation = new StringBuilder(32).append("AES/").append(mode == null ? AesMode.CBC : mode)
-                .append('/').append(padding == null ? CryptPadding.PKCS5Padding : padding).toString();
-        //
-        encrypt = Cipher.getInstance(transformation);
-        decrypt = Cipher.getInstance(transformation);
+    public static AesCrypto of256(AesMode aesMode) {
+        return of256(aesMode, null);
+    }
+
+    public static AesCrypto of256(AesMode aesMode, CryptPadding padding) {
+        return new Aes256Crypto(aesMode, padding);
+    }
+
+    protected final int keyLen;
+    protected final AesMode aesMode;
+    protected final CryptPadding padding;
+
+    protected AesCrypto(int keyLen, AesMode aesMode, CryptPadding padding) {
+        this.keyLen = keyLen;
+        this.aesMode = aesMode == null ? AesMode.CBC : aesMode;
+        this.padding = padding == null ? CryptPadding.PKCSPadding : padding;
     }
 
     public AesCrypto init(String secret) {
         return init(secret, null);
     }
 
-    @SneakyThrows
     public AesCrypto init(String secret, String iv) {
-        byte[] secretBytes = CodecUtil.getKeyByte16(secret);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretBytes, "AES");
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(
-                StringUtils.isEmpty(iv) ? secretBytes : CodecUtil.getKeyByte16(iv));
-        encrypt.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-        decrypt.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+        byte[] secretBytes = StringUtils.isEmpty(secret) ? null : secret.getBytes(StandardCharsets.ISO_8859_1);
+        byte[] ivBytes = StringUtils.isEmpty(iv) ? null : iv.getBytes(StandardCharsets.ISO_8859_1);
+        return init(secretBytes, ivBytes);
+    }
+
+    public AesCrypto init(byte[] secret) {
+        return init(secret, null);
+    }
+
+    public AesCrypto init(byte[] secret, byte[] iv) {
+        secret = normalizeParams(secret, keyLen);
+        iv = normalizeParams(iv, 16);
+        init0(secret, iv);
         return this;
     }
 
-    @SneakyThrows
-    @Override
-    public void encrypt(byte[] src, ByteArrayBuf dst) {
-        int wroteLen = encrypt.doFinal(src, 0, src.length, dst.buffer(), dst.writePos());
-        dst.addWritePos(wroteLen);
-    }
+    protected abstract void init0(byte[] secret, byte[] iv);
 
-    @SneakyThrows
-    @Override
-    public void decrypt(ByteArrayBuf src, ByteArrayBuf dst) {
-        int wroteLen = decrypt.doFinal(src.buffer(), 0, src.writePos(), dst.buffer(), dst.writePos());
-        dst.addWritePos(wroteLen);
-    }
-
-    @SneakyThrows
-    @Override
-    public byte[] encrypt(byte[] value, int offset, int length) {
-        if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
-        return encrypt.doFinal(value, offset, length);
-    }
-
-    @SneakyThrows
-    @Override
-    public byte[] decrypt(byte[] value, int offset, int length) {
-        if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
-        return decrypt.doFinal(value, offset, length);
+    static byte[] normalizeParams(byte[] key, int keyLen) {
+        int len = CollUtil.size(key);
+        if (len == 0) { return new byte[keyLen]; }
+        return len == keyLen ? key : Arrays.copyOf(key, keyLen);
     }
 }

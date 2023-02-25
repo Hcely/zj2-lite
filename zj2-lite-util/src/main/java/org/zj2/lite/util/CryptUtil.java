@@ -2,7 +2,7 @@ package org.zj2.lite.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.zj2.lite.codec.AesCrypto;
+import org.zj2.lite.codec.Aes128Crypto;
 import org.zj2.lite.common.function.PropGetter;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
@@ -143,7 +143,7 @@ public class CryptUtil {
         private final int version;
         private final String versionPrefix;
         private final String secretKey;
-        private final AesCrypto[] cryptos;
+        private final Aes128Crypto[] cryptos;
 
         private static int getKeyFlag(String secretKey) {
             return secretKey.hashCode() & 1023;
@@ -157,9 +157,9 @@ public class CryptUtil {
             this.secretKey = secretKey;
             this.version = version;
             this.versionPrefix = StringUtils.upperCase(PREFIX + Integer.toString(version, 36) + ">:");
-            this.cryptos = new AesCrypto[CRYPTO_SIZE];
+            this.cryptos = new Aes128Crypto[CRYPTO_SIZE];
             for (int i = 0; i < CRYPTO_SIZE; ++i) {
-                cryptos[i] = new AesCrypto();
+                cryptos[i] = new Aes128Crypto();
                 cryptos[i].init(secretKey);
             }
         }
@@ -176,7 +176,7 @@ public class CryptUtil {
 
         @Override
         public String encrypt(String value) {
-            final AesCrypto crypto = getCrypto();
+            final Aes128Crypto crypto = getCrypto();
             StringBuilder sb = new StringBuilder(128);
             sb.append(versionPrefix);
             //noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -190,7 +190,7 @@ public class CryptUtil {
         }
 
         public String decrypt(String value) {
-            final AesCrypto crypto = getCrypto();
+            final Aes128Crypto crypto = getCrypto();
             //noinspection SynchronizationOnLocalVariableOrMethodParameter
             synchronized (crypto) {
                 try {
@@ -201,7 +201,7 @@ public class CryptUtil {
             }
         }
 
-        private AesCrypto getCrypto() {
+        private Aes128Crypto getCrypto() {
             return cryptos[(int) (Thread.currentThread().getId() & (CRYPTO_SIZE - 1))];
         }
 

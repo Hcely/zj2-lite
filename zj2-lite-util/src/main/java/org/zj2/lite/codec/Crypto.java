@@ -20,7 +20,7 @@ public interface Crypto {
             // 快速模式
             return plus.fastEncrypt64(this, null, valueData).toString();
         } else {
-            return Base64Util.ENCODER.encode(encrypt(valueData));
+            return Base64Util.ENCODER.encode(encrypt(valueData, 0, valueData.length));
         }
     }
 
@@ -31,7 +31,7 @@ public interface Crypto {
             // 快速模式
             return plus.fastEncrypt64(this, sb, valueData);
         } else {
-            return Base64Util.ENCODER.encode(sb, encrypt(valueData));
+            return Base64Util.ENCODER.encode(sb, encrypt(valueData, 0, valueData.length));
         }
     }
 
@@ -46,23 +46,15 @@ public interface Crypto {
             return plus.fastDecrypt64(this, base64Value, offset, length);
         } else {
             byte[] base64Data = Base64Util.DECODER.decode(base64Value, offset, length);
-            return new String(decrypt(base64Data), StandardCharsets.UTF_8);
+            return new String(decrypt(base64Data, 0, base64Data.length), StandardCharsets.UTF_8);
         }
     }
 
-    void encrypt(byte[] src, ByteArrayBuf dst);
+    int encrypt(byte[] src, int srcOff, int srcLen, byte[] dst, int dstOff);
 
-    void decrypt(ByteArrayBuf src, ByteArrayBuf dst);
+    int decrypt(byte[] src, int srcOff, int srcLen, byte[] dst, int dstOff);
 
     byte[] encrypt(byte[] value, int offset, int length);
 
     byte[] decrypt(byte[] value, int offset, int length);
-
-    default byte[] encrypt(byte[] value) {
-        return encrypt(value, 0, value == null ? 0 : value.length);
-    }
-
-    default byte[] decrypt(byte[] value) {
-        return decrypt(value, 0, value == null ? 0 : value.length);
-    }
 }
