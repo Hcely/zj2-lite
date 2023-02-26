@@ -21,10 +21,6 @@ public class Aes128Crypto extends AesCrypto {
         this(null, null);
     }
 
-    public Aes128Crypto(AesMode mode) {
-        this(mode, null);
-    }
-
     public Aes128Crypto(AesMode mode, CryptPadding padding) {
         super(16, mode, padding);
     }
@@ -43,7 +39,7 @@ public class Aes128Crypto extends AesCrypto {
     }
 
     protected static String getTransformation(AesMode aesMode, CryptPadding padding) {
-        StringBuilder sb = new StringBuilder(32).append("AES/").append(aesMode).append('/' );
+        StringBuilder sb = new StringBuilder(24).append("AES/").append(aesMode).append('/' );
         if (padding == CryptPadding.PKCSPadding) {
             sb.append("PKCS5Padding");
         } else {

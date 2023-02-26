@@ -8,6 +8,8 @@ import java.util.List;
  * @author peijie.ye
  * @date 2023/2/19 21:18
  */
-public interface WXAppProvider {
-    List<WXApp> get();
+public interface WXAppBundle {
+    List<WXApp> list();
+
+    WXApp get(String wxAppId);
 }

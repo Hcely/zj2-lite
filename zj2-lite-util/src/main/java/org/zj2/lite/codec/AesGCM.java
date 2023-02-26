@@ -24,7 +24,11 @@ public class AesGCM {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
 
     public static AesGCM of128(String secret) {
-        return new AesGCM(secret, 16);
+        return of128(StringUtils.isEmpty(secret) ? null : secret.getBytes(StandardCharsets.ISO_8859_1));
+    }
+
+    public static AesGCM of128Base64(String secretBase64) {
+        return of128(Base64Util.DECODER.decode(secretBase64));
     }
 
     public static AesGCM of128(byte[] secret) {
@@ -32,7 +36,11 @@ public class AesGCM {
     }
 
     public static AesGCM of256(String secret) {
-        return new AesGCM(secret, 32);
+        return of256(StringUtils.isEmpty(secret) ? null : secret.getBytes(StandardCharsets.ISO_8859_1));
+    }
+
+    public static AesGCM of256Base64(String secretBase64) {
+        return of256(Base64Util.DECODER.decode(secretBase64));
     }
 
     public static AesGCM of256(byte[] secret) {
@@ -40,11 +48,6 @@ public class AesGCM {
     }
 
     protected final SecretKeySpec secretKeySpec;
-
-
-    public AesGCM(String secret, int keyLen) {
-        this(StringUtils.isEmpty(secret) ? null : secret.getBytes(StandardCharsets.ISO_8859_1), keyLen);
-    }
 
     public AesGCM(byte[] secret, int keyLen) {
         this.secretKeySpec = new SecretKeySpec(AesCrypto.normalizeParams(secret, keyLen), "AES");
@@ -57,6 +60,16 @@ public class AesGCM {
     public Crypto getCrypto(String nonce, String aad) {
         byte[] nonceBytes = StringUtils.isEmpty(nonce) ? null : nonce.getBytes(StandardCharsets.ISO_8859_1);
         byte[] addBytes = StringUtils.isEmpty(aad) ? null : aad.getBytes(StandardCharsets.ISO_8859_1);
+        return getCrypto(nonceBytes, addBytes);
+    }
+
+    public Crypto getCryptoBase64(String nonceBase64) {
+        return getCryptoBase64(nonceBase64, null);
+    }
+
+    public Crypto getCryptoBase64(String nonceBase64, String aadBase64) {
+        byte[] nonceBytes = Base64Util.DECODER.decode(nonceBase64);
+        byte[] addBytes = Base64Util.DECODER.decode(aadBase64);
         return getCrypto(nonceBytes, addBytes);
     }
 

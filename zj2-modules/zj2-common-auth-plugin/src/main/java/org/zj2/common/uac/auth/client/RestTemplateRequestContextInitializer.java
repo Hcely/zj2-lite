@@ -1,11 +1,9 @@
 package org.zj2.common.uac.auth.client;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestInitializer;
-import org.springframework.stereotype.Component;
 
 /**
  * WebContextTemplateInterceptor
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Component;
  * @author peijie.ye
  * @date 2022/12/9 1:57
  */
-@Component
-@Order(-2000)
 public class RestTemplateRequestContextInitializer extends AbsClientRequestSignInterceptor<HttpRequest>
         implements ClientHttpRequestInitializer {
 

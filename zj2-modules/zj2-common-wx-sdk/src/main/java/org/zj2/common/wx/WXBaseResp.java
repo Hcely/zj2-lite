@@ -21,6 +21,6 @@ public class WXBaseResp implements Serializable {
     private String errmsg;
 
     public boolean isSuccess() {
-        return errcode == null;
+        return errcode == null || errcode == 0;
     }
 }

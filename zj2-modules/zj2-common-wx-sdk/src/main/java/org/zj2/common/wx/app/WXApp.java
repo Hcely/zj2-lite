@@ -17,4 +17,7 @@ public class WXApp {
     private String wxAppName;
     private String wxAppId;
     private String wxAppSecret;
+    private String aesSecret;
+
+
 }

@@ -10,15 +10,12 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.modes.CBCBlockCipher;
 import org.bouncycastle.crypto.modes.CFBBlockCipher;
 import org.bouncycastle.crypto.modes.OFBBlockCipher;
-import org.bouncycastle.crypto.paddings.BlockCipherPadding;
 import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.paddings.ZeroBytePadding;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.zj2.lite.common.util.CollUtil;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * Aes256Crypto
@@ -30,11 +27,6 @@ public class Aes256Crypto extends AesCrypto {
     private AesCipher encrypt;
     private AesCipher decrypt;
 
-    public Aes256Crypto(AesMode mode) {
-        this(mode, null);
-    }
-
-    @SneakyThrows
     public Aes256Crypto(AesMode mode, CryptPadding padding) {
         super(32, mode, padding);
     }
@@ -96,7 +88,8 @@ public class Aes256Crypto extends AesCrypto {
 
     protected static class InnerPaddingCipher extends PaddedBufferedBlockCipher implements AesCipher {
         public InnerPaddingCipher(AesMode aesMode, CryptPadding padding) {
-            super(buildCipher(aesMode), buildPadding(padding));
+            super(buildCipher(aesMode),
+                    padding == CryptPadding.PKCSPadding ? new PKCS7Padding() : new ZeroBytePadding());
         }
 
         @Override
@@ -114,10 +107,6 @@ public class Aes256Crypto extends AesCrypto {
                 default:
                     return new CBCBlockCipher(new AESEngine());
             }
-        }
-
-        protected static BlockCipherPadding buildPadding(CryptPadding padding) {
-            return padding == CryptPadding.PKCSPadding ? new PKCS7Padding() : new ZeroBytePadding();
         }
     }
 

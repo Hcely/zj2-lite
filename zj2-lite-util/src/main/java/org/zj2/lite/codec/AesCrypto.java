@@ -49,6 +49,16 @@ public abstract class AesCrypto implements Crypto {
         return init(secretBytes, ivBytes);
     }
 
+    public AesCrypto initBase64(String secretBase64) {
+        return initBase64(secretBase64, null);
+    }
+
+    public AesCrypto initBase64(String secretBase64, String ivBase64) {
+        byte[] secretBytes = Base64Util.DECODER.decode(secretBase64);
+        byte[] ivBytes = Base64Util.DECODER.decode(ivBase64);
+        return init(secretBytes, ivBytes);
+    }
+
     public AesCrypto init(byte[] secret) {
         return init(secret, null);
     }

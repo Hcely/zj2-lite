@@ -11,13 +11,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * CacheUtil
  * <br>CreateDate February 20,2020
+ *
  * @author peijie.ye
  * @since 1.0
  */
 
 public class CacheUtil {
     private static final ConcurrentLinkedQueue<LocalCacheHelper> CACHE_HELPERS = new ConcurrentLinkedQueue<>();
-    public static final String DEFAULT_CACHE_SIGNAL_TAG = "SERVER:CACHE:SIGNAL";
+    static final String DEFAULT_CACHE_SIGNAL_TAG = "SERVER:CACHE:SIGNAL";
     public static final CacheHelper DEF_CACHE = createLocal();
 
     //    public static void sendCacheSign(Class<?> type, String key) {
@@ -81,7 +82,7 @@ public class CacheUtil {
         int length = type.getSimpleName().length() + StringUtils.length(key) + 40;
         StringBuilder sb = new StringBuilder(length);
         appendClassIdentifyName(sb, type);
-        sb.append(':');
+        sb.append(':' );
         if (StringUtils.isNotEmpty(key)) { sb.append(key); }
         return sb.toString();
     }
@@ -90,13 +91,13 @@ public class CacheUtil {
         int length = StringUtils.length(prefix) + StringUtils.length(key) + 1;
         StringBuilder sb = new StringBuilder(length);
         if (StringUtils.isNotEmpty(prefix)) { sb.append(prefix); }
-        sb.append(':');
+        sb.append(':' );
         if (StringUtils.isNotEmpty(key)) { sb.append(key); }
         return sb.toString();
     }
 
     private static StringBuilder appendClassIdentifyName(StringBuilder sb, Class<?> type) {
-        sb.append(type.getSimpleName()).append('&');
+        sb.append(type.getSimpleName()).append('&' );
         return CodecUtil.encodeHex(sb, type.getName().hashCode());
     }
 }

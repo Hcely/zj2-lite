@@ -22,6 +22,5 @@
         <module>zj2-common-uac-wx</module>
         <module>zj2-common-wx-sdk</module>
         <module>zj2-common-parent</module>
-        <module>zj2-common-uac-wx-api</module>
     </modules>
 </project>
