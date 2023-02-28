@@ -1,9 +1,11 @@
 package org.zj2.common.wx.user.resp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.common.wx.WXBaseResp;
+import org.zj2.lite.service.entity.StrList;
 
 /**
  * WXUserInfoResp
@@ -27,7 +29,22 @@ import org.zj2.common.wx.WXBaseResp;
 @NoArgsConstructor
 public class WXUserInfoResp extends WXBaseResp {
     private static final long serialVersionUID = 6962192132156875347L;
-
-
-
+    @JsonProperty("openid")
+    private String openid;
+    @JsonProperty("nickname")
+    private String nickname;
+    @JsonProperty("sex")
+    private Integer sex;
+    @JsonProperty("province")
+    private String province;
+    @JsonProperty("city")
+    private String city;
+    @JsonProperty("country")
+    private String country;
+    @JsonProperty("headimgurl")
+    private String headimgurl;
+    @JsonProperty("privilege")
+    private StrList privilege;
+    @JsonProperty("unionid")
+    private String unionid;
 }

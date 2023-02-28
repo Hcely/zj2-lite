@@ -16,7 +16,7 @@ import java.util.function.UnaryOperator;
 @NoArgsConstructor
 public class NumHolder extends Number {
     private static final long serialVersionUID = 20220719163940L;
-    private BigDecimal value = BigDecimal.ZERO;
+    protected BigDecimal value = BigDecimal.ZERO;
 
     public static NumHolder of(String value) {
         return new NumHolder(NumUtil.parse(value));

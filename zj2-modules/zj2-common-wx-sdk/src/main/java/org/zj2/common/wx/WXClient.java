@@ -5,6 +5,8 @@ import org.springframework.web.client.RestTemplate;
 import org.zj2.common.wx.app.WXAppManager;
 import org.zj2.lite.util.ZRBuilder;
 
+import java.util.Map;
+
 /**
  * WXClient
  *
@@ -25,4 +27,21 @@ public class WXClient {
         }
         return accessToken;
     }
+
+    protected <T extends WXBaseResp> T doGet(Class<T> respType, String url, Map<String, Object> params) {
+        T resp = restTemplate.getForObject(url, respType, params);
+        return handleResponse(resp);
+    }
+
+    protected <T extends WXBaseResp> T doPost(Class<T> respType, String url, Map<String, Object> params) {
+        T resp = restTemplate.postForObject(url, params, respType);
+        return handleResponse(resp);
+    }
+
+    private <T extends WXBaseResp> T handleResponse(T resp) {
+        if (resp == null) { throw ZRBuilder.failureErr("NO WX Response"); }
+        if (!resp.isSuccess()) { throw ZRBuilder.failureErr(resp.getErrmsg()); }
+        return resp;
+    }
+
 }
