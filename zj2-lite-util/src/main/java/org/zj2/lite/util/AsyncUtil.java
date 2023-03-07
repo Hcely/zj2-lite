@@ -14,6 +14,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.zj2.lite.common.context.ZContexts;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.NumUtil;
+import org.zj2.lite.common.util.ZThread;
+import org.zj2.lite.util.thread.AsyncTaskThread;
+import org.zj2.lite.util.thread.AsyncThreadFactory;
+import org.zj2.lite.util.thread.TaskWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,19 +46,17 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     private static final int MAX_CORE = 1 << 6;
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncUtil.class);
     private static final ThreadTaskExecutor EXECUTOR;
-    private static final ThreadPoolExecutor[] WORKERS;
+    private static final TaskWorker[] WORKERS;
     private static final int MASK;
 
     static {
         int coreNum = Runtime.getRuntime().availableProcessors() << 2;
         coreNum = Math.max(NumUtil.plus.ceilPower2(coreNum < 8 ? 8 : coreNum), MAX_CORE);
         EXECUTOR = createExecutor(coreNum);
-        WORKERS = new ThreadPoolExecutor[coreNum];
+        WORKERS = new TaskWorker[coreNum];
         MASK = coreNum - 1;
-        AsyncThreadFactory threadFactory = new AsyncThreadFactory();
         for (int i = 0; i < coreNum; ++i) {
-            WORKERS[i] = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
-                    threadFactory);
+            WORKERS[i] = new TaskWorker();
         }
     }
 
@@ -70,7 +72,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     @Override
     public void destroy() {
         EXECUTOR.shutdown();
-        for (ThreadPoolExecutor e : WORKERS) { e.shutdown(); }
+        for (TaskWorker e : WORKERS) { e.destroy(); }
     }
 
     public static boolean isAsyncThread() {
@@ -213,9 +215,8 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         public ThreadTaskExecutor(int coreSize) {
             coreSize = NumUtil.plus.ceilPower2(coreSize < 8 ? 8 : coreSize);
             //
-            AsyncThreadFactory threadFactory = new AsyncThreadFactory();
             this.commonExecutor = new ThreadPoolExecutor(coreSize, coreSize << 2, 60_000, TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<>(10000_0000), threadFactory);
+                    new LinkedBlockingQueue<>(10000_0000), AsyncThreadFactory.INSTANCE);
         }
 
         @Override
@@ -244,28 +245,6 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
         public void shutdown() {
             commonExecutor.shutdown();
-        }
-    }
-
-    private static class AsyncThreadFactory implements ThreadFactory {
-        private static final AtomicLong THREAD_NUMBER = new AtomicLong(1);
-        private final ThreadGroup group;// NOSONAR
-
-        AsyncThreadFactory() {
-            group = Thread.currentThread().getThreadGroup();
-        }
-
-        public Thread newThread(Runnable r) {
-            Thread t = new AsyncTaskThread(this, r, "ASYNC-" + THREAD_NUMBER.getAndIncrement());
-            if (t.isDaemon()) { t.setDaemon(false); }
-            if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
-            return t;
-        }
-    }
-
-    private static final class AsyncTaskThread extends Thread {
-        public AsyncTaskThread(AsyncThreadFactory threadFactory, Runnable target, String name) {
-            super(threadFactory.group, target, name, 0);
         }
     }
 }

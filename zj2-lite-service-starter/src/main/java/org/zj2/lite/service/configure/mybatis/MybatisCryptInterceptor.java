@@ -16,12 +16,13 @@ import org.springframework.stereotype.Component;
 import org.zj2.lite.common.annotation.CryptProperty;
 import org.zj2.lite.common.bean.BeanPropertyContext;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;
+import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
 import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.util.CryptUtil;
 
 /**
- *  MybatisCryptIn
+ * MybatisCryptIn
  *
  * @author peijie.ye
  * @date 2022/11/24 14:44
@@ -43,15 +44,15 @@ public class MybatisCryptInterceptor implements Interceptor {
         boolean isUpdate = args.length == 2;
         if (isUpdate) {
             Object value = invocation.getArgs()[1];
-            PropertyUtil.scanProperties(value, ENCRYPT_HANDLER);
+            PropertyUtil.scanSimpleProperties(value, ENCRYPT_HANDLER);
             try {
                 return invocation.proceed();
             } finally {
-                PropertyUtil.scanProperties(value, DECRYPT_HANDLER);
+                PropertyUtil.scanSimpleProperties(value, DECRYPT_HANDLER);
             }
         } else {
             Object value = invocation.proceed();
-            PropertyUtil.scanProperties(value, DECRYPT_HANDLER);
+            PropertyUtil.scanSimpleProperties(value, DECRYPT_HANDLER);
             return value;
         }
     }
@@ -64,7 +65,7 @@ public class MybatisCryptInterceptor implements Interceptor {
         return target;
     }
 
-    private static final class PropertyCryptHandler implements BeanPropertyScanHandler {
+    private static final class PropertyCryptHandler implements BeanSimplePropertyScanHandler {
         private final boolean isEncrypt;
 
         private PropertyCryptHandler(boolean isEncrypt) {
@@ -72,15 +73,11 @@ public class MybatisCryptInterceptor implements Interceptor {
         }
 
         @Override
-        public PropScanMode apply(BeanPropertyContext context) {
-            if (!context.isSimplePropertyType()) {
-                return PropScanMode.DEEP;
-            }
+        public void handle(BeanPropertyContext context) {
             Object propValue = context.propertyValue();
             if (propValue instanceof String && context.propertyAnnotation(CryptProperty.class) != null) {
                 context.propertyValue(CryptUtil.crypt(isEncrypt, propValue.toString()));
             }
-            return PropScanMode.NOT_DEEP;
         }
     }
 }

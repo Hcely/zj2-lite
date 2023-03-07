@@ -33,5 +33,9 @@
             <groupId>org.zj2.lite.module</groupId>
             <artifactId>zj2-common-auth-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+        </dependency>
     </dependencies>
 </project>

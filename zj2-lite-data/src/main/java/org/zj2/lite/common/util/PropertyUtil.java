@@ -5,10 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeanUtils;
 import org.zj2.lite.common.bean.BeanDescriptor;
+import org.zj2.lite.common.bean.BeanPropertyContext;
 import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.BeanPropertyScanner;
+import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
 import org.zj2.lite.common.bean.DefBeanPropertyScanner;
+import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.function.PropGetter;
 
@@ -17,10 +20,12 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 获取属性UTIL
  * <br>CreateDate 六月 22,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("all")
@@ -70,14 +75,19 @@ public class PropertyUtil {
         return new DefBeanPropertyScanner();
     }
 
+    public static void scanSimpleProperties(Object bean, BeanSimplePropertyScanHandler propertyHandler) {
+        if (bean == null || propertyHandler == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
+        getScannerInstance().scan(bean, propertyHandler);
+    }
+
     public static void scanProperties(Object bean, BeanPropertyScanHandler propertyHandler) {
         if (bean == null || propertyHandler == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
+        getScannerInstance().scan(bean, propertyHandler);
+    }
+
+    private static BeanPropertyScanner getScannerInstance() {
         DefBeanPropertyScanner scanner = SCANNER_THREAD_LOCAL.get();
-        if (scanner.getRootBean() == null) { // 防止环
-            scanner.scan(bean, propertyHandler);
-        } else {
-            createScanner().scan(bean, propertyHandler);
-        }
+        return scanner.getRootBean() == null ? scanner : createScanner();
     }
 
     public static <T> T getProperty(Object bean, String... paths) {

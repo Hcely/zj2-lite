@@ -20,6 +20,8 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
     private Set<Integer> beanIdentifySet;
     private Object rootBean;
     private BeanPropertyScanHandler propertyHandler;
+    private BeanSimplePropertyScanHandler simplePropertyHandler;
+
     private Object currentBean;
     //
     private boolean simplePropertyType;
@@ -36,11 +38,24 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public void scan(Object bean, BeanPropertyScanHandler propertyHandler) {
+        if (propertyHandler == null) { return; }
+        scan0(bean, propertyHandler, null);
+    }
+
+    @Override
+    public void scan(Object bean, BeanSimplePropertyScanHandler propertyHandler) {
+        if (propertyHandler == null) { return; }
+        scan0(bean, null, propertyHandler);
+    }
+
+    private void scan0(Object bean, BeanPropertyScanHandler propertyHandler,
+            BeanSimplePropertyScanHandler simplePropertyHandler) {
         try {
-            if (bean == null || propertyHandler == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
+            if (bean == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
             this.beanIdentifySet = loadBeanIdentifySet();
             this.rootBean = bean;
             this.propertyHandler = propertyHandler;
+            this.simplePropertyHandler = simplePropertyHandler;
             scanImpl(bean);
         } finally {
             reset();
@@ -110,7 +125,13 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
         this.simplePropertyType =
                 descriptor != null ? descriptor.isSimplePropertyType() : BeanUtils.isSimpleValueType(value.getClass());
         //
-        PropScanMode mode = propertyHandler.apply(this);
+        PropScanMode mode;
+        if (propertyHandler != null) {
+            mode = propertyHandler.handle(this);
+        } else {
+            if (simplePropertyType) { simplePropertyHandler.handle(this); }
+            mode = PropScanMode.DEEP;
+        }
         if (mode == PropScanMode.DEEP && !simplePropertyType) { scanImpl(propertyValue()); }
     }
 

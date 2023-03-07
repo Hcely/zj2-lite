@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.zj2.common.uac.auth.server.hider.PropertyValueHider;
 import org.zj2.lite.common.bean.BeanPropertyContext;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;
+import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
 import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
@@ -40,10 +41,10 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
     public void authorize(RequestContext requestContext, AuthContext authContext, UriResource uriResource,
             Object result) {
         final AuthoritySet authorities = getAuthoritySet(requestContext, authContext);
-        PropertyUtil.scanProperties(result, new AuthorizePropertyScanHandler(this, authContext, authorities));
+        PropertyUtil.scanSimpleProperties(result, new AuthorizePropertyScanHandler(this, authContext, authorities));
     }
 
-    private static class AuthorizePropertyScanHandler implements BeanPropertyScanHandler {
+    private static class AuthorizePropertyScanHandler implements BeanSimplePropertyScanHandler {
         private final AuthorizeJWTPropertyHandler handler;
         private final AuthContext context;
         private final AuthoritySet authorities;
@@ -56,7 +57,8 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
         }
 
         @Override
-        public PropScanMode apply(BeanPropertyContext cxt) {
+        public void handle(BeanPropertyContext cxt) {
+            if (!cxt.isPropertyOfBean()) { return; }
             String propertyAuthority = handler.getPropertyAuthority(cxt);
             Object value;
             if (handler.isRequiredAuthority(context, propertyAuthority) && (value = cxt.propertyValue()) != null) {
@@ -65,13 +67,10 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
                     cxt.propertyValue(newValue);
                 }
             }
-            return PropScanMode.DEEP;
         }
     }
 
     protected String getPropertyAuthority(BeanPropertyContext cxt) {
-        if (!cxt.isSimplePropertyType()) { return null; }
-        if (!cxt.isPropertyOfBean()) { return null; }
         AuthorityResource resource = cxt.propertyAnnotation(AuthorityResource.class);
         if (resource == null) { return null; }
         String authority = resource.name();

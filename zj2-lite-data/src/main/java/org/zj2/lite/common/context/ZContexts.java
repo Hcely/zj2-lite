@@ -1,5 +1,7 @@
 package org.zj2.lite.common.context;
 
+import org.zj2.lite.common.util.ZThread;
+
 import java.util.function.Supplier;
 
 /**
@@ -18,7 +20,7 @@ public class ZContexts {
     }
 
     private ZContexts(ZContexts context) {
-        ZContext[] tmp = context.contexts;
+        ZContext[] tmp = context == null ? null : context.contexts;
         if (tmp != null && tmp.length > 0) {
             int len = tmp.length;
             contexts = new ZContext[len];
@@ -32,23 +34,48 @@ public class ZContexts {
     }
 
     public static ZContexts current() {
-        ZContexts context = CONTEXT_TL.get();
-        if (context == null) { CONTEXT_TL.set(context = new ZContexts()); }//NOSONAR
+        Thread currentThread = Thread.currentThread();
+        ZContexts context;
+        if (currentThread instanceof ZThread) {
+            ZThread zThread = (ZThread) currentThread;
+            context = zThread.getContexts();
+            if (context == null) { zThread.setContexts(context = new ZContexts()); }//NOSONAR
+        } else {
+            context = CONTEXT_TL.get();
+            if (context == null) { CONTEXT_TL.set(context = new ZContexts()); }//NOSONAR
+        }
         return context;
     }
 
-    public static ZContexts copyContexts() {
-        return new ZContexts(current());
+    public static ZContexts get() {
+        Thread currentThread = Thread.currentThread();
+        if (currentThread instanceof ZThread) {
+            return ((ZThread) currentThread).getContexts();
+        } else {
+            return CONTEXT_TL.get();
+        }
     }
 
     public static ZContexts setContexts(ZContexts context) {
-        ZContexts old = CONTEXT_TL.get();
-        CONTEXT_TL.set(context);
+        Thread currentThread = Thread.currentThread();
+        ZContexts old;
+        if (currentThread instanceof ZThread) {
+            ZThread zThread = (ZThread) currentThread;
+            old = zThread.getContexts();
+            zThread.setContexts(context);
+        } else {
+            old = CONTEXT_TL.get();
+            CONTEXT_TL.set(context);
+        }
         return old;
     }
 
+    public static ZContexts copyContexts() {
+        return new ZContexts(get());
+    }
+
     public static void clearContext() {
-        ZContexts context = CONTEXT_TL.get();
+        ZContexts context = get();
         if (context != null) {
             ZContext[] contexts = context.contexts;
             for (int i = 0, len = contexts.length; i < len; ++i) { contexts[i] = null; }
@@ -85,7 +112,7 @@ public class ZContexts {
     }
 
     static <T extends ZContext> T clearContext(int idx) {
-        ZContexts zcontext = CONTEXT_TL.get();
+        ZContexts zcontext = get();
         if (zcontext == null) { return null; }
         ZContext[] tmp = zcontext.contexts;
         if (tmp == null || idx >= tmp.length) {
@@ -106,6 +133,4 @@ public class ZContexts {
         if (array != null) { System.arraycopy(array, 0, newArray, 0, array.length); }
         return newArray;
     }
-
-
 }
