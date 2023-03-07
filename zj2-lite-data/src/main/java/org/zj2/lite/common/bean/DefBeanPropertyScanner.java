@@ -23,6 +23,7 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
     private BeanSimplePropertyScanHandler simplePropertyHandler;
 
     private Object currentBean;
+    private Object flag;
     //
     private boolean simplePropertyType;
     private BeanPropertyDescriptor propertyDescriptor;
@@ -34,6 +35,12 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     public Object getRootBean() {
         return rootBean;
+    }
+
+    @Override
+    public BeanPropertyScanner flag(Object flag) {
+        this.flag = flag;
+        return this;
     }
 
     @Override
@@ -135,7 +142,7 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
         if (mode == PropScanMode.DEEP && !simplePropertyType) { scanImpl(propertyValue()); }
     }
 
-    private void reset() {
+    public void reset() {
         recyleBeanIdentifySet(beanIdentifySet);
         this.beanIdentifySet = null;
         this.rootBean = null;
@@ -147,6 +154,12 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
         this.propertyIterator = null;
         this.propertyArrayComponentType = null;
         this.propertyValue = null;
+        this.flag = null;
+    }
+
+    @Override
+    public <T> T flag() {
+        return (T) flag;
     }
 
     @Override

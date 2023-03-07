@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 public interface BeanPropertyContext {
+    <T> T flag();
+
     Object rootBean();
 
     Object currentBean();

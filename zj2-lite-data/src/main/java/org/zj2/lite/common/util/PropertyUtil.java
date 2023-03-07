@@ -5,13 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.beans.BeanUtils;
 import org.zj2.lite.common.bean.BeanDescriptor;
-import org.zj2.lite.common.bean.BeanPropertyContext;
 import org.zj2.lite.common.bean.BeanPropertyDescriptor;
 import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.BeanPropertyScanner;
 import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
 import org.zj2.lite.common.bean.DefBeanPropertyScanner;
-import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.constant.NoneConstants;
 import org.zj2.lite.common.function.PropGetter;
 
@@ -20,7 +18,6 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * 获取属性UTIL
@@ -71,23 +68,28 @@ public class PropertyUtil {
         return paths == null || paths.length == 0 ? NoneConstants.EMPTY_STRINGS : paths;
     }
 
-    public static BeanPropertyScanner createScanner() {
-        return new DefBeanPropertyScanner();
-    }
-
     public static void scanSimpleProperties(Object bean, BeanSimplePropertyScanHandler propertyHandler) {
         if (bean == null || propertyHandler == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
-        getScannerInstance().scan(bean, propertyHandler);
+        scannerInstance().scan(bean, propertyHandler);
     }
 
     public static void scanProperties(Object bean, BeanPropertyScanHandler propertyHandler) {
         if (bean == null || propertyHandler == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
-        getScannerInstance().scan(bean, propertyHandler);
+        scannerInstance().scan(bean, propertyHandler);
     }
 
-    private static BeanPropertyScanner getScannerInstance() {
+    public static BeanPropertyScanner scannerInstance() {
         DefBeanPropertyScanner scanner = SCANNER_THREAD_LOCAL.get();
-        return scanner.getRootBean() == null ? scanner : createScanner();
+        if (scanner.getRootBean() == null) {
+            scanner.flag(null);
+            return scanner;
+        } else {
+            return createScanner();
+        }
+    }
+
+    public static BeanPropertyScanner createScanner() {
+        return new DefBeanPropertyScanner();
     }
 
     public static <T> T getProperty(Object bean, String... paths) {
