@@ -2,8 +2,13 @@ package org.zj2.lite.common.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * ReflectUtil
@@ -11,7 +16,33 @@ import java.lang.reflect.Method;
  * @author peijie.ye
  * @date 2023/2/14 23:21
  */
+@SuppressWarnings("all")
 public class ReflectUtil {
+
+    public static Field getField(Class<?> type, String fieldName) {
+        Field field = FieldUtils.getField(type, fieldName);
+        if(field != null && (isPublic(field.getModifiers()) || field.trySetAccessible())) { return field; }
+        return null;
+    }
+
+    public static Constructor getConstructor(Class<?> type) {
+        try {
+            Constructor<?> constructor = type == null || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) ?
+                    null :
+                    BeanUtils.getResolvableConstructor(type);
+            if(constructor != null && (isPublic(constructor.getModifiers()) || constructor.trySetAccessible())) {
+                return constructor;
+            }
+        } catch(Throwable e) {
+        }
+        return null;
+    }
+
+    private static boolean isPublic(int modifiers) {
+        return Modifier.isPublic(modifiers);
+    }
+
+
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
         if(clazz == null || StringUtils.isEmpty(methodName)) { return null; }
         return getMethod0(clazz, methodName, paramTypes == null ? ArrayUtils.EMPTY_CLASS_ARRAY : paramTypes);

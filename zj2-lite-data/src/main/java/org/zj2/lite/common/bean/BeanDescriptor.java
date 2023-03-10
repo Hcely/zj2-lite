@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.BeanUtils;
 import org.zj2.lite.common.util.CollUtil;
+import org.zj2.lite.common.util.ReflectUtil;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
@@ -76,17 +77,6 @@ public class BeanDescriptor {
         return new BeanDescriptor(type, map, CollUtil.toArray(map.values(), BeanPropertyDescriptor.class));
     }
 
-    private static Constructor getConstructor(Class<?> type) {
-        try {
-            Constructor constructor = type == null || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) ?
-                    null :
-                    BeanUtils.getResolvableConstructor(type);
-            constructor.trySetAccessible();
-            return constructor;
-        } catch(Throwable e) {
-            return null;
-        }
-    }
 
     private BeanDescriptor(Class<?> type) {
         this(type, type);
@@ -96,14 +86,14 @@ public class BeanDescriptor {
         this.propertyDescriptors = EMPTY_DESCRIPTORS;
         this.propertyDescriptorMap = Collections.emptyMap();
         this.type = type;
-        this.constructor = getConstructor(newInstanceType);
+        this.constructor = ReflectUtil.getConstructor(newInstanceType);
     }
 
     private BeanDescriptor(Class<?> type, Map<String, BeanPropertyDescriptor> propertyDescriptorMap, BeanPropertyDescriptor[] propertyDescriptors) {
         this.propertyDescriptorMap = propertyDescriptorMap == null ? Collections.emptyMap() : Collections.unmodifiableMap(propertyDescriptorMap);
         this.propertyDescriptors = propertyDescriptors == null ? EMPTY_DESCRIPTORS : propertyDescriptors;
         this.type = type;
-        this.constructor = getConstructor(type);
+        this.constructor = ReflectUtil.getConstructor(type);
     }
 
     public Class<?> type() {

@@ -1,7 +1,6 @@
 package org.zj2.lite.common.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.zj2.lite.common.constant.ZJ2Constants;
 import org.zj2.lite.common.entity.result.ZError;
@@ -18,18 +17,7 @@ import java.lang.reflect.Field;
  * @since 1.0
  */
 public class StrUtil {
-    private static final Field STACK_TRACE_FIELD;
-
-    static {
-        Field field;
-        try {
-            field = FieldUtils.getDeclaredField(Throwable.class, "stackTrace");
-            if(!field.trySetAccessible()) { field = null; }
-        } catch(Throwable e) {//NOSONAR
-            field = null;
-        }
-        STACK_TRACE_FIELD = field;
-    }
+    private static final Field STACK_TRACE_FIELD = ReflectUtil.getField(Throwable.class, "stackTrace");
 
     public static String buildErrorStackStr(Throwable error) {
         return buildErrorStackStr(error, Integer.MAX_VALUE);
