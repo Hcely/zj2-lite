@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("all")
 public class RingArrayStream<T extends Releasable> implements Destroyable, Concurrent {
     private static int normalizeCapacity(int capacity) {
-        if (capacity < 16) { return 16; }
+        if(capacity < 16) { return 16; }
         return 1 << (32 - Integer.numberOfLeadingZeros(capacity - 1));
     }
 
@@ -76,8 +76,8 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         this.states = new byte[capacity];
         this.references = new Releasable[capacity];
         steps[0] = produceStep;
-        for (int i = 1; i <= stepCount; ++i) { steps[i] = new StateStep(i, capacity, stepCount); }
-        for (int i = 0; i < capacity; ++i) { references[i] = enumCreator.get(); }
+        for(int i = 1; i <= stepCount; ++i) { steps[i] = new StateStep(i, capacity, stepCount); }
+        for(int i = 0; i < capacity; ++i) { references[i] = enumCreator.get(); }
     }
 
     @Override
@@ -121,7 +121,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
 
     private <E> boolean publish0(E value, BiConsumer<T, E> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
-        if (pos > FAILURE_POS) {
+        if(pos > FAILURE_POS) {
             try {
                 handler.accept(get(pos), value);
             } finally {
@@ -134,7 +134,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
 
     private boolean publish0(long value, LongBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
-        if (pos > FAILURE_POS) {
+        if(pos > FAILURE_POS) {
             try {
                 handler.accept(value, get(pos));
             } finally {
@@ -147,7 +147,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
 
     private boolean publish0(int value, IntBeanConsumer<T> handler, boolean tryNext) {
         long pos = tryNext ? tryNext() : next();
-        if (pos > FAILURE_POS) {
+        if(pos > FAILURE_POS) {
             try {
                 handler.accept(value, get(pos));
             } finally {
@@ -167,14 +167,14 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
     }
 
     private long next0(int timeoutCount) {
-        if (streamState == STATE_RUNNING) {
+        if(streamState == STATE_RUNNING) {
             return nextPos(null, produceStep, 1, timeoutCount);
         }
         return DESTROY_POS;
     }
 
     public T get(long pos) {
-        return (T) references[(int) (pos & mask)];
+        return (T)references[(int)(pos & mask)];
     }
 
     public void publish(long pos) {
@@ -184,11 +184,11 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
     private long nextPos(StepTaskStream<?> stream, StateStep step, int size, int timeoutCount) {//NOSONAR
         final AtomicLong readPos = step.readPos, limitPos = step.limitPos, maxPos = steps[step.prevState].readPos;
         long rPos, nPos, lPos = limitPos.get(), newLPos;
-        for (int tryCount = 0; ; ) {
-            if ((rPos = readPos.get()) < lPos || rPos < (lPos = limitPos.get())) {
-                if ((nPos = rPos + size) <= lPos || (tryCount > (TRY_COUNT_YIELD - 1) && (nPos = lPos) > 0)) {
-                    if (readPos.compareAndSet(rPos, nPos)) {
-                        if (stream != null) { stream.setEndPos(nPos); }
+        for(int tryCount = 0; ; ) {
+            if((rPos = readPos.get()) < lPos || rPos < (lPos = limitPos.get())) {
+                if((nPos = rPos + size) <= lPos || (tryCount > (TRY_COUNT_YIELD - 1) && (nPos = lPos) > 0)) {
+                    if(readPos.compareAndSet(rPos, nPos)) {
+                        if(stream != null) { stream.setEndPos(nPos); }
                         return rPos;
                     } else {
                         continue;
@@ -196,17 +196,17 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
                 }
             }
             newLPos = nextLimitPos(step, limitPos, maxPos, size);
-            if (newLPos > lPos) {
+            if(newLPos > lPos) {
                 lPos = newLPos;
-            } else if (lPos == newLPos) {
+            } else if(lPos == newLPos) {
                 final int state = streamState;
-                if (state == STATE_DESTROYED) {
-                    if (rPos >= produceStep.readPos.get()) { return DESTROY_POS; }
-                } else if (state == STATE_DESTROYED_NOW) {
+                if(state == STATE_DESTROYED) {
+                    if(rPos >= produceStep.readPos.get()) { return DESTROY_POS; }
+                } else if(state == STATE_DESTROYED_NOW) {
                     return DESTROY_POS;
                 }
-                if (tryCount < Integer.MAX_VALUE) { ++tryCount; }
-                if (timeoutCount < 0 || tryCount < timeoutCount) {
+                if(tryCount < Integer.MAX_VALUE) { ++tryCount; }
+                if(timeoutCount < 0 || tryCount < timeoutCount) {
                     step.tryWait(tryCount);
                 } else {
                     break;
@@ -219,7 +219,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
     }
 
     private long nextLimitPos(final StateStep step, AtomicLong limitPos, AtomicLong maxPos, int size) {
-        if (step.tryLock()) {
+        if(step.tryLock()) {
             final long oldLPos = limitPos.get();
             final long max = maxPos.get() + step.offset;
             long lPos = oldLPos;
@@ -227,15 +227,15 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
             final byte targetState = step.state;
             final int localMask = mask;
             int len = size < 0x3F ? 0x7F : (size + (size >>> 1));
-            for (int i = 0; lPos < max && i < len; ++i) {
-                byte state = (byte) STATES_AA.getVolatile(localStates, (int) (lPos & localMask));
-                if (state == targetState) {
+            for(int i = 0; lPos < max && i < len; ++i) {
+                byte state = (byte)STATES_AA.getVolatile(localStates, (int)(lPos & localMask));
+                if(state == targetState) {
                     ++lPos;
                 } else {
                     break;
                 }
             }
-            if (lPos > oldLPos) { limitPos.compareAndSet(oldLPos, lPos); }
+            if(lPos > oldLPos) { limitPos.compareAndSet(oldLPos, lPos); }
             step.unLock();
             return lPos;
         }
@@ -243,15 +243,15 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
     }
 
     private void nextStep(final StateStep step, final long pos, final boolean notifyNextStep) {
-        final int idx = (int) (pos & mask);
+        final int idx = (int)(pos & mask);
         final byte nextState = step.nextState;
-        if (nextState == 0) {
+        if(nextState == 0) {
             try {
                 references[idx].release();
-            } catch (Throwable ignore) { }
+            } catch(Throwable ignore) { }
         }
         STATES_AA.setVolatile(states, idx, nextState);
-        if (notifyNextStep) { steps[nextState].tryNotify(); }
+        if(notifyNextStep) { steps[nextState].tryNotify(); }
     }
 
     public StepTaskStream<T> stream(int stepIdx) {
@@ -279,9 +279,9 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
             this.lockFlag = new AtomicInteger(0);
             this.offset = state == 0 ? capacity : 0;
             this.waitThread = 0;
-            this.state = (byte) state;
-            this.prevState = (byte) (state == 0 ? stepCount : state - 1);
-            this.nextState = (byte) (state == stepCount ? 0 : (state + 1));
+            this.state = (byte)state;
+            this.prevState = (byte)(state == 0 ? stepCount : state - 1);
+            this.nextState = (byte)(state == stepCount ? 0 : (state + 1));
         }
 
         private boolean tryLock() {
@@ -294,18 +294,18 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         }
 
         private int tryWait(int count) {
-            if (count < TRY_COUNT_CAL) {
+            if(count < TRY_COUNT_CAL) {
                 return count + 1;
-            } else if (count < TRY_COUNT_YIELD) {
+            } else if(count < TRY_COUNT_YIELD) {
                 Thread.yield();
-            } else if (count < TRY_COUNT_PARK) {
+            } else if(count < TRY_COUNT_PARK) {
                 LockSupport.parkNanos(10000);
             } else {
-                synchronized (this) {
+                synchronized(this) {
                     ++waitThread;
                     try {
                         this.wait(1);
-                    } catch (Throwable ignored) {
+                    } catch(Throwable ignored) {
                     } finally {
                         --waitThread;
                     }
@@ -315,7 +315,7 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
         }
 
         private void tryNotify() {
-            if (waitThread > 0) { synchronized (this) { this.notify(); } }
+            if(waitThread > 0) { synchronized(this) { this.notify(); } }
         }
     }
 
@@ -336,24 +336,24 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
             final Object[] references = localStream.references;
             final int mask = localStream.mask;
             Object value;
-            for (long pos, size = 0, take = 0, end; ; ) {
+            for(long pos, size = 0, take = 0, end; ; ) {
                 pos = localStream.nextPos(this, localStep, getDynamicConsumeSize(size, take), TRY_COUNT_MAX);
-                if (pos > FAILURE_POS) {
+                if(pos > FAILURE_POS) {
                     end = endPos;
                     size = end - pos;
                     take = System.currentTimeMillis();
                     //
-                    for (; pos < end; ++pos) {
+                    for(; pos < end; ++pos) {
                         try {
-                            consumer.accept((T) references[(int) (mask & pos)]);
-                        } catch (Throwable e) {
+                            consumer.accept((T)references[(int)(mask & pos)]);
+                        } catch(Throwable e) {
                             LOGGER.error("Data consume error!", e);
                         } finally {
                             localStream.nextStep(step, pos, (pos & NOTIFY_COUNT) == NOTIFY_COUNT);
                         }
                     }
                     take = System.currentTimeMillis() - take;
-                } else if (pos == FAILURE_POS) {
+                } else if(pos == FAILURE_POS) {
                     size = 0;
                 } else {
                     break;
@@ -367,13 +367,13 @@ public class RingArrayStream<T extends Releasable> implements Destroyable, Concu
 
         // 动态消费数量，让整体生产消费处于合理平衡
         private static int getDynamicConsumeSize(long size, long take) {
-            if (size < 4) { return 4; }
-            if (take < 2) {
+            if(size < 4) { return 4; }
+            if(take < 2) {
                 size <<= 1;
-                return size < MAX_CONSUME_SIZE ? (int) size : MAX_CONSUME_SIZE;
+                return size < MAX_CONSUME_SIZE ? (int)size : MAX_CONSUME_SIZE;
             } else {
                 size = MAX_CONSUME_SIZE / take;
-                return size < 4 ? 4 : (int) size;
+                return size < 4 ? 4 : (int)size;
             }
         }
     }

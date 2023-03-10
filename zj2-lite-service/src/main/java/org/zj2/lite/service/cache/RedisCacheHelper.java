@@ -32,28 +32,26 @@ class RedisCacheHelper extends AbsCacheHelper {
 
     @Override
     public <T> void setCache(String cacheKey, T value, long timeout) {
-        String valueStr =
-                value == null ? NoneConstants.NONE_STR : JSON.toJSONString(value, SerializerFeature.WriteClassName);
+        String valueStr = value == null ? NoneConstants.NONE_STR : JSON.toJSONString(value, SerializerFeature.WriteClassName);
         redisTemplate.opsForValue().set(cacheKey, valueStr, getTimeout(timeout), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout,
-            boolean ignoreErr) {
+    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout, boolean ignoreErr) {
         try {
             String valueStr = redisTemplate.opsForValue().get(cacheKey);
             T value = null;
-            if (StringUtils.isNotEmpty(valueStr)) {
+            if(StringUtils.isNotEmpty(valueStr)) {
                 //noinspection unchecked
-                value = NoneConstants.NONE_STR.equals(valueStr) ? null : (T) JSON.parseObject(valueStr);
-            } else if (getter != null && StringUtils.isNotEmpty(dataKey)) {
+                value = NoneConstants.NONE_STR.equals(valueStr) ? null : (T)JSON.parseObject(valueStr);
+            } else if(getter != null && StringUtils.isNotEmpty(dataKey)) {
                 value = getter.apply(dataKey);
                 setCache(cacheKey, value, timeout);
             }
             return value;
-        } catch (Throwable e) {// NOSONAR
+        } catch(Throwable e) {// NOSONAR
             log.error("缓存获取异常", e);
-            if (ignoreErr) { return null; } else { throw e; }
+            if(ignoreErr) { return null; } else { throw e; }
         }
     }
 }

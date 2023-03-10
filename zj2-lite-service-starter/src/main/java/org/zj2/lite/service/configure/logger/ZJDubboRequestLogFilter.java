@@ -18,12 +18,12 @@ public class ZJDubboRequestLogFilter extends AbstractRequestLogFilter implements
         try {
             logRequest(context);
             return invoker.invoke(invocation);
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             error = e;
             throw e;
         } finally {
-            if (context.getLogState() != RequestLogContext.STATE_COMPLETED) {
-                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
+            if(context.getLogState() != RequestLogContext.STATE_COMPLETED) {
+                if(context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
                 context.completed(error == null ? 200 : 500);
                 logResponse(context);
             }

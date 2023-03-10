@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.zj2.lite.common.constant.NoneConstants;
 
 /**
- *  StandardServerSignalListener
+ * StandardServerSignalListener
  *
  * @author peijie.ye
  * @date 2022/12/13 0:53

@@ -36,14 +36,14 @@ public class AuthoritySet implements Serializable {
     }
 
     public AuthoritySet addAuthority(String authority, long expireTime) {
-        if (authority == null) { return this; }
-        if (StringUtils.isEmpty(authority)) { return this; }
-        if (expireTime > 0 && expireTime < System.currentTimeMillis()) { return this; }
-        if (authority.indexOf('*') != -1) {
-            if (authorityPatterns == null) { authorityPatterns = new HashMap<>(); }
+        if(authority == null) { return this; }
+        if(StringUtils.isEmpty(authority)) { return this; }
+        if(expireTime > 0 && expireTime < System.currentTimeMillis()) { return this; }
+        if(authority.indexOf('*' ) != -1) {
+            if(authorityPatterns == null) { authorityPatterns = new HashMap<>(); }
             authorityPatterns.put(authority, expireTime);
         } else {
-            if (authorityResources == null) { authorityResources = new LinkedHashMap<>(); }
+            if(authorityResources == null) { authorityResources = new LinkedHashMap<>(); }
             authorityResources.put(authority, expireTime);
         }
         return this;
@@ -58,31 +58,31 @@ public class AuthoritySet implements Serializable {
     }
 
     public boolean containsAuthority(String authority) {
-        if (StringUtils.isEmpty(authority)) { return false; }
-        if (isEmptyAuthorities()) { return false; }
+        if(StringUtils.isEmpty(authority)) { return false; }
+        if(isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
-        if (containsSupperAuthority(currentTime)) { return true; }
+        if(containsSupperAuthority(currentTime)) { return true; }
         return containsAuthority0(System.currentTimeMillis(), authority);
     }
 
     public boolean containsAllAuthorities(Collection<String> authorities) {
-        if (CollUtil.isEmpty(authorities)) { return true; }
-        if (isEmptyAuthorities()) { return false; }
+        if(CollUtil.isEmpty(authorities)) { return true; }
+        if(isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
-        if (containsSupperAuthority(currentTime)) { return true; }
-        for (String e : authorities) {
-            if (!containsAuthority0(currentTime, e)) { return false; }
+        if(containsSupperAuthority(currentTime)) { return true; }
+        for(String e : authorities) {
+            if(!containsAuthority0(currentTime, e)) { return false; }
         }
         return true;
     }
 
     public boolean containsAnyAuthorities(Collection<String> authorities) {
-        if (CollUtil.isEmpty(authorities)) { return true; }
-        if (isEmptyAuthorities()) { return false; }
+        if(CollUtil.isEmpty(authorities)) { return true; }
+        if(isEmptyAuthorities()) { return false; }
         long currentTime = System.currentTimeMillis();
-        if (containsSupperAuthority(currentTime)) { return true; }
-        for (String e : authorities) {
-            if (containsAuthority0(currentTime, e)) { return true; }
+        if(containsSupperAuthority(currentTime)) { return true; }
+        for(String e : authorities) {
+            if(containsAuthority0(currentTime, e)) { return true; }
         }
         return false;
     }
@@ -97,21 +97,21 @@ public class AuthoritySet implements Serializable {
     }
 
     private boolean containsAuthority0(long currentTime, String authority) {
-        if (StringUtils.isEmpty(authority) || StringUtils.equals(authority, SUPPER_AUTHORITY)) {
+        if(StringUtils.isEmpty(authority) || StringUtils.equals(authority, SUPPER_AUTHORITY)) {
             return false;
         }
         Long expireTime = CollUtil.get(authorityResources, authority);
-        if (expireTime == null) {
+        if(expireTime == null) {
             expireTime = matchAuthority0(authority);
-            if (expireTime == null) { return false; }
+            if(expireTime == null) { return false; }
         }
         return expireTime <= 0 || expireTime > currentTime;
     }
 
     private Long matchAuthority0(String authority) {
-        if (CollUtil.isEmpty(authorityPatterns)) { return null; }
-        for (Map.Entry<String, Long> e : authorityPatterns.entrySet()) {
-            if (PatternUtil.matchPath(e.getKey(), authority)) { return e.getValue(); }
+        if(CollUtil.isEmpty(authorityPatterns)) { return null; }
+        for(Map.Entry<String, Long> e : authorityPatterns.entrySet()) {
+            if(PatternUtil.matchPath(e.getKey(), authority)) { return e.getValue(); }
         }
         return null;
     }

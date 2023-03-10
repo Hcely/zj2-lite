@@ -13,7 +13,7 @@ import org.zj2.lite.common.util.DateUtil;
 import java.time.LocalDateTime;
 
 /**
- *  OrgEmployeeQuitHelper
+ * OrgEmployeeQuitHelper
  *
  * @author peijie.ye
  * @date 2023/1/1 21:10
@@ -27,7 +27,7 @@ public class OrgEmployeeQuitHelper {
 
     public void handle(String employeeId, LocalDateTime quitTime) {
         OrgEmployeeDTO employee = orgEmployeeService.getIfAbsentError(employeeId);
-        if (EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
+        if(EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
             updateEmployee(employeeId, quitTime);
             addLog(employee);
         }

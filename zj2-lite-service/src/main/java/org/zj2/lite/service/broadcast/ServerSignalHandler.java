@@ -1,7 +1,7 @@
 package org.zj2.lite.service.broadcast;
 
 /**
- *  ServerMsgHandler
+ * ServerMsgHandler
  *
  * @author peijie.ye
  * @date 2022/12/13 0:17

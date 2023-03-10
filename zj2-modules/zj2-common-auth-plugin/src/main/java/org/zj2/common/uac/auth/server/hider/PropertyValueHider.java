@@ -3,7 +3,7 @@ package org.zj2.common.uac.auth.server.hider;
 import org.zj2.lite.Supportable;
 
 /**
- *  AuthorityPropertyHider
+ * AuthorityPropertyHider
  *
  * @author peijie.ye
  * @date 2023/1/7 2:46

@@ -21,14 +21,14 @@ public class SysConfigUtil {
     private static final SpringBeanRef<SysConfigApi> SEQUENCE_API_REF = new SpringBeanRef<>(SysConfigApi.class);
 
     public static SysConfigDTO config(String configCode) {
-        if (StringUtils.isEmpty(configCode)) { return EMPTY_CONFIG; }
+        if(StringUtils.isEmpty(configCode)) { return EMPTY_CONFIG; }
         String appCode = AuthContext.currentAppCode();
         SysConfigDTO config = null;
-        if (StringUtils.isNotEmpty(appCode)) {
+        if(StringUtils.isNotEmpty(appCode)) {
             String cacheKey = SysConfigDTO.getConfigKey(appCode, configCode);
             config = CacheUtil.DEF_CACHE.getCache(cacheKey, configCode, s -> getConfig0(appCode, configCode), true);
         }
-        if (config == null) {
+        if(config == null) {
             String cacheKey = SysConfigDTO.getConfigKey(COMMON_APP, configCode);
             config = CacheUtil.DEF_CACHE.getCache(cacheKey, configCode, s -> getConfig0(COMMON_APP, configCode), true);
         }

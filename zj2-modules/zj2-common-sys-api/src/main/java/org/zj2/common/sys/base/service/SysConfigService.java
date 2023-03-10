@@ -7,7 +7,7 @@ import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  SysConfigService
+ * SysConfigService
  *
  * @author peijie.ye
  * @date 2022/12/10 2:31

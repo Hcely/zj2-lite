@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * <br>CreateDate 三月 21,2022
+ *
  * @author peijie.ye
  */
 public interface BaseInnerService<DTO> {// NOSONAR
@@ -48,6 +48,7 @@ public interface BaseInnerService<DTO> {// NOSONAR
 
     /**
      * 如果存在主键id，则更新,否则新增
+     *
      * @param dto
      * @return
      */
@@ -56,6 +57,7 @@ public interface BaseInnerService<DTO> {// NOSONAR
     /**
      * 尝试更新，更新失败则新增
      * 可能存在逻辑删问题，请注意
+     *
      * @param dto
      * @return
      */

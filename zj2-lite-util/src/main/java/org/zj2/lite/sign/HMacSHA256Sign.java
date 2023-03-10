@@ -30,18 +30,18 @@ public class HMacSHA256Sign implements DigestSign {
 
     @Override
     public String sign(String value) {
-        if (StringUtils.isEmpty(value)) { return ""; }
+        if(StringUtils.isEmpty(value)) { return ""; }
         return CodecUtil.encodeHex(sign(secretKey, value));
     }
 
     public static String signStr(String secret, String value) {
-        if (StringUtils.isEmpty(value)) { return ""; }
+        if(StringUtils.isEmpty(value)) { return ""; }
         SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         return CodecUtil.encodeHex(sign(secretKey, value));
     }
 
     public static byte[] signBytes(String secret, String value) {
-        if (StringUtils.isEmpty(value)) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
+        if(StringUtils.isEmpty(value)) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
         SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         return sign(secretKey, value);
     }
@@ -51,7 +51,7 @@ public class HMacSHA256Sign implements DigestSign {
             Mac sha256 = Mac.getInstance(ALGORITHM);
             sha256.init(secretKey);
             return sha256.doFinal(value.getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
+        } catch(Exception e) {
             return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
     }
@@ -59,12 +59,11 @@ public class HMacSHA256Sign implements DigestSign {
     public static byte[] signISO(String secret, CharSequence value, int startIdx, int endIdx) {
         try {
             Mac sha256 = Mac.getInstance(HMacSHA256Sign.ALGORITHM);
-            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.ISO_8859_1),
-                    HMacSHA256Sign.ALGORITHM);
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.ISO_8859_1), HMacSHA256Sign.ALGORITHM);
             sha256.init(secretKey);
-            for (int i = startIdx; i < endIdx; ++i) { sha256.update((byte) value.charAt(i)); }
+            for(int i = startIdx; i < endIdx; ++i) { sha256.update((byte)value.charAt(i)); }
             return sha256.doFinal();
-        } catch (Exception e) {
+        } catch(Exception e) {
             return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
     }

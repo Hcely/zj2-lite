@@ -28,8 +28,7 @@ public class DubboConsumerRequestContextFilter extends AbsClientRequestSignInter
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        String uri = ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
-                invocation.getParameterTypes());
+        String uri = ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(), invocation.getParameterTypes());
         setRequestContext(invocation, RequestMethods.DUBBO, uri);
         return invoker.invoke(invocation);
     }

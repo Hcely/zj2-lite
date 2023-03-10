@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * <br>CreateDate 三月 21,2022
+ *
  * @author peijie.ye
  */
 public interface BaseApi<DTO> {// NOSONAR

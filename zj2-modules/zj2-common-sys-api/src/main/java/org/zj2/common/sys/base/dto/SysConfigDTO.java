@@ -30,11 +30,11 @@ public class SysConfigDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static String getConfigKey(String appCode, String configCode) {
-        if (StringUtils.isEmpty(appCode)) { appCode = COMMON_APP_CODE; }
+        if(StringUtils.isEmpty(appCode)) { appCode = COMMON_APP_CODE; }
         StringBuilder sb = new StringBuilder(StringUtils.length(appCode) + StringUtils.length(configCode) + 16);
         sb.append("SYS_CONFIG:").append(appCode);
-        if (StringUtils.isNotEmpty(configCode)) {
-            sb.append(':').append(configCode);
+        if(StringUtils.isNotEmpty(configCode)) {
+            sb.append(':' ).append(configCode);
         }
         return sb.toString();
     }
@@ -142,7 +142,7 @@ public class SysConfigDTO implements Serializable {
 
     public LocalDateTime valueDate(String defaultValue) {
         LocalDateTime time = DateUtil.parse(configValue);
-        if (time == null) { time = DateUtil.parse(defaultValue); }
+        if(time == null) { time = DateUtil.parse(defaultValue); }
         return time;
     }
 }

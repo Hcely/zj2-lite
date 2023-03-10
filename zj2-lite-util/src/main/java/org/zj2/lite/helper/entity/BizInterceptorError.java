@@ -1,8 +1,8 @@
 package org.zj2.lite.helper.entity;
 
 /**
- *
  * <br>CreateDate 四月 03,2022
+ *
  * @author peijie.ye
  */
 public final class BizInterceptorError extends RuntimeException {

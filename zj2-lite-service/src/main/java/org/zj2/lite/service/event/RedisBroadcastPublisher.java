@@ -14,6 +14,7 @@ import org.zj2.lite.service.entity.event.MqEvent;
 /**
  * redis订阅消息发布者
  * <br>CreateDate 一月 16,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -28,16 +29,14 @@ class RedisBroadcastPublisher implements EventPublisher {
     @Override
     public void publish(BaseEvent<?> event) {
         MqEvent mqEvent = event.mqEvent();
-        if (mqEvent != null && event.containsMqType(TYPE)) {
+        if(mqEvent != null && event.containsMqType(TYPE)) {
             String topic = mqEvent.topic();
-            if (StringUtils.isNotEmpty(topic)) { send(topic, event.toJSONStr()); }
+            if(StringUtils.isNotEmpty(topic)) { send(topic, event.toJSONStr()); }
         }
     }
 
     public void send(String topic, Object value) {
-        String messageStr = value instanceof String ?
-                value.toString() :
-                JSON.toJSONString(value, SerializerFeature.DisableCircularReferenceDetect);
+        String messageStr = value instanceof String ? value.toString() : JSON.toJSONString(value, SerializerFeature.DisableCircularReferenceDetect);
         log.info("[Send-RedisBroadcast]-[topic=" + topic + "]-" + messageStr);
         stringRedisTemplate.convertAndSend(topic, messageStr);
     }

@@ -1,8 +1,5 @@
 package org.zj2.lite.service.configure;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -15,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.zj2.lite.common.constant.ZJ2Constants;
-import org.zj2.lite.common.entity.result.ZResult;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.service.ApiDoc;
 import org.zj2.lite.service.constant.ServiceConstants;
@@ -51,8 +47,7 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
     private Set<String> basePackages;
 
     public ZJSwaggerConfiguration() {
-        parameters = List.of(
-                createParameter(ServiceConstants.AUTHORIZATION, "认证信息<JWT/Digest>", ParameterType.HEADER));
+        parameters = List.of(createParameter(ServiceConstants.AUTHORIZATION, "认证信息<JWT/Digest>", ParameterType.HEADER));
     }
 
     @Bean
@@ -61,12 +56,12 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
         String docTitle = StringUtils.defaultIfEmpty(title, "ZJ2.0接口文档");
         String docVersion = StringUtils.defaultIfEmpty(version, "1.0");
         ApiInfo apiInfo = new ApiInfoBuilder().title(docTitle).version(docVersion).build();
-        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).apiInfo(apiInfo).enable(true)
-                .select().apis(requestHandler -> {
+        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).apiInfo(apiInfo).enable(true).select()
+                .apis(requestHandler -> {
                     //noinspection deprecation
                     Class<?> type = requestHandler.declaringClass();//NOSONAR
                     String packageName = type.getPackageName();
-                    if (StringUtils.startsWith(packageName, ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
+                    if(StringUtils.startsWith(packageName, ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
                         return true;
                     }
                     return CollUtil.anyMatch(basePackages, e -> StringUtils.startsWith(packageName, e));
@@ -82,17 +77,16 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         int i = 0;
-        for (String name : beanFactory.getBeanDefinitionNames()) {
+        for(String name : beanFactory.getBeanDefinitionNames()) {
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(name);
-            if (isApiDoc(beanDefinition.getBeanClassName())) {
-                ApiDoc apiDoc = (ApiDoc) beanFactory.getBean(name);
+            if(isApiDoc(beanDefinition.getBeanClassName())) {
+                ApiDoc apiDoc = (ApiDoc)beanFactory.getBean(name);
                 String docGroupName = apiDoc.getGroupName();
                 String docTitle = StringUtils.defaultIfEmpty(apiDoc.getTitle(), docGroupName);
                 String docVersion = StringUtils.defaultIfEmpty(apiDoc.getVersion(), version);
                 String basePackage = apiDoc.getBasePackage();
                 addPackage(basePackage);
-                beanFactory.registerSingleton(name + "$docket_" + i,
-                        createDocket(docTitle, docVersion, docGroupName, basePackage));
+                beanFactory.registerSingleton(name + "$docket_" + i, createDocket(docTitle, docVersion, docGroupName, basePackage));
                 log.info("加载文档模块:{}", docGroupName);
                 ++i;
             }
@@ -100,7 +94,7 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
     }
 
     private void addPackage(String basePackage) {
-        if (basePackages == null) { basePackages = new HashSet<>(); }
+        if(basePackages == null) { basePackages = new HashSet<>(); }
         basePackages.add(basePackage);
     }
 
@@ -108,17 +102,16 @@ public class ZJSwaggerConfiguration implements EnvironmentAware, BeanFactoryPost
         title = StringUtils.defaultIfEmpty(title, "ZJ2.0接口文档");
         version = StringUtils.defaultIfEmpty(version, "1.0");
         ApiInfo apiInfo = new ApiInfoBuilder().title(title).version(version).build();
-        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).groupName(group)
-                .apiInfo(apiInfo).enable(true).select().apis(RequestHandlerSelectors.basePackage(basePackages))
-                .paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.OAS_30).globalRequestParameters(parameters).groupName(group).apiInfo(apiInfo).enable(true).select()
+                .apis(RequestHandlerSelectors.basePackage(basePackages)).paths(PathSelectors.any()).build();
     }
 
     private static boolean isApiDoc(String className) {
-        if (!StringUtils.containsIgnoreCase(className, ApiDoc.class.getSimpleName())) { return false; }
+        if(!StringUtils.containsIgnoreCase(className, ApiDoc.class.getSimpleName())) { return false; }
         try {
             Class<?> type = Class.forName(className);
             return ApiDoc.class.isAssignableFrom(type);
-        } catch (Throwable ignored) {//NOSONAR
+        } catch(Throwable ignored) {//NOSONAR
         }
         return false;
     }

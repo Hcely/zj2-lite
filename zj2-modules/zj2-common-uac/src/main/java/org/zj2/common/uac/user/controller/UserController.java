@@ -70,16 +70,14 @@ public class UserController {
     @ApiOperation("编辑手机号接口")
     @PostMapping("editMobile")
     public ZResult editMobile(@RequestBody UserEditMobileReq req) {
-        userService.editUserValue(new UserEditValueReq(req.getUserId(), UserValueTypeEnum.MOBILE, req.getUserMobile(),
-                req.getUserMobileAreaCode()));
+        userService.editUserValue(new UserEditValueReq(req.getUserId(), UserValueTypeEnum.MOBILE, req.getUserMobile(), req.getUserMobileAreaCode()));
         return ZRBuilder.successResult();
     }
 
     @ApiOperation("编辑邮件接口")
     @PostMapping("editEmail")
     public ZResult editEmail(@RequestBody UserEditEmailReq req) {
-        userService.editUserValue(
-                new UserEditValueReq(req.getUserId(), UserValueTypeEnum.EMAIL, req.getUserEmail(), null));
+        userService.editUserValue(new UserEditValueReq(req.getUserId(), UserValueTypeEnum.EMAIL, req.getUserEmail(), null));
         return ZRBuilder.successResult();
     }
 

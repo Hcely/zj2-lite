@@ -7,8 +7,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * <br>CreateDate 三月 26,2022
+ *
  * @author peijie.ye
  */
 @Component
@@ -29,9 +29,9 @@ class ApplicationEventAop {
         final boolean ignoreError = EventPublishManager.isIgnoreError();
         try {
             return joinPoint.proceed();
-        } catch (Throwable e) {// NOSONAR
+        } catch(Throwable e) {// NOSONAR
             EventPublishManager.logger.error("事件处理异常", e);
-            if (ignoreError) {
+            if(ignoreError) {
                 return null;
             } else {
                 throw e;

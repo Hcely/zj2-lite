@@ -35,8 +35,8 @@ public class LongHolder extends Number {
     }
 
     public LongHolder add(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.add(this.value, v, context).longValue();
         }
         return this;
@@ -52,8 +52,8 @@ public class LongHolder extends Number {
     }
 
     public LongHolder sub(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.sub(this.value, v, context).longValue();
         }
         return this;
@@ -69,7 +69,7 @@ public class LongHolder extends Number {
     }
 
     public LongHolder multi(Number v, MathContext context) {
-        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
         this.value = NumUtil.multi(this.value, v, context).longValue();
         return this;
     }
@@ -84,7 +84,7 @@ public class LongHolder extends Number {
     }
 
     public LongHolder divide(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        if(value instanceof NumHolder) { value = ((NumHolder)value).value; }
         Number v = NumUtil.divide(this.value, value, context);
         this.value = v == null ? 0 : v.longValue();
         return this;
@@ -92,7 +92,7 @@ public class LongHolder extends Number {
 
     @Override
     public int intValue() {
-        return (int) value;
+        return (int)value;
     }
 
     @Override

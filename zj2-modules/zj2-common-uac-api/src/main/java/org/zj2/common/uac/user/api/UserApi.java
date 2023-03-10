@@ -6,7 +6,7 @@ import org.zj2.lite.service.ApiReference;
 import org.zj2.lite.service.BaseApi;
 
 /**
- *  UserApi
+ * UserApi
  *
  * @author peijie.ye
  * @date 2022/11/27 20:28

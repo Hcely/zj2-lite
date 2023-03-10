@@ -28,7 +28,7 @@ public class AuthorizationServerSignFactory implements AuthorizationFactory {
     @Override
     public AuthContext create(RequestContext requestContext, String authorization) {
         AuthorizationServerSign sign = ServerSignUtil.parse(authorization);
-        if (sign == null) { throw AuthUtil.unAuthorityErr("无效签名格式"); }
+        if(sign == null) { throw AuthUtil.unAuthorityErr("无效签名格式"); }
         AuthContext context = new AuthContext();
         context.setAuthorization(sign);
         context.setTokenType(TokenType.SERVER_SIGN);

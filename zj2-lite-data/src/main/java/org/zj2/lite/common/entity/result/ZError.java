@@ -102,8 +102,8 @@ public class ZError extends RuntimeException implements ZStatusMsg, Cloneable {
     @Override
     public ZError clone() {//NOSONAR
         try {
-            return (ZError) super.clone();
-        } catch (CloneNotSupportedException e) {
+            return (ZError)super.clone();
+        } catch(CloneNotSupportedException e) {
             throw new ZError();
         }
     }

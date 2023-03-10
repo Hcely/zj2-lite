@@ -21,17 +21,17 @@ public class NumRuleUtil {
 
     static SysNumRuleDTO getNumRule(String numRuleCode) {
         final SysNumRuleApi api = SEQUENCE_API_REF.get();
-        if (api == null) { throw ZRBuilder.builder("没有序号服务").buildError(); }
+        if(api == null) { throw ZRBuilder.builder("没有序号服务").buildError(); }
         String cacheKey = SysNumRuleDTO.getRuleCacheKey(numRuleCode);
         return CacheUtil.DEF_CACHE.getCache(cacheKey, numRuleCode, api::getRule, true);
     }
 
     static String next(NumNextReq req, boolean errorBack) {
         final SysNumRuleApi api = SEQUENCE_API_REF.get();
-        if (api == null) { throw ZRBuilder.builder("没有序号服务").buildError(); }
+        if(api == null) { throw ZRBuilder.builder("没有序号服务").buildError(); }
         final SequenceNo sequenceNo = api.next(req);
-        if (sequenceNo == null) { throw ZRBuilder.builder("生成序号异常").buildError(); }
-        if (errorBack) {
+        if(sequenceNo == null) { throw ZRBuilder.builder("生成序号异常").buildError(); }
+        if(errorBack) {
             TransactionSyncUtil.afterRollback(() -> AsyncUtil.execute(() -> api.back(sequenceNo)));
         }
         return sequenceNo.getSequenceNo();

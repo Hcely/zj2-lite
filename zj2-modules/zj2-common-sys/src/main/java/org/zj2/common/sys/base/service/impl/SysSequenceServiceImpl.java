@@ -20,14 +20,13 @@ import org.zj2.common.sys.base.service.helper.SequenceSetNumHelper;
 import org.zj2.lite.service.BaseServiceImpl;
 
 /**
- *  SysConfigServiceImpl
+ * SysConfigServiceImpl
  *
  * @author peijie.ye
  * @date 2022/12/10 3:00
  */
 @Service
-public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, SysSequence, SysSequenceDTO>
-        implements SysSequenceService {
+public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, SysSequence, SysSequenceDTO> implements SysSequenceService {
     @Autowired
     SequenceNextNoHelper nextHelper;
     @Autowired
@@ -53,7 +52,7 @@ public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, S
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void setSequenceNum(NumNextReq rule, long num) {
-        if (num < 0) { return; }
+        if(num < 0) { return; }
         NumNextContext context = new NumNextContext(rule, num);
         sequenceSetNumHelper.handle(context);
     }
@@ -65,17 +64,16 @@ public class SysSequenceServiceImpl extends BaseServiceImpl<SysSequenceMapper, S
 
     @Override
     public boolean update(String sequenceKey, Long oldNum, Long newNum) {
-        return update(updateWrapper().set(SysSequenceDTO::getSequenceNum, newNum)
-                .eq(SysSequenceDTO::getSequenceKey, sequenceKey).eq(SysSequenceDTO::getSequenceNum, oldNum)) > 0;
+        return update(updateWrapper().set(SysSequenceDTO::getSequenceNum, newNum).eq(SysSequenceDTO::getSequenceKey, sequenceKey)
+                .eq(SysSequenceDTO::getSequenceNum, oldNum)) > 0;
     }
 
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void back(SequenceNo sequenceNo) {
         SysSequenceDTO sequence = getOne(
-                wrapper().eq(SysSequenceDTO::getSequenceRuleCode, sequenceNo.getSequenceRuleCode())
-                        .orderByDesc(SysSequenceDTO::getSequenceId));
-        if (sequence != null && !StringUtils.equalsIgnoreCase(sequence.getSequenceKey(), sequenceNo.getSequenceKey())) {
+                wrapper().eq(SysSequenceDTO::getSequenceRuleCode, sequenceNo.getSequenceRuleCode()).orderByDesc(SysSequenceDTO::getSequenceId));
+        if(sequence != null && !StringUtils.equalsIgnoreCase(sequence.getSequenceKey(), sequenceNo.getSequenceKey())) {
             redisTemplate.opsForList().rightPush(sequenceNo.getSequenceKey(), sequenceNo.getSequenceNo());
         }
     }

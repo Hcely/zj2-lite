@@ -13,7 +13,7 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AuthUserNamePwHandler
+ * AuthUserNamePwHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 9:20
@@ -27,8 +27,8 @@ public class AuthFindUserHandler implements BizVHandler<AuthContext> {
     public void handle(AuthContext context) {
         AuthNamePwReq req = context.getReq();
         UserDTO user = getUser(req);
-        if (user == null) { throw ZRBuilder.failureErr("用户账号或密码错误"); }
-        if (!StringUtils.equalsIgnoreCase(UserUtil.buildPassword(req.getPassword()), user.getUserPassword())) {
+        if(user == null) { throw ZRBuilder.failureErr("用户账号或密码错误"); }
+        if(!StringUtils.equalsIgnoreCase(UserUtil.buildPassword(req.getPassword()), user.getUserPassword())) {
             throw ZRBuilder.failureErr("用户账号或密码错误");
         }
         context.setUser(user);
@@ -36,12 +36,12 @@ public class AuthFindUserHandler implements BizVHandler<AuthContext> {
 
     private UserDTO getUser(AuthNamePwReq req) {
         UserDTO user = null;
-        if (UserUtil.isMobile(req.getName())) {
+        if(UserUtil.isMobile(req.getName())) {
             user = userService.findUser(UserValueTypeEnum.MOBILE, req.getName(), req.getNameExtValue());
-        } else if (UserUtil.isEmail(req.getName())) {
+        } else if(UserUtil.isEmail(req.getName())) {
             user = userService.findUser(UserValueTypeEnum.MOBILE, req.getName(), null);
         }
-        if (user == null) {
+        if(user == null) {
             user = userService.findUser(UserValueTypeEnum.ACCOUNT_NAME, req.getName(), null);
         }
         return user;

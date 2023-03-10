@@ -3,7 +3,7 @@ package org.zj2.lite.service.broadcast;
 import org.zj2.lite.Supportable;
 
 /**
- *  ServerMsgListener
+ * ServerMsgListener
  *
  * @author peijie.ye
  * @date 2022/12/12 16:11

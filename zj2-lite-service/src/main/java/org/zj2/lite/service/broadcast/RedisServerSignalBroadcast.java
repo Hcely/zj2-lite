@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- *  RedisServerMsgBroadcast
+ * RedisServerMsgBroadcast
  *
  * @author peijie.ye
  * @date 2022/12/13 0:28
@@ -40,11 +40,10 @@ public class RedisServerSignalBroadcast extends AbstractServerSignalBroadcast {
     protected void init() {
         //
         RedisConnection redisConnection = redisTemplate.getRequiredConnectionFactory().getConnection();
-        redisConnection.subscribe(
-                (message, bytes) -> msgHandler().onMsg(JSON.parseObject(message.getBody(), ServerSignal.class)),
+        redisConnection.subscribe((message, bytes) -> msgHandler().onMsg(JSON.parseObject(message.getBody(), ServerSignal.class)),
                 broadcastChannel.getBytes(StandardCharsets.UTF_8));
         //
-        for (ServerSignalListener l : CollUtil.descIterable(serverSignalListeners)) {
+        for(ServerSignalListener l : CollUtil.descIterable(serverSignalListeners)) {
             addSignalListener(l);
         }
     }

@@ -18,8 +18,7 @@ import org.zj2.lite.spring.SpringBeanRef;
  * @date 2023/2/13 15:31
  */
 public abstract class AuthAbstractHandler implements AuthHandler {
-    private static final SpringBeanRef<TokenAuthorityApi> TOKEN_AUTHORITY_REF = new SpringBeanRef<>(
-            TokenAuthorityApi.class);
+    private static final SpringBeanRef<TokenAuthorityApi> TOKEN_AUTHORITY_REF = new SpringBeanRef<>(TokenAuthorityApi.class);
     private static final SpringBeanRef<AnonymityAuthorityProvider[]> ANONYMITY_PROVIDERS_REF = new SpringBeanRef<>(
             AnonymityAuthorityProvider[].class);
 
@@ -27,7 +26,7 @@ public abstract class AuthAbstractHandler implements AuthHandler {
         final String tokenId = authContext.getTokenId();
         final String userId = authContext.getUserId();
         AuthoritySet authoritySet;
-        if (StringUtils.isEmpty(tokenId) || authContext.isAuthenticated()) {
+        if(StringUtils.isEmpty(tokenId) || authContext.isAuthenticated()) {
             authoritySet = getTokenAuthoritySet(tokenId);
         } else {
             authoritySet = getAnonymityAuthoritySet(requestContext, authContext);
@@ -37,16 +36,16 @@ public abstract class AuthAbstractHandler implements AuthHandler {
 
     private AuthoritySet getTokenAuthoritySet(String tokenId) {
         final TokenAuthorityApi tokenAuthorityApi = TOKEN_AUTHORITY_REF.get();
-        if (tokenAuthorityApi == null) { return null; }
+        if(tokenAuthorityApi == null) { return null; }
         return CacheUtil.DEF_CACHE.get(AuthoritySet.class, tokenId, tokenAuthorityApi::getAuthorities, 180_000);
     }
 
     private AuthoritySet getAnonymityAuthoritySet(RequestContext requestContext, AuthContext authContext) {
         AnonymityAuthorityProvider[] authorityProviders = ANONYMITY_PROVIDERS_REF.get();
-        if (CollUtil.isNotEmpty(authorityProviders)) {
-            for (AnonymityAuthorityProvider provider : authorityProviders) {
+        if(CollUtil.isNotEmpty(authorityProviders)) {
+            for(AnonymityAuthorityProvider provider : authorityProviders) {
                 AuthoritySet authoritySet = provider.get(requestContext, authContext);
-                if (authoritySet != null) { return authoritySet; }
+                if(authoritySet != null) { return authoritySet; }
             }
         }
         return null;

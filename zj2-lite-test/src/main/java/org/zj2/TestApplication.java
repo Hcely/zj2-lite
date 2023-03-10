@@ -16,7 +16,7 @@ public class TestApplication {
     public static void main(String[] args) {
         try {
             SpringApplication.run(TestApplication.class, args);
-        } catch (Throwable e) {// NOSONAR
+        } catch(Throwable e) {// NOSONAR
             e.printStackTrace();
         }
     }

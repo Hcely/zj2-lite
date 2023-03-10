@@ -14,9 +14,9 @@ import static org.zj2.lite.codec.CodecUtil.plus;
  */
 public interface Crypto {
     default String encrypt64(String value) {
-        if (StringUtils.isEmpty(value)) { return StringUtils.EMPTY; }
+        if(StringUtils.isEmpty(value)) { return StringUtils.EMPTY; }
         byte[] valueData = value.getBytes(StandardCharsets.UTF_8);
-        if (plus.isAllowFastMode(valueData.length)) {
+        if(plus.isAllowFastMode(valueData.length)) {
             // 快速模式
             return plus.fastEncrypt64(this, null, valueData).toString();
         } else {
@@ -25,9 +25,9 @@ public interface Crypto {
     }
 
     default StringBuilder encrypt64(StringBuilder sb, String value) {
-        if (StringUtils.isEmpty(value)) { return sb == null ? new StringBuilder() : sb; }
+        if(StringUtils.isEmpty(value)) { return sb == null ? new StringBuilder() : sb; }
         byte[] valueData = value.getBytes(StandardCharsets.UTF_8);
-        if (plus.isAllowFastMode(valueData.length)) {
+        if(plus.isAllowFastMode(valueData.length)) {
             // 快速模式
             return plus.fastEncrypt64(this, sb, valueData);
         } else {
@@ -40,8 +40,8 @@ public interface Crypto {
     }
 
     default String decrypt64(CharSequence base64Value, int offset, int length) {
-        if (length == 0) { return StringUtils.EMPTY; }
-        if (plus.isAllowFastMode(length)) {
+        if(length == 0) { return StringUtils.EMPTY; }
+        if(plus.isAllowFastMode(length)) {
             // 快速模式
             return plus.fastDecrypt64(this, base64Value, offset, length);
         } else {

@@ -64,7 +64,7 @@ public class AppDTO implements Serializable {
      */
     @JProperty(json = APP_CONFIG)
     private Integer requiredClient;
-    
+
     /**
      * 应用配置
      */

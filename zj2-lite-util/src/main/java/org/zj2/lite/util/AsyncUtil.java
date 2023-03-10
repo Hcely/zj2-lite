@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.zj2.lite.common.context.ZContexts;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.NumUtil;
-import org.zj2.lite.common.util.ZThread;
 import org.zj2.lite.util.thread.AsyncTaskThread;
 import org.zj2.lite.util.thread.AsyncThreadFactory;
 import org.zj2.lite.util.thread.TaskWorker;
@@ -27,10 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * AsyncUtil 异步执行工具
@@ -55,7 +52,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         EXECUTOR = createExecutor(coreNum);
         WORKERS = new TaskWorker[coreNum];
         MASK = coreNum - 1;
-        for (int i = 0; i < coreNum; ++i) {
+        for(int i = 0; i < coreNum; ++i) {
             WORKERS[i] = new TaskWorker();
         }
     }
@@ -72,7 +69,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     @Override
     public void destroy() {
         EXECUTOR.shutdown();
-        for (TaskWorker e : WORKERS) { e.destroy(); }
+        for(TaskWorker e : WORKERS) { e.destroy(); }
     }
 
     public static boolean isAsyncThread() {
@@ -89,12 +86,12 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
      * @param command
      */
     public static void execute(final Runnable command) {
-        if (command != null) { EXECUTOR.execute(command); }
+        if(command != null) { EXECUTOR.execute(command); }
     }
 
     public static void execute(final Object key, final Runnable command) {
-        if (command != null) {
-            if (key == null) {
+        if(command != null) {
+            if(key == null) {
                 EXECUTOR.execute(command);
             } else {
                 WORKERS[key.hashCode() & MASK].execute(of(command));
@@ -108,8 +105,8 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
      * @param command
      */
     public static void executeAfterCommit(final Runnable command) {
-        if (command == null) { return; }
-        if (TransactionSyncUtil.isTransactionActive()) {
+        if(command == null) { return; }
+        if(TransactionSyncUtil.isTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), AsyncUtil::execute);
         } else {
             execute(command);
@@ -117,8 +114,8 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
     }
 
     public static void executeAfterCommit(final Object key, final Runnable command) {
-        if (command == null) { return; }
-        if (TransactionSyncUtil.isTransactionActive()) {
+        if(command == null) { return; }
+        if(TransactionSyncUtil.isTransactionActive()) {
             TransactionSyncUtil.afterCommit(of(command), cmd -> execute(key, cmd));
         } else {
             execute(command);
@@ -135,28 +132,28 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
 
     @SneakyThrows
     private static void join0(boolean ignoreError, Runnable[] commands) {//NOSONAR
-        if (CollUtil.isEmpty(commands)) { return; }
+        if(CollUtil.isEmpty(commands)) { return; }
         List<Future<?>> futures = new ArrayList<>(commands.length);
         Throwable ex = null;
-        for (Runnable cmd : commands) {
-            if (cmd != null) { futures.add(EXECUTOR.submit(cmd)); }
+        for(Runnable cmd : commands) {
+            if(cmd != null) { futures.add(EXECUTOR.submit(cmd)); }
         }
-        for (Future<?> f : futures) {
-            if (ex != null) {
+        for(Future<?> f : futures) {
+            if(ex != null) {
                 f.cancel(false);
             } else {
                 try {
                     f.get();
-                } catch (InterruptedException | CancellationException ignored) {//NOSONAR
+                } catch(InterruptedException | CancellationException ignored) {//NOSONAR
                     // NOTHING
-                } catch (ExecutionException e) {
-                    if (!ignoreError) {
+                } catch(ExecutionException e) {
+                    if(!ignoreError) {
                         ex = e.getCause();
                     }
                 }
             }
         }
-        if (ex != null) { throw ex; }
+        if(ex != null) { throw ex; }
     }
 
     /**
@@ -194,7 +191,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
             ZContexts oldContext = ZContexts.setContexts(context);
             try {
                 run0();
-            } catch (Throwable e) {// NOSONAR
+            } catch(Throwable e) {// NOSONAR
                 error = e;
                 LOGGER.error("[异步任务执行异常]", e);
                 throw e;
@@ -204,7 +201,7 @@ public class AsyncUtil implements AsyncConfigurer, DisposableBean {
         }
 
         protected void run0() throws Throwable {
-            if (command != null) { command.run(); }
+            if(command != null) { command.run(); }
         }
     }
 

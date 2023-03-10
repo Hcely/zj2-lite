@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *  AppOrgPlusDTO
+ * AppOrgPlusDTO
  *
  * @author peijie.ye
  * @date 2023/1/7 12:28

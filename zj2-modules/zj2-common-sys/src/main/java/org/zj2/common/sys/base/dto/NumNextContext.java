@@ -9,7 +9,7 @@ import org.zj2.lite.common.util.DateUtil;
 import java.time.LocalDateTime;
 
 /**
- *  SequenceNextContext
+ * SequenceNextContext
  *
  * @author peijie.ye
  * @date 2022/12/11 13:53

@@ -27,9 +27,9 @@ public class DataCollectionStream<T> implements DataFixedStream<T>, Resettable {
 
     @Override
     public T next() {
-        while (iterator.hasNext()) {
+        while(iterator.hasNext()) {
             T value = iterator.next();
-            if (value != null) { return value; }
+            if(value != null) { return value; }
         }
         return null;
     }

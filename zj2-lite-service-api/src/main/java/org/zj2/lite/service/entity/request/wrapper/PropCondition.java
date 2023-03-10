@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- *  QueryCondition
+ * QueryCondition
  *
  * @author peijie.ye
  * @date 2022/11/27 4:13

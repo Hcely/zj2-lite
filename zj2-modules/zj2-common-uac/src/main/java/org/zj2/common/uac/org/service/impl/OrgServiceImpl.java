@@ -36,11 +36,11 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
         req.setOrgCode(StringUtils.trimToEmpty(req.getOrgCode()));
         req.setOrgName(StringUtils.trimToEmpty(req.getOrgName()));
         // 检验参数
-        if (StringUtils.length(req.getOrgCode()) > 60) { throw ZRBuilder.failureErr("机构编码超过60个字"); }
-        if (!PatternUtil.isWord(req.getOrgCode())) { throw ZRBuilder.failureErr("机构编码格式不合法"); }
+        if(StringUtils.length(req.getOrgCode()) > 60) { throw ZRBuilder.failureErr("机构编码超过60个字"); }
+        if(!PatternUtil.isWord(req.getOrgCode())) { throw ZRBuilder.failureErr("机构编码格式不合法"); }
         // 检查编码唯一性
         boolean exist = exists(wrapper().eq(OrgDTO::getOrgCode, req.getOrgCode()));
-        if (exist) { throw ZRBuilder.failureErr("机构已存在"); }
+        if(exist) { throw ZRBuilder.failureErr("机构已存在"); }
         // 插入机构
         AuthContext.current().setOrgCode(req.getOrgCode());
         OrgDTO org = new OrgDTO();
@@ -55,7 +55,7 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
     public void edit(OrgEditReq req) {
         // 处理参数
         OrgDTO org = getByCode(req.getOrgCode());
-        if (org != null) {
+        if(org != null) {
             OrgDTO update = new OrgDTO();
             update.setOrgId(org.getOrgId());
             update.setOrgName(req.getOrgName());
@@ -67,7 +67,7 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
     @Override
     public void enable(String orgCode) {
         OrgDTO org = getByCode(orgCode);
-        if (org != null && BooleanUtil.isFalse(org.getEnableFlag())) {
+        if(org != null && BooleanUtil.isFalse(org.getEnableFlag())) {
             OrgDTO update = new OrgDTO();
             update.setOrgId(org.getOrgId());
             update.setEnableFlag(1);
@@ -80,7 +80,7 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
     @Override
     public void disable(String orgCode) {
         OrgDTO org = getByCode(orgCode);
-        if (org != null && BooleanUtil.isTrue(org.getEnableFlag())) {
+        if(org != null && BooleanUtil.isTrue(org.getEnableFlag())) {
             OrgDTO update = new OrgDTO();
             update.setOrgId(org.getOrgId());
             update.setEnableFlag(0);
@@ -92,7 +92,6 @@ public class OrgServiceImpl extends BaseServiceImpl<OrgMapper, Org, OrgDTO> impl
     @Override
     public ZListResp<OrgDTO> pageQuery(OrgQuery query) {
         return pageQuery(query, q -> query(
-                wrapper(true).like(OrgDTO::getOrgCode, q.getOrgCode()).like(OrgDTO::getOrgName, q.getOrgName())
-                        .orderByDesc(OrgDTO::getOrgId)));
+                wrapper(true).like(OrgDTO::getOrgCode, q.getOrgCode()).like(OrgDTO::getOrgName, q.getOrgName()).orderByDesc(OrgDTO::getOrgId)));
     }
 }

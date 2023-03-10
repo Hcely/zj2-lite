@@ -9,7 +9,7 @@ import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  AppOrgService
+ * AppOrgService
  *
  * @author peijie.ye
  * @date 2022/12/3 7:37
@@ -17,6 +17,7 @@ import org.zj2.lite.service.BaseInnerService;
 public interface AppOrgService extends BaseInnerService<AppOrgDTO>, AppOrgApi {
     /**
      * 添加机构
+     *
      * @param req
      * @return
      */
@@ -24,24 +25,28 @@ public interface AppOrgService extends BaseInnerService<AppOrgDTO>, AppOrgApi {
 
     /**
      * 移除机构
+     *
      * @param appOrgId
      */
     void removeOrg(String appOrgId);
 
     /**
      * 启用
+     *
      * @param appOrgId
      */
     void enable(String appOrgId);
 
     /**
      * 禁用
+     *
      * @param appOrgId
      */
     void disable(String appOrgId);
 
     /**
      * 查询应用机构
+     *
      * @param query
      * @return
      */

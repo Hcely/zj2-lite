@@ -8,7 +8,7 @@ import org.zj2.common.uac.org.service.OrgEmployeeLogService;
 import org.zj2.lite.service.BaseServiceImpl;
 
 /**
- *  OrgEmployeeLogServiceImpl
+ * OrgEmployeeLogServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40

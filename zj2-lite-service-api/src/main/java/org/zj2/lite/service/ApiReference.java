@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
  * <br>CreateDate 三月 21,2022
+ *
  * @author peijie.ye
  */
 @Target(ElementType.TYPE)

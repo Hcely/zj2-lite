@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- *
  * <br>CreateDate 七月 27,2022
+ *
  * @author peijie.ye
  */
 public class CryptUtil {
@@ -33,14 +33,14 @@ public class CryptUtil {
     }
 
     public static void addCryptProvider(String key) {
-        if (StringUtils.isNotEmpty(key) && !AES_SECRET_KEYS.contains(key)) {
+        if(StringUtils.isNotEmpty(key) && !AES_SECRET_KEYS.contains(key)) {
             addCryptProvider(new AesCryptProvider(key));
         }
     }
 
     public static synchronized void addCryptProvider(CryptProvider cryptProvider) {
-        if (cryptProvider instanceof AesCryptProvider) {
-            if (AES_SECRET_KEYS.add(((AesCryptProvider) cryptProvider).secretKey)) {
+        if(cryptProvider instanceof AesCryptProvider) {
+            if(AES_SECRET_KEYS.add(((AesCryptProvider)cryptProvider).secretKey)) {
                 CRYPT_PROVIDERS.add(cryptProvider);
             }
         } else {
@@ -53,7 +53,7 @@ public class CryptUtil {
     }
 
     public static String encrypt(String val) {
-        if (StringUtils.isEmpty(val)) { return val; }
+        if(StringUtils.isEmpty(val)) { return val; }
         CryptProvider provider = getDefCryptProvider();
         return provider.supportsEncrypt(val) ? provider.encrypt(val) : val;
     }
@@ -64,19 +64,19 @@ public class CryptUtil {
     }
 
     public static String decrypt(String val) {
-        if (StringUtils.isNotEmpty(val)) {
+        if(StringUtils.isNotEmpty(val)) {
             String newVal;
             // 优先使用默认的
             CryptProvider provider = getDefCryptProvider();
-            if (provider.supportsDecrypt(val) && (newVal = provider.decrypt(val)) != null) {
+            if(provider.supportsDecrypt(val) && (newVal = provider.decrypt(val)) != null) {
                 return newVal;
             }
             CopyOnWriteArrayList<CryptProvider> providers = CRYPT_PROVIDERS;
             int size = providers.size();
             //noinspection ForLoopReplaceableByForEach
-            for (int i = 0; i < size; ++i) {
+            for(int i = 0; i < size; ++i) {
                 CryptProvider p = providers.get(i);
-                if (p != null && p.supportsDecrypt(val) && (newVal = p.decrypt(val)) != null) { return newVal; }
+                if(p != null && p.supportsDecrypt(val) && (newVal = p.decrypt(val)) != null) { return newVal; }
             }
         }
         return val;
@@ -84,12 +84,12 @@ public class CryptUtil {
 
     @SafeVarargs
     public static <T> void decryptList(Collection<? extends T> beans, PropGetter<T, String>... getters) {
-        if (getters == null || getters.length == 0 || CollUtil.isEmpty(beans)) { return; }
-        for (PropGetter<T, String> getter : getters) {
+        if(getters == null || getters.length == 0 || CollUtil.isEmpty(beans)) { return; }
+        for(PropGetter<T, String> getter : getters) {
             Field field = null;
-            for (T e : beans) {
-                if (e != null) {
-                    if (field == null && (field = getBeanField(e.getClass(), getter)) == null) { break; }
+            for(T e : beans) {
+                if(e != null) {
+                    if(field == null && (field = getBeanField(e.getClass(), getter)) == null) { break; }
                     decryptBean(e, getter, field);
                 }
             }
@@ -98,23 +98,23 @@ public class CryptUtil {
 
     @SafeVarargs
     public static <T> void decryptBean(T bean, PropGetter<T, String>... getters) {
-        if (bean != null && getters != null && getters.length > 0) {
-            for (PropGetter<T, String> getter : getters) {
+        if(bean != null && getters != null && getters.length > 0) {
+            for(PropGetter<T, String> getter : getters) {
                 decryptBean(bean, getter, getBeanField(bean.getClass(), getter));
             }
         }
     }
 
     private static <T> void decryptBean(T bean, PropGetter<T, String> getter, Field field) {
-        if (field == null) { return; }
+        if(field == null) { return; }
         try {
             String value = getter.apply(bean);
             String newValue = decrypt(value);
             //noinspection StringEquality
-            if (value != newValue) {// NOSONAR
+            if(value != newValue) {// NOSONAR
                 FieldUtils.writeField(field, bean, newValue);
             }
-        } catch (Throwable ignored) { }// NOSONAR
+        } catch(Throwable ignored) { }// NOSONAR
     }
 
     @SuppressWarnings("all")
@@ -122,7 +122,7 @@ public class CryptUtil {
         try {
             String fieldName = PropertyUtil.getLambdaFieldName(getter);
             return StringUtils.isEmpty(fieldName) ? null : FieldUtils.getField(beanType, fieldName, true);
-        } catch (Throwable ignored) {// NOSONAR
+        } catch(Throwable ignored) {// NOSONAR
             return null;
         }
     }
@@ -158,7 +158,7 @@ public class CryptUtil {
             this.version = version;
             this.versionPrefix = StringUtils.upperCase(PREFIX + Integer.toString(version, 36) + ">:");
             this.cryptos = new Aes128Crypto[CRYPTO_SIZE];
-            for (int i = 0; i < CRYPTO_SIZE; ++i) {
+            for(int i = 0; i < CRYPTO_SIZE; ++i) {
                 cryptos[i] = new Aes128Crypto();
                 cryptos[i].init(secretKey);
             }
@@ -180,10 +180,10 @@ public class CryptUtil {
             StringBuilder sb = new StringBuilder(128);
             sb.append(versionPrefix);
             //noinspection SynchronizationOnLocalVariableOrMethodParameter
-            synchronized (crypto) {
+            synchronized(crypto) {
                 try {
                     return crypto.encrypt64(sb, value).toString();
-                } catch (Throwable e) {//NOSONAR
+                } catch(Throwable e) {//NOSONAR
                     return value;
                 }
             }
@@ -192,17 +192,17 @@ public class CryptUtil {
         public String decrypt(String value) {
             final Aes128Crypto crypto = getCrypto();
             //noinspection SynchronizationOnLocalVariableOrMethodParameter
-            synchronized (crypto) {
+            synchronized(crypto) {
                 try {
                     return crypto.decrypt64(value, versionPrefix.length(), value.length() - versionPrefix.length());
-                } catch (Throwable e) {//NOSONAR
+                } catch(Throwable e) {//NOSONAR
                     return value;
                 }
             }
         }
 
         private Aes128Crypto getCrypto() {
-            return cryptos[(int) (Thread.currentThread().getId() & (CRYPTO_SIZE - 1))];
+            return cryptos[(int)(Thread.currentThread().getId() & (CRYPTO_SIZE - 1))];
         }
 
         public int getVersion() {

@@ -3,8 +3,8 @@ package org.zj2.common.uac.app.service;
 import org.zj2.common.uac.app.api.AppUserApi;
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.dto.AppUserExtDTO;
-import org.zj2.common.uac.app.dto.req.AppUserQuery;
 import org.zj2.common.uac.app.dto.req.AppUserAddReq;
+import org.zj2.common.uac.app.dto.req.AppUserQuery;
 import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseInnerService;
 

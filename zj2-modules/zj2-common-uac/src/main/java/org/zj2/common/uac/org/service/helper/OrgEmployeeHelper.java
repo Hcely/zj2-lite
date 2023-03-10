@@ -25,7 +25,7 @@ import org.zj2.lite.util.ZRBuilder;
 import java.time.LocalDateTime;
 
 /**
- *  OrgEmployeeAddHelper
+ * OrgEmployeeAddHelper
  *
  * @author peijie.ye
  * @date 2022/12/25 1:08
@@ -48,7 +48,7 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
         loadOrg(context);
         // 检查职员号是否唯一
         checkEmployeeNo(context);
-        if (context.isAddMode()) {
+        if(context.isAddMode()) {
             // 加载用户信息
             loadUserForAdd(context);
         } else {
@@ -62,20 +62,20 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
 
     private void loadOrg(OrgEmployeeContext context) {
         String orgCode = context.getOrgCode();
-        if (StringUtils.isEmpty(orgCode)) {
+        if(StringUtils.isEmpty(orgCode)) {
             orgCode = AuthContext.currentOrgCode();
             context.setOrgCode(orgCode);
         }
         OrgDTO org = orgService.getByCode(orgCode);
-        if (org == null) { throw ZRBuilder.failureErr("机构不存在"); }
+        if(org == null) { throw ZRBuilder.failureErr("机构不存在"); }
         context.setOrg(org);
     }
 
     private void checkEmployeeNo(OrgEmployeeContext context) {
         String employeeNo = context.getEmployeeNo();
-        if (StringUtils.isEmpty(employeeNo)) { return; }
+        if(StringUtils.isEmpty(employeeNo)) { return; }
         boolean exist = orgEmployeeService.existEmployeeNo(context.getOrgCode(), employeeNo);
-        if (exist) { throw ZRBuilder.failureErr("职员号已存在"); }
+        if(exist) { throw ZRBuilder.failureErr("职员号已存在"); }
     }
 
     private void loadUserForAdd(OrgEmployeeContext context) {
@@ -87,7 +87,7 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
         String userMobileAreaCode = context.getUserMobileAreaCode();
         String userMobile = context.getUserMobile();
         UserDTO user = userService.getByMobile(userMobileAreaCode, userMobile);
-        if (user == null) {
+        if(user == null) {
             UserCreateReq createReq = new UserCreateReq();
             createReq.setUserMobileAreaCode(userMobileAreaCode);
             createReq.setUserMobile(userMobile);
@@ -100,7 +100,7 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
     private void checkUserEmployee(OrgEmployeeContext context) {
         UserDTO user = context.getUser();
         OrgEmployeeDTO employee = orgEmployeeService.getEmployee(context.getOrgCode(), user.getUserId());
-        if (employee != null && EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
+        if(employee != null && EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
             throw ZRBuilder.failureErr("用户已经在职");
         }
     }
@@ -109,7 +109,7 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
         UserDTO user = context.getUser();
         OrgEmployeeDTO employee = new OrgEmployeeDTO();
         String employeeNo = context.getEmployeeNo();
-        if (StringUtils.isEmpty(employeeNo)) {
+        if(StringUtils.isEmpty(employeeNo)) {
             employeeNo = nextEmployeeNo(context);
         }
         employee.setEmployeeNo(employeeNo);
@@ -129,9 +129,9 @@ public class OrgEmployeeHelper implements BizVHandler<OrgEmployeeContext> {
 
     private String nextEmployeeNo(OrgEmployeeContext context) {
         String orgCode = context.getOrgCode();
-        for (int i = 0; i < 10000; ++i) {
+        for(int i = 0; i < 10000; ++i) {
             String employeeNo = UacNumRules.EMPLOYEE_NO_RULE.orgCode(orgCode).next();
-            if (!orgEmployeeService.existEmployeeNo(orgCode, employeeNo)) {
+            if(!orgEmployeeService.existEmployeeNo(orgCode, employeeNo)) {
                 return employeeNo;
             }
         }

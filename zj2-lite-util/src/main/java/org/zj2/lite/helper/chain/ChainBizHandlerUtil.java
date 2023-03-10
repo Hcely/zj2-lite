@@ -37,7 +37,7 @@ public class ChainBizHandlerUtil {
     }
 
     static void completeChain(ChainBizContext context) {
-        if (context == null || context.parent() == null) {
+        if(context == null || context.parent() == null) {
             CHAIN_CONTEXT_TL.remove();
         } else {
             CHAIN_CONTEXT_TL.set(context.parent());
@@ -49,25 +49,24 @@ public class ChainBizHandlerUtil {
     }
 
     public static void scanExecutors(Class<?> type) {
-        for (Field field : FieldUtils.getAllFields(type)) {
-            if (Modifier.isStatic(field.getModifiers()) && ChainBizFuncExecutor.class.isAssignableFrom(
-                    field.getType())) {
+        for(Field field : FieldUtils.getAllFields(type)) {
+            if(Modifier.isStatic(field.getModifiers()) && ChainBizFuncExecutor.class.isAssignableFrom(field.getType())) {
                 try {
-                    ChainBizFuncExecutor executor = (ChainBizFuncExecutor) FieldUtils.readStaticField(field, true);
+                    ChainBizFuncExecutor executor = (ChainBizFuncExecutor)FieldUtils.readStaticField(field, true);
                     registerExecutor(executor);
-                } catch (Throwable ignored) {//NOSONAR
+                } catch(Throwable ignored) {//NOSONAR
                 }
             }
         }
     }
 
     public static void registerExecutor(ChainBizFuncExecutor executor) {
-        if (executor != null) { EXECUTORS.add(executor); }
+        if(executor != null) { EXECUTORS.add(executor); }
     }
 
     static ChainBizFuncExecutor getExecutor(BizFunc handler) {
-        for (ChainBizFuncExecutor executor : EXECUTORS) {
-            if (executor != null && executor.supports(handler)) {
+        for(ChainBizFuncExecutor executor : EXECUTORS) {
+            if(executor != null && executor.supports(handler)) {
                 return executor;
             }
         }
@@ -77,7 +76,7 @@ public class ChainBizHandlerUtil {
     public static <T extends BizFunc> T getHandler(Class<T> type) {
         try {
             return SpringUtil.getBean(type);
-        } catch (NoSuchBeanDefinitionException e) {
+        } catch(NoSuchBeanDefinitionException e) {
             return BeanUtil.newInstance(type);
         }
     }
@@ -86,7 +85,7 @@ public class ChainBizHandlerUtil {
         try {
             Map<String, T> beans = SpringUtil.getBeansOfType(type);
             return beans.values();
-        } catch (Exception e) {
+        } catch(Exception e) {
             return Collections.emptyList();
         }
     }

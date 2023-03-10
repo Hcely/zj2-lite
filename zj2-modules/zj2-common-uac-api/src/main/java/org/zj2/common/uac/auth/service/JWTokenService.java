@@ -3,7 +3,7 @@ package org.zj2.common.uac.auth.service;
 import org.zj2.common.uac.auth.api.JWTokenApi;
 
 /**
- *  TokenService
+ * TokenService
  *
  * @author peijie.ye
  * @date 2022/12/6 6:26

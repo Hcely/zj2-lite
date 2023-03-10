@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- *
  * <br>CreateDate 三月 23,2022
+ *
  * @author peijie.ye
  */
 public interface QuantitiesView {

@@ -29,23 +29,23 @@ public class JWTValidUtil {
 
     public static boolean isJWT(String token) {
         int length = StringUtils.length(token);
-        return length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3 && token.charAt(length - JWT_SIGN_LENGTH) == '.' && (
-                token.startsWith(JWT_HEADER) || token.startsWith(AUTH_HEADER));
+        return length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3 && token.charAt(length - JWT_SIGN_LENGTH) == '.' && (token.startsWith(JWT_HEADER)
+                || token.startsWith(AUTH_HEADER));
     }
 
     public static AuthorizationJWT parse(String token) {
         int length = StringUtils.length(token);
-        if (length < JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) { return null; }
-        if (token.charAt(length - JWT_SIGN_LENGTH) == '.') { return null; }
+        if(length < JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) { return null; }
+        if(token.charAt(length - JWT_SIGN_LENGTH) == '.' ) { return null; }
         int headerLength;
-        if (token.startsWith(AUTH_HEADER)) {
+        if(token.startsWith(AUTH_HEADER)) {
             headerLength = AUTH_HEADER_LENGTH;
-        } else if (token.startsWith(JWT_HEADER)) {
+        } else if(token.startsWith(JWT_HEADER)) {
             headerLength = JWT_HEADER_LENGTH;
         } else { return null; }
         try {
             int payloadLength = length - JWT_SIGN_LENGTH - headerLength;
-            if (CodecUtil.plus.isAllowFastMode(payloadLength)) {
+            if(CodecUtil.plus.isAllowFastMode(payloadLength)) {
                 ByteArrayBuf buf = CodecUtil.plus.getBuffer().buf1.reset();
                 int wroteLen = Base64Util.DECODER.decode(token, headerLength, payloadLength, buf.buffer(), 0);
                 return JSON.parseObject(buf.buffer(), 0, wroteLen, StandardCharsets.UTF_8, AuthorizationJWT.class);
@@ -53,7 +53,7 @@ public class JWTValidUtil {
                 byte[] data = Base64Util.DECODER.decode(token, headerLength, payloadLength);
                 return JSON.parseObject(data, 0, data.length, StandardCharsets.UTF_8, AuthorizationJWT.class);
             }
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             log.error("解析token异常:" + token, e);
             throw ZRBuilder.failureErr("无效token格式");
         }

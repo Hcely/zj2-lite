@@ -14,8 +14,7 @@ import java.nio.charset.StandardCharsets;
 public class CodecUtil {
     private static final int BUFFER_SIZE = 512;
     private static final SoftBufferThreadLocal BUFFERS = new SoftBufferThreadLocal();
-    private static final char[] CHAR_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-            'F'};
+    private static final char[] CHAR_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     public static final CodecPlus plus = new CodecPlus();
 
     public static class CodecPlus {
@@ -59,11 +58,11 @@ public class CodecUtil {
 
     public static byte[] getKeyByte16(String key) {
         byte[] keyData = key.getBytes(StandardCharsets.ISO_8859_1);
-        if (keyData.length > 16) {
+        if(keyData.length > 16) {
             return DigestUtils.md5Digest(keyData);
         } else {
             byte[] bytes = new byte[16];
-            for (int i = 0, len = keyData.length; i < len; ++i) {
+            for(int i = 0, len = keyData.length; i < len; ++i) {
                 bytes[i & 15] ^= keyData[i];
             }
             return bytes;
@@ -71,11 +70,11 @@ public class CodecUtil {
     }
 
     public static String encodeHex(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) { return ""; }
+        if(bytes == null || bytes.length == 0) { return ""; }
         char[] charHex = CHAR_HEX;
         int len = bytes.length;
         char[] sb = new char[bytes.length << 1];
-        for (int i = 0, n = 0; i < len; ++i, n += 2) {
+        for(int i = 0, n = 0; i < len; ++i, n += 2) {
             byte b = bytes[i];
             sb[n] = charHex[(b >>> 4) & 15];
             sb[n + 1] = charHex[b & 15];
@@ -84,14 +83,14 @@ public class CodecUtil {
     }
 
     public static StringBuilder encodeHex(StringBuilder sb, byte[] bytes) {
-        if (bytes == null || bytes.length == 0) { return sb == null ? new StringBuilder() : sb; }
+        if(bytes == null || bytes.length == 0) { return sb == null ? new StringBuilder() : sb; }
         char[] charHex = CHAR_HEX;
-        if (sb == null) {
+        if(sb == null) {
             sb = new StringBuilder(bytes.length << 1);
         } else {
             sb.ensureCapacity(sb.length() + bytes.length << 1);
         }
-        for (byte b : bytes) {
+        for(byte b : bytes) {
             sb.append(charHex[(b >>> 4) & 15]);
             sb.append(charHex[b & 15]);
         }
@@ -103,7 +102,7 @@ public class CodecUtil {
     }
 
     public static StringBuilder encodeHex(StringBuilder sb, int v) {
-        if (sb == null) {
+        if(sb == null) {
             sb = new StringBuilder(8);
         } else {
             sb.ensureCapacity(sb.length() + 8);
@@ -124,27 +123,27 @@ public class CodecUtil {
     }
 
     public static StringBuilder encodeHex(StringBuilder sb, long v) {
-        if (sb == null) {
+        if(sb == null) {
             sb = new StringBuilder(16);
         } else {
             sb.ensureCapacity(sb.length() + 16);
         }
-        sb.append(CHAR_HEX[(int) ((v >>> 60) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 56) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 52) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 48) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 44) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 40) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 36) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 32) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 28) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 24) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 20) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 16) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 12) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 8) & 15)]);
-        sb.append(CHAR_HEX[(int) ((v >>> 4) & 15)]);
-        sb.append(CHAR_HEX[(int) (v & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 60) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 56) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 52) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 48) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 44) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 40) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 36) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 32) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 28) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 24) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 20) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 16) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 12) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 8) & 15)]);
+        sb.append(CHAR_HEX[(int)((v >>> 4) & 15)]);
+        sb.append(CHAR_HEX[(int)(v & 15)]);
         return sb;
     }
 
@@ -152,7 +151,7 @@ public class CodecUtil {
         public CacheBuffer getBuffer() {
             SoftReference<CacheBuffer> bufferRef = get();
             CacheBuffer buffer;
-            if (bufferRef == null || (buffer = bufferRef.get()) == null) {
+            if(bufferRef == null || (buffer = bufferRef.get()) == null) {
                 buffer = new CacheBuffer();
                 set(new SoftReference<>(buffer));
             }

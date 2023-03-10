@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- *  SysConfig
+ * SysConfig
  *
  * @author peijie.ye
  * @date 2022/12/24 23:57

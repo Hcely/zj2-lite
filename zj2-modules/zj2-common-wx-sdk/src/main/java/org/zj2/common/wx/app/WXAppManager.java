@@ -22,14 +22,13 @@ import java.util.concurrent.TimeUnit;
 public class WXAppManager {
     private static final FormatKey ACCESS_TOKEN_KEY = new FormatKey("WX:{}:ACCESS_TOKEN");
     private static final SpringBeanRef<WXAppBundle[]> BUNDLES_REF = new SpringBeanRef<>(WXAppBundle[].class);
-    private static final SpringBeanRef<StringRedisTemplate> REDIS_TEMPLATE_REF = new SpringBeanRef<>(
-            StringRedisTemplate.class);
+    private static final SpringBeanRef<StringRedisTemplate> REDIS_TEMPLATE_REF = new SpringBeanRef<>(StringRedisTemplate.class);
 
     public static List<WXApp> apps() {
         List<WXApp> apps = new ArrayList<>();
         WXAppBundle[] bundles = BUNDLES_REF.get();
-        if (bundles != null) {
-            for (WXAppBundle bundle : bundles) {
+        if(bundles != null) {
+            for(WXAppBundle bundle : bundles) {
                 CollUtil.addAll(apps, bundle.list(), true);
             }
         }
@@ -38,10 +37,10 @@ public class WXAppManager {
 
     public static WXApp getApp(String wxAppId) {
         WXAppBundle[] bundles = BUNDLES_REF.get();
-        if (bundles != null) {
-            for (WXAppBundle bundle : bundles) {
+        if(bundles != null) {
+            for(WXAppBundle bundle : bundles) {
                 WXApp app = bundle.get(wxAppId);
-                if (app != null) { return app; }
+                if(app != null) { return app; }
             }
         }
         return null;
@@ -50,7 +49,7 @@ public class WXAppManager {
 
     public static void setWXAccessToken(String wxAppId, WXAccessTokenResp resp) {
         StringRedisTemplate redisTemplate = REDIS_TEMPLATE_REF.get();
-        if (redisTemplate == null) { return; }
+        if(redisTemplate == null) { return; }
         final long createTime = System.currentTimeMillis();
         final long expireAt = createTime + resp.getExpiresIn() * 1000 - 5000L;
         WXAccessToken accessToken = new WXAccessToken();
@@ -65,12 +64,11 @@ public class WXAppManager {
     }
 
     public static String getWXAccessToken(String wxAppId) {
-        WXAccessToken accessToken = CacheUtil.DEF_CACHE.get(WXAccessToken.class, wxAppId,
-                WXAppManager::getWXAccessToken0);
-        if (accessToken == null || accessToken.getExpireTime() < System.currentTimeMillis()) {
+        WXAccessToken accessToken = CacheUtil.DEF_CACHE.get(WXAccessToken.class, wxAppId, WXAppManager::getWXAccessToken0);
+        if(accessToken == null || accessToken.getExpireTime() < System.currentTimeMillis()) {
             accessToken = getWXAccessToken0(wxAppId);
         }
-        if (accessToken == null || accessToken.getExpireTime() < System.currentTimeMillis()) {
+        if(accessToken == null || accessToken.getExpireTime() < System.currentTimeMillis()) {
             return null;
         }
         return accessToken.getAccessToken();
@@ -78,10 +76,10 @@ public class WXAppManager {
 
     private static WXAccessToken getWXAccessToken0(String wxAppId) {
         StringRedisTemplate redisTemplate = REDIS_TEMPLATE_REF.get();
-        if (redisTemplate == null) { return null; }
+        if(redisTemplate == null) { return null; }
         String key = ACCESS_TOKEN_KEY.get(wxAppId);
         String value = redisTemplate.opsForValue().get(key);
-        if (StrUtil.isEmpty(value)) { return null; }
+        if(StrUtil.isEmpty(value)) { return null; }
         return JSON.parseObject(value, WXAccessToken.class);
     }
 }

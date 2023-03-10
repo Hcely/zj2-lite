@@ -3,8 +3,8 @@ package org.zj2.lite.session.entity;
 import java.util.Map;
 
 /**
- *
  * <br>CreateDate 七月 01,2022
+ *
  * @author peijie.ye
  */
 public class SessionAttr implements Map.Entry<String, Object> {

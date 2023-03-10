@@ -9,6 +9,7 @@ import java.util.UUID;
 /**
  * BasicEvent
  * <br>CreateDate 一月 11,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -82,24 +83,24 @@ public class BaseEvent<T> extends ApplicationEvent {
 
     public MqEvent mqEvent() {
         Object result = mqEvent;
-        if (result == null) { mqEvent = result = mqEventImpl(); }
-        return result == BaseEvent.class ? null : (MqEvent) result;
+        if(result == null) { mqEvent = result = mqEventImpl(); }
+        return result == BaseEvent.class ? null : (MqEvent)result;
     }
 
     public boolean containsMqType(String type) {
         MqEvent event = mqEvent();
-        if (event == null) { return false; }
-        for (String t : event.type()) {
-            if (StringUtils.equalsIgnoreCase(t, type)) { return true; }
+        if(event == null) { return false; }
+        for(String t : event.type()) {
+            if(StringUtils.equalsIgnoreCase(t, type)) { return true; }
         }
         return false;
     }
 
     private Object mqEventImpl() {
         Class<?> type = this.getClass();
-        while (type != null && type != Object.class) {
+        while(type != null && type != Object.class) {
             MqEvent result = type.getAnnotation(MqEvent.class);
-            if (result != null) { return result; }
+            if(result != null) { return result; }
             type = type.getSuperclass();
         }
         return BaseEvent.class;

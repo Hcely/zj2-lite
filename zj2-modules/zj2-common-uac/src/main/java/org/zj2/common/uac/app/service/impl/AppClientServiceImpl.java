@@ -23,8 +23,7 @@ import java.util.List;
  * @date 2022/11/27 20:40
  */
 @Service
-public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppClient, AppClientDTO>
-        implements AppClientService {
+public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppClient, AppClientDTO> implements AppClientService {
 
     @Override
     public boolean hasClient(String appCode) {
@@ -44,16 +43,16 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
     @Override
     public AppClientDTO saveClient(AppClientSaveReq req) {
         AppClientDTO appClient = getByCode(req.getAppCode(), req.getClientCode());
-        if (appClient == null) {
+        if(appClient == null) {
             appClient = new AppClientDTO();
             appClient.setAppCode(req.getAppCode());
             appClient.setClientCode(req.getClientCode());
             appClient.setEnableFlag(1);
             appClient.setEnabledTime(DateUtil.now());
         }
-        if (StringUtils.isNotEmpty(req.getClientName())) { appClient.setClientName(req.getClientName()); }
-        if (StringUtils.isNotEmpty(req.getNamespace())) { appClient.setNamespace(req.getNamespace()); }
-        if (req.getTokenTimeout() != null) { appClient.setTokenTimeout(req.getTokenTimeout()); }
+        if(StringUtils.isNotEmpty(req.getClientName())) { appClient.setClientName(req.getClientName()); }
+        if(StringUtils.isNotEmpty(req.getNamespace())) { appClient.setNamespace(req.getNamespace()); }
+        if(req.getTokenTimeout() != null) { appClient.setTokenTimeout(req.getTokenTimeout()); }
         save(appClient);
         return appClient;
     }
@@ -66,7 +65,7 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
     @Override
     public void enable(String appClientId) {
         AppClientDTO appClient = get(appClientId);
-        if (appClient != null && BooleanUtil.isTrue(appClient.getEnableFlag())) {
+        if(appClient != null && BooleanUtil.isTrue(appClient.getEnableFlag())) {
             AppClientDTO update = new AppClientDTO();
             update.setAppClientId(appClientId);
             update.setEnableFlag(1);
@@ -79,7 +78,7 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
     @Override
     public void disable(String appClientId) {
         AppClientDTO appClient = get(appClientId);
-        if (appClient != null && BooleanUtil.isTrue(appClient.getEnableFlag())) {
+        if(appClient != null && BooleanUtil.isTrue(appClient.getEnableFlag())) {
             AppClientDTO update = new AppClientDTO();
             update.setAppClientId(appClientId);
             update.setEnableFlag(0);
@@ -90,8 +89,8 @@ public class AppClientServiceImpl extends BaseServiceImpl<AppClientMapper, AppCl
 
     @Override
     public ZListResp<AppClientDTO> pageQuery(AppClientQuery query) {
-        return pageQuery(query, q -> query(wrapper(true).eq(AppClientDTO::getAppCode, q.getAppCode())
-                .like(AppClientDTO::getClientCode, q.getClientCode())
-                .like(AppClientDTO::getClientName, q.getClientName())));
+        return pageQuery(query, q -> query(
+                wrapper(true).eq(AppClientDTO::getAppCode, q.getAppCode()).like(AppClientDTO::getClientCode, q.getClientCode())
+                        .like(AppClientDTO::getClientName, q.getClientName())));
     }
 }

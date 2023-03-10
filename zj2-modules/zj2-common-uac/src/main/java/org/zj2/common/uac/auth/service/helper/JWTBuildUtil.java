@@ -20,7 +20,7 @@ public class JWTBuildUtil {
 
     public static String getSignPart(String token) {
         int length = StringUtils.length(token);
-        if (length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) {
+        if(length >= JWT_SIGN_LENGTH + JWT_HEADER_LENGTH + 3) {
             return token.substring(length - JWT_SIGN_LENGTH + 1);
         } else {
             return "";
@@ -32,7 +32,7 @@ public class JWTBuildUtil {
         sb.append(JWT_HEADER);
         URL_ENCODER.encode(sb, JSON.toJSONBytes(token));
         byte[] signData = HMacSHA256Sign.signISO(secret, sb, 0, sb.length());
-        sb.append('.');
+        sb.append('.' );
         return URL_ENCODER.encode(sb, signData).toString();
     }
 }

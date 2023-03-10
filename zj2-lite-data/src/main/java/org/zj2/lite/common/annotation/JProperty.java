@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
  * json内部字段
  * 在BeanUtil 把数据库的DO 转换成对外的对象
  * <br>CreateDate 九月 05,2022
+ *
  * @author peijie.ye
  */
 @Target(ElementType.FIELD)

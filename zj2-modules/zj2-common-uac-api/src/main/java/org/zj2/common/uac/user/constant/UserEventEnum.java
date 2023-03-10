@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.zj2.lite.CodeEnum;
 
 /**
- *  UserStatusEnum
+ * UserStatusEnum
  *
  * @author peijie.ye
  * @date 2022/11/27 22:11

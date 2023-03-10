@@ -5,7 +5,7 @@ import org.zj2.lite.helper.BizReference;
 import org.zj2.lite.helper.CommonBizHelper;
 
 /**
- *  AuthNamePwHelper
+ * AuthNamePwHelper
  *
  * @author peijie.ye
  * @date 2022/12/3 9:25

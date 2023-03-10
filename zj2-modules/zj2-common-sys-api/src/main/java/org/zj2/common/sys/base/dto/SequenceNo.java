@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- *  SequenceNo
+ * SequenceNo
  *
  * @author peijie.ye
  * @date 2022/12/10 3:20

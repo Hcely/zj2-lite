@@ -14,7 +14,7 @@ interface ChainBizFuncExecutors {
     ChainBizFuncExecutor BIZ_FILTER_EXECUTOR = new ChainBizFuncExecutor() {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
-            ((BizVHandler) handler).handle(context);
+            ((BizVHandler)handler).handle(context);
             return true;
         }
 
@@ -26,7 +26,7 @@ interface ChainBizFuncExecutors {
     ChainBizFuncExecutor BIZ_HANDLER_EXECUTOR = new ChainBizFuncExecutor() {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
-            return ((BizHandler) handler).handle(context);
+            return ((BizHandler)handler).handle(context);
         }
 
         @Override
@@ -37,8 +37,8 @@ interface ChainBizFuncExecutors {
     ChainBizFuncExecutor BIZ_RESP_EXECUTOR = new ChainBizFuncExecutor() {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
-            Object resp = ((BizRespHandler) handler).handle(context);
-            return !(resp instanceof Boolean) || ((Boolean) resp);
+            Object resp = ((BizRespHandler)handler).handle(context);
+            return !(resp instanceof Boolean) || ((Boolean)resp);
         }
 
         @Override
@@ -50,8 +50,8 @@ interface ChainBizFuncExecutors {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
             ZRBuilder hr = new ZRBuilder();
-            ((BizValidator) handler).valid(context, hr);
-            if (hr.hasError()) { throw hr.buildError(); }
+            ((BizValidator)handler).valid(context, hr);
+            if(hr.hasError()) { throw hr.buildError(); }
             return true;
         }
 
@@ -63,8 +63,8 @@ interface ChainBizFuncExecutors {
     ChainBizFuncExecutor BIZ_CONVERTER_EXECUTOR = new ChainBizFuncExecutor() {
         @Override
         public boolean execute(ChainBizContext chainContext, BizFunc handler, Object context) {
-            Object newContext = ((BizContextConverter) handler).convert(chainContext);
-            if (newContext != null) { chainContext.setCurrentContext(newContext); }
+            Object newContext = ((BizContextConverter)handler).convert(chainContext);
+            if(newContext != null) { chainContext.setCurrentContext(newContext); }
             return true;
         }
 

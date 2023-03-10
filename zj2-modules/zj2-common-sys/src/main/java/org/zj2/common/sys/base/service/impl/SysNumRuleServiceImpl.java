@@ -20,18 +20,17 @@ import org.zj2.lite.util.ZRBuilder;
  * @date 2022/12/24 21:00
  */
 @Service
-public class SysNumRuleServiceImpl extends BaseServiceImpl<SysNumRuleMapper, SysNumRule, SysNumRuleDTO>
-        implements SysNumRuleService {
+public class SysNumRuleServiceImpl extends BaseServiceImpl<SysNumRuleMapper, SysNumRule, SysNumRuleDTO> implements SysNumRuleService {
     @Override
     public SysNumRuleDTO saveRule(SysNumRuleDTO rule) {
         SysNumRuleDTO exist = getRule(rule.getNumRuleCode());
-        if (exist != null) {
+        if(exist != null) {
             rule.setNumRuleId(exist.getNumRuleId());
         } else {
-            if (StringUtils.isEmpty(rule.getNumRuleCode())) {
+            if(StringUtils.isEmpty(rule.getNumRuleCode())) {
                 throw ZRBuilder.failureErr("单号规则编码不能为空");
             }
-            if (PatternUtil.isWord(rule.getNumRuleCode())) {
+            if(PatternUtil.isWord(rule.getNumRuleCode())) {
                 throw ZRBuilder.failureErr("单号规则编码不合法");
             }
         }
@@ -52,8 +51,8 @@ public class SysNumRuleServiceImpl extends BaseServiceImpl<SysNumRuleMapper, Sys
 
     @Override
     public ZListResp<SysNumRuleDTO> pageQuery(SysNumRuleQuery query) {
-        return pageQuery(query, e -> query(wrapper(true).like(SysNumRuleDTO::getNumRuleCode, e.getNumRuleCode())
-                .like(SysNumRuleDTO::getNumRuleName, e.getNumRuleName())));
+        return pageQuery(query, e -> query(
+                wrapper(true).like(SysNumRuleDTO::getNumRuleCode, e.getNumRuleCode()).like(SysNumRuleDTO::getNumRuleName, e.getNumRuleName())));
 
     }
 }

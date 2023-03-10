@@ -11,8 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
  * <br>CreateDate 三月 23,2022
+ *
  * @author peijie.ye
  */
 public class Quantities implements QuantitiesView, Serializable {
@@ -30,7 +30,7 @@ public class Quantities implements QuantitiesView, Serializable {
 
     public Quantities copy() {
         Map<String, Quantity> map = new LinkedHashMap<>(16);
-        for (Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
+        for(Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
             map.put(e.getKey(), new Quantity(e.getValue()));
         }
         return new Quantities(map);
@@ -42,15 +42,15 @@ public class Quantities implements QuantitiesView, Serializable {
     }
 
     public Quantity get(Object key) {
-        if (key == null) { return Quantity.ZERO; }
-        String keyStr = key instanceof Enum ? ((Enum<?>) key).name() : key.toString();
+        if(key == null) { return Quantity.ZERO; }
+        String keyStr = key instanceof Enum ? ((Enum<?>)key).name() : key.toString();
         return get(keyStr);
     }
 
     public boolean modify(String key, BigDecimal mainQuantity, BigDecimal viceQuantity) {
-        if (NumUtil.allEqZero(mainQuantity, viceQuantity)) { return false; }
+        if(NumUtil.allEqZero(mainQuantity, viceQuantity)) { return false; }
         Quantity value = quantityMap.get(key);//NOSONAR
-        if (value != null) {
+        if(value != null) {
             quantityMap.put(key, value.add(mainQuantity, viceQuantity));
             return true;
         }
@@ -68,43 +68,43 @@ public class Quantities implements QuantitiesView, Serializable {
     }
 
     public boolean eq(Quantities q) {
-        if (q == null) { return eqZero(); }
-        for (Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
-            if (!e.getValue().eq(q.quantityMap.get(e.getKey()))) { return false; }
+        if(q == null) { return eqZero(); }
+        for(Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
+            if(!e.getValue().eq(q.quantityMap.get(e.getKey()))) { return false; }
         }
-        for (Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
-            if (!e.getValue().eq(quantityMap.get(e.getKey()))) { return false; }
+        for(Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
+            if(!e.getValue().eq(quantityMap.get(e.getKey()))) { return false; }
         }
         return true;
     }
 
     public Quantities add(Quantities q) {
-        if (q == null) { return this.copy(); }
+        if(q == null) { return this.copy(); }
         Map<String, Quantity> map = new LinkedHashMap<>();
-        for (Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
+        for(Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
             map.put(e.getKey(), e.getValue().add(q.quantityMap.get(e.getKey())));
         }
-        for (Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
-            if (!map.containsKey(e.getKey())) { map.put(e.getKey(), e.getValue().copy()); }
+        for(Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
+            if(!map.containsKey(e.getKey())) { map.put(e.getKey(), e.getValue().copy()); }
         }
         return new Quantities(map);
     }
 
     public Quantities sub(Quantities q) {
-        if (q == null) { return this.copy(); }
+        if(q == null) { return this.copy(); }
         Map<String, Quantity> map = new LinkedHashMap<>();
-        for (Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
+        for(Map.Entry<String, Quantity> e : quantityMap.entrySet()) {
             map.put(e.getKey(), e.getValue().sub(q.quantityMap.get(e.getKey())));
         }
-        for (Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
-            if (!map.containsKey(e.getKey())) { map.put(e.getKey(), e.getValue().negate()); }
+        for(Map.Entry<String, Quantity> e : q.quantityMap.entrySet()) {
+            if(!map.containsKey(e.getKey())) { map.put(e.getKey(), e.getValue().negate()); }
         }
         return new Quantities(map);
     }
 
     public boolean eqZero() {
-        for (Quantity quantity : quantityMap.values()) {
-            if (!quantity.eqZero()) { return false; }
+        for(Quantity quantity : quantityMap.values()) {
+            if(!quantity.eqZero()) { return false; }
         }
         return true;
     }

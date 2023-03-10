@@ -30,7 +30,7 @@ public final class SlotFormatPart implements FormatPart {
 
     @Override
     public void append(TextStringBuilder sb, Object[] args) {
-        if (args == null || args.length == 0) {
+        if(args == null || args.length == 0) {
             appendValue(sb, null);
         } else {
             int idx = getIdx();
@@ -40,13 +40,11 @@ public final class SlotFormatPart implements FormatPart {
 
     @Override
     public void appendObj(TextStringBuilder sb, Object obj) {
-        if (obj == null) {
+        if(obj == null) {
             appendValue(sb, null);
         } else {
             String[] paths = loadValuePathKeys();
-            Object value = paths == null || paths.length == 0 ?
-                    PropertyUtil.getProperty(obj, getKey()) :
-                    PropertyUtil.getProperty(obj, paths);
+            Object value = paths == null || paths.length == 0 ? PropertyUtil.getProperty(obj, getKey()) : PropertyUtil.getProperty(obj, paths);
             appendValue(sb, value);
         }
     }
@@ -57,7 +55,7 @@ public final class SlotFormatPart implements FormatPart {
 
     public String getKey() {
         String k = valueKey;
-        if (k == null) {
+        if(k == null) {
             k = getKeyPart(loadArgKey());
             valueKey = k;
         }
@@ -66,10 +64,10 @@ public final class SlotFormatPart implements FormatPart {
 
     public int getIdx() {
         int idx = valueIdx;
-        if (idx == -2) {
+        if(idx == -2) {
             try {
                 idx = Integer.parseInt(getKeyPart(rawArgKey));
-            } catch (Exception e) { idx = -1; }
+            } catch(Exception e) { idx = -1; }
             valueIdx = idx < 0 ? -1 : idx;
         }
         return idx;
@@ -77,7 +75,7 @@ public final class SlotFormatPart implements FormatPart {
 
     public String getValueFormatter() {
         String formatter = valueFormatter;
-        if (formatter == null) {
+        if(formatter == null) {
             formatter = getFormatterPart(loadArgKey());
             valueFormatter = formatter;
         }
@@ -86,7 +84,7 @@ public final class SlotFormatPart implements FormatPart {
 
     private String loadArgKey() {
         String key = rawArgKey;
-        if (key == null) {
+        if(key == null) {
             int idx = valueIdx;
             key = idx < 0 ? "" : String.valueOf(idx);
             rawArgKey = key;
@@ -99,23 +97,23 @@ public final class SlotFormatPart implements FormatPart {
 
     private String[] loadValuePathKeys() {
         String[] paths = valuePathKeys;
-        if (paths == null) {
+        if(paths == null) {
             paths = PropertyUtil.getPathKeys(getKey());
-            if (paths != null && paths.length == 1) { paths = NoneConstants.EMPTY_STRINGS; }
+            if(paths != null && paths.length == 1) { paths = NoneConstants.EMPTY_STRINGS; }
             valuePathKeys = paths;
         }
         return paths;
     }
 
     private static String getKeyPart(String key) {
-        if (key == null) { return ""; }
-        int i = key.indexOf(',');
+        if(key == null) { return ""; }
+        int i = key.indexOf(',' );
         return i == -1 ? StringUtils.trimToEmpty(key) : StringUtils.trimToEmpty(key.substring(0, i));
     }
 
     private static String getFormatterPart(String key) {
-        if (key == null) { return ""; }
-        int i = key.indexOf(',');
+        if(key == null) { return ""; }
+        int i = key.indexOf(',' );
         return i == -1 ? "" : StringUtils.trimToEmpty(key.substring(i + 1));
     }
 }

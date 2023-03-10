@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  BaseServiceUtil
+ * BaseServiceUtil
  *
  * @author peijie.ye
  * @date 2022/11/27 16:35
@@ -40,7 +40,7 @@ class WrapperUtil {
     public static <DTO, DO> Wrapper<DO>//NOSONAR
     buildCondition(Map<String, String> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
         QueryWrapper<DO> result = Wrappers.query();
-        for (PropCondition c : CollUtil.of(wrapper.getConditions())) {
+        for(PropCondition c : CollUtil.of(wrapper.getConditions())) {
             addCondition(tableFieldMap, c, result);
         }
         return result;
@@ -49,23 +49,23 @@ class WrapperUtil {
     public static <DTO, DO> QueryWrapper<DO>//NOSONAR
     buildQueryCondition(String keyColumn, Map<String, String> tableFieldMap, ZQueryWrapper<DTO> wrapper) {
         QueryWrapper<DO> result = Wrappers.query();
-        if (CollUtil.isNotEmpty(wrapper.getSelectProps())) {
+        if(CollUtil.isNotEmpty(wrapper.getSelectProps())) {
             result.select(getColumns(tableFieldMap, wrapper.getSelectProps()));
         }
-        for (PropCondition c : CollUtil.of(wrapper.getConditions())) {
+        for(PropCondition c : CollUtil.of(wrapper.getConditions())) {
             addCondition(tableFieldMap, c, result);
         }
-        if (CollUtil.isNotEmpty(wrapper.getSorts())) {
+        if(CollUtil.isNotEmpty(wrapper.getSorts())) {
             result.orderBy(true, wrapper.isSortAsc(), getColumnList(tableFieldMap, wrapper.getSorts()));
         } else {
             result.orderByAsc(keyColumn);
         }
-        if (wrapper.getOffset() >= 0 && wrapper.getSize() > 0) {
+        if(wrapper.getOffset() >= 0 && wrapper.getSize() > 0) {
             StringBuilder sb = new StringBuilder(32);
-            sb.append("LIMIT ").append(wrapper.getOffset()).append(',').append(wrapper.getSize());
-            if (wrapper.isForUpdate()) { sb.append(" FOR UPDATE"); }
+            sb.append("LIMIT ").append(wrapper.getOffset()).append(',' ).append(wrapper.getSize());
+            if(wrapper.isForUpdate()) { sb.append(" FOR UPDATE"); }
             result.last(sb.toString());
-        } else if (wrapper.isForUpdate()) {
+        } else if(wrapper.isForUpdate()) {
             result.last("FOR UPDATE");
         }
         return result;
@@ -74,11 +74,11 @@ class WrapperUtil {
     public static <DTO, DO> UpdateWrapper<DO>//NOSONAR
     buildUpdate(Map<String, String> tableFieldMap, ZUpdateWrapper<DTO> wrapper) {
         UpdateWrapper<DO> result = Wrappers.update();
-        for (PropCondition c : CollUtil.of(wrapper.getConditions())) {
+        for(PropCondition c : CollUtil.of(wrapper.getConditions())) {
             addCondition(tableFieldMap, c, result);
         }
         Map<String, UpdateField> updateFields = wrapper.getUpdateFields();
-        if (updateFields != null) {
+        if(updateFields != null) {
             //
             updateFields.remove(ServiceConstants.APP_CODE);
             updateFields.remove(ServiceConstants.ORG_CODE);
@@ -90,25 +90,25 @@ class WrapperUtil {
             updateFields.remove(ServiceConstants.UPDATE_USER);
             updateFields.remove(ServiceConstants.UPDATE_USER_NAME);
             //
-            for (Map.Entry<String, UpdateField> e : updateFields.entrySet()) {
+            for(Map.Entry<String, UpdateField> e : updateFields.entrySet()) {
                 addUpdateField(tableFieldMap, e.getKey(), e.getValue(), result);
             }
         }
         String column = tableFieldMap.get(ServiceConstants.UPDATE_TIME);
-        if (column != null) { result.set(column, LocalDateTime.now()); }
+        if(column != null) { result.set(column, LocalDateTime.now()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) { result.set(column, AuthContext.currentUserId()); }
+        if(column != null) { result.set(column, AuthContext.currentUserId()); }
         //
         column = tableFieldMap.get(ServiceConstants.UPDATE_USER);
-        if (column != null) { result.set(column, AuthContext.currentUsername()); }
+        if(column != null) { result.set(column, AuthContext.currentUsername()); }
         return result;
     }
 
     private static String[] getColumns(Map<String, String> tableFieldMap, Collection<String> props) {
         String[] columns = new String[props.size()];
         int i = 0;
-        for (String prop : props) {
+        for(String prop : props) {
             columns[i++] = getColumnName(tableFieldMap, prop);
         }
         return columns;
@@ -116,17 +116,16 @@ class WrapperUtil {
 
     private static List<String> getColumnList(Map<String, String> tableFieldMap, Collection<String> props) {
         List<String> list = new ArrayList<>(props.size());
-        for (String prop : props) {
+        for(String prop : props) {
             list.add(getColumnName(tableFieldMap, prop));
         }
         return list;
     }
 
-    private static void addCondition(Map<String, String> tableFieldMap, PropCondition condition,
-            AbstractWrapper wrapper) {
-        if (condition.getMode() == null) { return; }
+    private static void addCondition(Map<String, String> tableFieldMap, PropCondition condition, AbstractWrapper wrapper) {
+        if(condition.getMode() == null) { return; }
         String column = getColumnName(tableFieldMap, condition.getName());
-        switch (condition.getMode()) {
+        switch(condition.getMode()) {
             case EQ:
                 wrapper.eq(column, condition.getValue1());
                 break;
@@ -178,66 +177,59 @@ class WrapperUtil {
         }
     }
 
-    private static void addUpdateField(Map<String, String> tableFieldMap, String name, UpdateField field,
-            UpdateWrapper wrapper) {
-        if (field.getMode() == null) { return; }
+    private static void addUpdateField(Map<String, String> tableFieldMap, String name, UpdateField field, UpdateWrapper wrapper) {
+        if(field.getMode() == null) { return; }
         String column = getColumnName(tableFieldMap, name);
-        switch (field.getMode()) {
+        switch(field.getMode()) {
             case SET:
                 wrapper.set(column, field.getValue());
                 break;
             case SET_IF_ABSENT:
-                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`='',{1},`{0}`)", column,
-                        getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`='',{1},`{0}`)", column, getSqlValue(field.getValue())));
                 break;
             case SET_IF_PRESENT:
-                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NOT NULL OR `{0}`!='',{1},`{0}`)", column,
-                        getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NOT NULL OR `{0}`!='',{1},`{0}`)", column, getSqlValue(field.getValue())));
                 break;
             case MIN:
-                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`>{1},{1},`{0}`)", column,
-                        getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`>{1},{1},`{0}`)", column, getSqlValue(field.getValue())));
                 break;
             case MAX:
-                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`<{1},{1},`{0}`)", column,
-                        getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL OR `{0}`<{1},{1},`{0}`)", column, getSqlValue(field.getValue())));
                 break;
             case INCREASE:
-                wrapper.setSql(
-                        StrUtil.format("`{0}`=IF(`{0}` IS NULL,{1},`{0}`+{1})", column, getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL,{1},`{0}`+{1})", column, getSqlValue(field.getValue())));
                 break;
             case DECREASE:
-                wrapper.setSql(
-                        StrUtil.format("`{0}`=IF(`{0}` IS NULL,{1},`{0}`-{1})", column, getSqlValue(field.getValue())));
+                wrapper.setSql(StrUtil.format("`{0}`=IF(`{0}` IS NULL,{1},`{0}`-{1})", column, getSqlValue(field.getValue())));
                 break;
         }
     }
 
     private static String getSqlValue(Object value) {
-        if (value == null) { return "null"; }
-        if (value instanceof Number) {
-            return NumUtil.toStr((Number) value);
-        } else if (value instanceof Date) {
-            return StrUtil.concat("'", DateUtil.format((Date) value), "'");
-        } else if (value instanceof TemporalAccessor) {
-            return StrUtil.concat("'", DateUtil.format((TemporalAccessor) value), "'");
+        if(value == null) { return "null"; }
+        if(value instanceof Number) {
+            return NumUtil.toStr((Number)value);
+        } else if(value instanceof Date) {
+            return StrUtil.concat("'", DateUtil.format((Date)value), "'");
+        } else if(value instanceof TemporalAccessor) {
+            return StrUtil.concat("'", DateUtil.format((TemporalAccessor)value), "'");
         } else {
             String valueStr = value.toString();
             TextStringBuilder sb = new TextStringBuilder(8 + valueStr.length());
-            sb.append('\'');
-            for (int i = 0, len = valueStr.length(); i < len; ++i) {
+            sb.append('\'' );
+            for(int i = 0, len = valueStr.length(); i < len; ++i) {
                 char c = valueStr.charAt(i);
-                if (c == '\'') { sb.append('\\'); }
+                if(c == '\'' ) { sb.append('\\' ); }
                 sb.append(c);
             }
-            sb.append('\'');
+            sb.append('\'' );
             return sb.toString();
         }
     }
 
     private static String getColumnName(Map<String, String> tableFieldMap, String propName) {
         String column = tableFieldMap.get(propName);
-        if (column == null) { throw new ZError(propName + "-字段不存在!"); }
+        if(column == null) { throw new ZError(propName + "-字段不存在!"); }
         return column;
     }
 }

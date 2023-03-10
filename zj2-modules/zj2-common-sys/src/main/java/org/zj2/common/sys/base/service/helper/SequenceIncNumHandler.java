@@ -10,7 +10,7 @@ import org.zj2.lite.helper.handler.BizHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  SequenceIncNumHandler
+ * SequenceIncNumHandler
  *
  * @author peijie.ye
  * @date 2022/12/11 23:57
@@ -33,9 +33,9 @@ public class SequenceIncNumHandler implements BizHandler<NumNextContext> {
 
     private Long nextSequenceNum(NumNextContext context) {
         String key = context.getSequenceKey();
-        for (int i = 0; i < 10000; ++i) {
+        for(int i = 0; i < 10000; ++i) {
             SysSequenceDTO sequence = sysSequenceService.getByKey(key);
-            if (sequence == null) {
+            if(sequence == null) {
                 try {
                     sequence = new SysSequenceDTO();
                     sequence.setSequenceKey(key);
@@ -43,12 +43,12 @@ public class SequenceIncNumHandler implements BizHandler<NumNextContext> {
                     sequence.setSequenceNum(1L);
                     sysSequenceService.add(sequence);
                     return 1L;
-                } catch (Throwable ignore) {//NOSONAR
+                } catch(Throwable ignore) {//NOSONAR
                 }
             } else {
                 Long oldValue = ObjectUtils.defaultIfNull(sequence.getSequenceNum(), 0L);
                 Long newValue = oldValue + 1L;
-                if (sysSequenceService.update(key, oldValue, newValue)) {
+                if(sysSequenceService.update(key, oldValue, newValue)) {
                     return newValue;
                 }
             }

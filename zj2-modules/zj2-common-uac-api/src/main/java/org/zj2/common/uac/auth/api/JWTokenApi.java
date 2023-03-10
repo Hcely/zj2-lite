@@ -3,7 +3,7 @@ package org.zj2.common.uac.auth.api;
 import org.zj2.lite.service.ApiReference;
 
 /**
- *  TokenApi
+ * TokenApi
  *
  * @author peijie.ye
  * @date 2022/12/6 6:18
@@ -11,7 +11,6 @@ import org.zj2.lite.service.ApiReference;
 @ApiReference
 public interface JWTokenApi {
     /**
-     *
      * @param appCode
      * @param userId
      * @param namespace

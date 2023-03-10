@@ -27,8 +27,7 @@ public class DubboContextFilter implements Filter {
 
     private void initRequestContext(Invoker<?> invoker, Invocation invocation) {
         DubboRequestContext requestContext = new DubboRequestContext(invoker, invocation);
-        requestContext.setUri(ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(),
-                invocation.getParameterTypes()));
+        requestContext.setUri(ServiceUriUtil.getMethodName(invoker.getInterface(), invocation.getMethodName(), invocation.getParameterTypes()));
         requestContext.setRootUri(invocation.getAttachment(ServiceConstants.REQUEST_ROOT_URI));
         requestContext.setAttrIp(invocation.getAttachment(ServiceConstants.REQUEST_ATTR_IP));
         requestContext.setDevice(invocation.getAttachment(ServiceConstants.REQUEST_DEVICE));

@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * LinkedBizHandler
  * <br>CreateDate 一月 11,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -24,9 +25,9 @@ public class ChainBizHandler<T> implements BizHandler<T> {
     private static final ChainBizFuncWrapper[] EMPTY_HANDLERS = {};
 
     public static <T> BizHandler<T> chain(BizFunc... handlers) {
-        if (ArrayUtils.isEmpty(handlers)) { return BizHandler.EMPTY_HANDLER; }
+        if(ArrayUtils.isEmpty(handlers)) { return BizHandler.EMPTY_HANDLER; }
         ChainBizFuncWrapper[] wrappers = new ChainBizFuncWrapper[handlers.length];
-        for (int i = 0, len = handlers.length; i < len; ++i) {
+        for(int i = 0, len = handlers.length; i < len; ++i) {
             wrappers[i] = new ChainBizFuncWrapper(handlers[i]);
         }
         return new ChainBizHandler<>(wrappers);
@@ -34,9 +35,9 @@ public class ChainBizHandler<T> implements BizHandler<T> {
 
     @SafeVarargs
     public static <T> BizHandler<T> chain(Class<? extends BizFunc>... handlerTypes) {
-        if (ArrayUtils.isEmpty(handlerTypes)) { return BizHandler.EMPTY_HANDLER; }
+        if(ArrayUtils.isEmpty(handlerTypes)) { return BizHandler.EMPTY_HANDLER; }
         Builder<T> builder = new Builder<>();
-        for (int i = 0, len = handlerTypes.length; i < len; ++i) {
+        for(int i = 0, len = handlerTypes.length; i < len; ++i) {
             builder.addHandler(handlerTypes[i]);
         }
         return builder.build();
@@ -55,18 +56,18 @@ public class ChainBizHandler<T> implements BizHandler<T> {
         }
 
         public Builder<T> addHandler(BizHandler<T> handler) {
-            return addHandler((BizFunc) handler);
+            return addHandler((BizFunc)handler);
         }
 
         public Builder<T> addHandler(BizVHandler<T> handler) {
-            return addHandler((BizFunc) handler);
+            return addHandler((BizFunc)handler);
         }
 
         public Builder<T> addHandler(Class<? extends BizFunc> handlerType) {
-            if (handlerType.getAnnotation(BizMulti.class) != null) {
+            if(handlerType.getAnnotation(BizMulti.class) != null) {
                 Collection<? extends BizFunc> funcs = ChainBizHandlerUtil.getHandlers(handlerType);
-                if (funcs != null && !funcs.isEmpty()) {
-                    for (BizFunc func : funcs) { addHandler(func); }
+                if(funcs != null && !funcs.isEmpty()) {
+                    for(BizFunc func : funcs) { addHandler(func); }
                 }
             } else {
                 addHandler(ChainBizHandlerUtil.getHandler(handlerType));
@@ -75,8 +76,8 @@ public class ChainBizHandler<T> implements BizHandler<T> {
         }
 
         public Builder<T> addHandler(BizFunc handler) {
-            if (handler != null) {
-                if (handlers == null) { handlers = new ArrayList<>(10); }
+            if(handler != null) {
+                if(handlers == null) { handlers = new ArrayList<>(10); }
                 handlers.add(new ChainBizFuncWrapper(handler));
             }
             return this;
@@ -94,8 +95,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
 
 
         public ChainBizHandler<T> build() {
-            ChainBizFuncWrapper[] wrappers =
-                    handlers == null ? null : handlers.toArray(new ChainBizFuncWrapper[handlers.size()]);
+            ChainBizFuncWrapper[] wrappers = handlers == null ? null : handlers.toArray(new ChainBizFuncWrapper[handlers.size()]);
             return new ChainBizHandler<>(handlerName, logger, wrappers);
         }
     }
@@ -129,20 +129,20 @@ public class ChainBizHandler<T> implements BizHandler<T> {
     @Override
     public boolean handle(T context) {
         final ChainBizFuncWrapper[] handlers = this.bizNodeWrappers;
-        if (handlers == null || handlers.length == 0) { return true; }
+        if(handlers == null || handlers.length == 0) { return true; }
         //
         boolean interrupted = false;
         Throwable error = null;
         ChainBizContext chainContext = ChainBizHandlerUtil.startChain(this, context);
         try {
-            for (int i = 0, len = handlers.length; i < len; ++i) {
-                if (!handlers[i].execute(chainContext)) {
+            for(int i = 0, len = handlers.length; i < len; ++i) {
+                if(!handlers[i].execute(chainContext)) {
                     interrupted = true;
                     return false;
                 }
             }
             return true;
-        } catch (Throwable e) {
+        } catch(Throwable e) {
             error = e;
             throw e;
         } finally {
@@ -154,7 +154,7 @@ public class ChainBizHandler<T> implements BizHandler<T> {
 
     private void completed(ChainBizContext chainContext, Throwable error, boolean interrupted) {
         List<ChainBizFuncStack> stacks = chainContext.handlerStacks();
-        for (int idx = stacks.size() - 1; idx > -1; --idx) {
+        for(int idx = stacks.size() - 1; idx > -1; --idx) {
             ChainBizFuncStack stack = stacks.get(idx);
             stack.bizFuncWrapper().onCompleted(chainContext, stack.context(), error, interrupted);
         }

@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- *  UserUpdatePasswordReq
+ * UserUpdatePasswordReq
  *
  * @author peijie.ye
  * @date 2022/11/28 14:48

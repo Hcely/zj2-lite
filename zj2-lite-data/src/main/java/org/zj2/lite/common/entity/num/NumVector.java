@@ -23,7 +23,7 @@ public class NumVector implements Serializable {
 
     public NumVector(int len) {
         this.values = len < 1 ? EMPTY_DECIMALS : new BigDecimal[len];
-        for (int i = 0; i < len; ++i) { values[i] = BigDecimal.ZERO; }
+        for(int i = 0; i < len; ++i) { values[i] = BigDecimal.ZERO; }
     }
 
     protected BigDecimal[] getValues() {
@@ -47,14 +47,14 @@ public class NumVector implements Serializable {
     }
 
     public NumVector setNum(int idx, Number value, MathContext context) {
-        if (idx < values.length) { values[idx] = NumUtil.of(value, context); }
+        if(idx < values.length) { values[idx] = NumUtil.of(value, context); }
         return this;
     }
 
     public NumVector setNums(Number... nums) {
-        if (nums == null || nums.length == 0) { return this; }
+        if(nums == null || nums.length == 0) { return this; }
         int len = Math.min(values.length, nums.length);
-        for (int i = 0; i < len; ++i) { values[i] = NumUtil.of(nums[i]); }
+        for(int i = 0; i < len; ++i) { values[i] = NumUtil.of(nums[i]); }
         return this;
     }
 

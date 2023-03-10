@@ -31,20 +31,20 @@ public class DataBufferStream<T> implements DataStream<T>, Concurrent {
 
     @Override
     public T next() {//NOSONAR
-        while (hasMore || !bufferQueue.isEmpty()) {
-            if (bufferQueue.isEmpty()) { readMore(); }
+        while(hasMore || !bufferQueue.isEmpty()) {
+            if(bufferQueue.isEmpty()) { readMore(); }
             T value = bufferQueue.poll();
-            if (value != null) { return value; }
+            if(value != null) { return value; }
         }
         return null;
     }
 
     protected void readMore() {
-        synchronized (bufferQueue) {
-            if (bufferQueue.isEmpty()) {
-                for (int i = 0; i < bufferSize; ++i) {
+        synchronized(bufferQueue) {
+            if(bufferQueue.isEmpty()) {
+                for(int i = 0; i < bufferSize; ++i) {
                     T data = stream.next();
-                    if (data == null) {
+                    if(data == null) {
                         hasMore = i > 0;
                         break;
                     }

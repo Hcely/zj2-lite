@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
  * @date 2023/3/2 15:53
  */
 public abstract class AbstractPromise implements Promise {
-    private static final AtomicIntegerFieldUpdater<AbstractPromise> STATE_UPDATER = AtomicIntegerFieldUpdater.newUpdater(
-            AbstractPromise.class, "state");
+    private static final AtomicIntegerFieldUpdater<AbstractPromise> STATE_UPDATER = AtomicIntegerFieldUpdater.newUpdater(AbstractPromise.class,
+            "state");
     private static final AtomicReferenceFieldUpdater<AbstractPromise, PromiseListenerNode> HEADER_UPDATER = AtomicReferenceFieldUpdater.newUpdater(
             AbstractPromise.class, PromiseListenerNode.class, "listenerHeader");
     private static final PromiseListenerNode NONE_NODE = new PromiseListenerNode(null);
@@ -41,7 +41,7 @@ public abstract class AbstractPromise implements Promise {
     @Override
     public <T> T flag() {
         //noinspection unchecked
-        return (T) flag;
+        return (T)flag;
     }
 
     private volatile int waitCount;
@@ -60,9 +60,9 @@ public abstract class AbstractPromise implements Promise {
     }
 
     protected final boolean tryCompleted(int completedState) {
-        if (completedState <= STATE_COMPLETING) { return false; }
-        for (int s = state; s < STATE_COMPLETING; s = state) {
-            if (STATE_UPDATER.compareAndSet(this, s, STATE_COMPLETING)) {
+        if(completedState <= STATE_COMPLETING) { return false; }
+        for(int s = state; s < STATE_COMPLETING; s = state) {
+            if(STATE_UPDATER.compareAndSet(this, s, STATE_COMPLETING)) {
                 this.completedState = completedState;
                 return true;
             }
@@ -71,7 +71,7 @@ public abstract class AbstractPromise implements Promise {
     }
 
     protected final void completed() {
-        if (state == STATE_COMPLETING && STATE_UPDATER.compareAndSet(this, STATE_COMPLETING, completedState)) {
+        if(state == STATE_COMPLETING && STATE_UPDATER.compareAndSet(this, STATE_COMPLETING, completedState)) {
             PromiseListenerNode listenerNode = tryGetListeners();
             notifyWaiters();
             callback(listenerNode);
@@ -80,22 +80,22 @@ public abstract class AbstractPromise implements Promise {
 
 
     private PromiseListenerNode tryGetListeners() {
-        for (PromiseListenerNode result = listenerHeader; ; result = listenerHeader) {
-            if (HEADER_UPDATER.compareAndSet(this, result, NONE_NODE)) {
+        for(PromiseListenerNode result = listenerHeader; ; result = listenerHeader) {
+            if(HEADER_UPDATER.compareAndSet(this, result, NONE_NODE)) {
                 return result;
             }
         }
     }
 
     private void notifyWaiters() {
-        if (waitCount > 0) { synchronized (this) { if (waitCount > 0) { this.notifyAll(); } } }
+        if(waitCount > 0) { synchronized(this) { if(waitCount > 0) { this.notifyAll(); } } }
     }
 
     private void callback(PromiseListenerNode listenerNode) {
-        while (listenerNode != null) {
+        while(listenerNode != null) {
             try {
                 listenerNode.listener.onCompleted(this);
-            } catch (Throwable ignored) {//NOSONAR
+            } catch(Throwable ignored) {//NOSONAR
             }
             listenerNode = listenerNode.next;
         }
@@ -121,10 +121,10 @@ public abstract class AbstractPromise implements Promise {
 
     @SneakyThrows
     private void sync0(boolean loop, long expireAt) {
-        while (!isCompleted() && (loop || System.currentTimeMillis() < expireAt)) {
-            synchronized (this) {
+        while(!isCompleted() && (loop || System.currentTimeMillis() < expireAt)) {
+            synchronized(this) {
                 waitCount = 1;
-                if (!isCompleted()) {
+                if(!isCompleted()) {
                     long timeout = loop ? 100 : Math.min(expireAt - System.currentTimeMillis(), 100);
                     this.wait(timeout);
                 }
@@ -134,18 +134,18 @@ public abstract class AbstractPromise implements Promise {
 
     @Override
     public Promise addListener(PromiseListener listener) {
-        if (listener == null) { return this; }
-        if (!addListener0(listener)) { listener.onCompleted(this); }
+        if(listener == null) { return this; }
+        if(!addListener0(listener)) { listener.onCompleted(this); }
         return this;
     }
 
     private boolean addListener0(PromiseListener listener) {
-        if (isCompleted()) { return false; }
+        if(isCompleted()) { return false; }
         PromiseListenerNode header;
         PromiseListenerNode node = new PromiseListenerNode(listener);
-        while (!isCompleted() && (header = listenerHeader) != NONE_NODE) {
+        while(!isCompleted() && (header = listenerHeader) != NONE_NODE) {
             node.next = header;
-            if (HEADER_UPDATER.compareAndSet(this, header, node)) { return true; }
+            if(HEADER_UPDATER.compareAndSet(this, header, node)) { return true; }
         }
         return false;
     }

@@ -6,7 +6,7 @@ import org.zj2.lite.service.broadcast.ServerSignal;
 import org.zj2.lite.service.broadcast.StandardServerSignalListener;
 
 /**
- *  CacheSignalListener
+ * CacheSignalListener
  *
  * @author peijie.ye
  * @date 2022/12/13 1:05
@@ -20,8 +20,8 @@ public class CacheSignalListener extends StandardServerSignalListener {
     @Override
     public void onMsg(ServerSignal signal) {
         String s = signal.getSignal();
-        if (StringUtils.equalsIgnoreCase(s, "CLEAR")) {
-            LocalCacheHelper cacheHelper = (LocalCacheHelper) CacheUtil.DEF_CACHE;
+        if(StringUtils.equalsIgnoreCase(s, "CLEAR")) {
+            LocalCacheHelper cacheHelper = (LocalCacheHelper)CacheUtil.DEF_CACHE;
             cacheHelper.clear();
         } else {
             CacheUtil.DEF_CACHE.removeCache(s);

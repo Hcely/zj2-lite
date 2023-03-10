@@ -1,13 +1,9 @@
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 
 /**
@@ -34,24 +30,21 @@ public class HttpHandler {
         cookieManager.addCookie(new Cookie("m.che300.com", "spidercooskieXX12", "1678027175"));
         cookieManager.addCookie(new Cookie("m.che300.com", "city_name", "%E4%B8%89%E4%BA%9A"));
         cookieManager.addCookie(new Cookie("m.che300.com", "prov_id", "25"));
-        wc.getCookieManager()
-                .addCookie(new Cookie("m.che300.com", "spidercodeCI12X3", "85314d0baf5a8c81c277d8f72556b1ce"));
-        wc.getCookieManager()
-                .addCookie(new Cookie("m.che300.com", "PHPSESSID", "c01f6cb81c7a4f4d4aba945e69fac809cd134cee"));
+        wc.getCookieManager().addCookie(new Cookie("m.che300.com", "spidercodeCI12X3", "85314d0baf5a8c81c277d8f72556b1ce"));
+        wc.getCookieManager().addCookie(new Cookie("m.che300.com", "PHPSESSID", "c01f6cb81c7a4f4d4aba945e69fac809cd134cee"));
         cookieManager.addCookie(new Cookie("m.che300.com", "prov_name", "%E6%B5%B7%E5%8D%97"));
         cookieManager.addCookie(new Cookie("m.che300.com", "city_id", "54"));
         cookieManager.addCookie(new Cookie(".che300.com", "device_id", "h555d7-2122-069e-66a1-9071"));
-        cookieManager.addCookie(new Cookie(".che300.com", "zg_did",
-                "%7B%22did%22%3A%20%22186ac06a7ff384-0db826f8d0f1d1-26021f51-144000-186ac06a800109e%22%7D"));
+        cookieManager.addCookie(
+                new Cookie(".che300.com", "zg_did", "%7B%22did%22%3A%20%22186ac06a7ff384-0db826f8d0f1d1-26021f51-144000-186ac06a800109e%22%7D"));
         cookieManager.addCookie(new Cookie(".che300.com", "pcim", "db37d873562e3c17846661ef0732a097b4d3d4db"));
         cookieManager.addCookie(new Cookie(".che300.com", "tel", "18826401135"));
         cookieManager.addCookie(new Cookie(".che300.com", "zg_db630a48aa614ee784df54cc5d0cdabb",
                 "%7B%22did%22%3A%20%22186ac06a7ff384-0db826f8d0f1d1-26021f51-144000-186ac06a800109e%22%7D"));
         cookieManager.addCookie(new Cookie(".m.che300.com", "Hm_lpvt_12b6a0c74b9c210899f69b3429653ed6", "1678027177"));
         cookieManager.addCookie(new Cookie(".m.che300.com", "Hm_lvt_12b6a0c74b9c210899f69b3429653ed6", "1677923363"));
-        HtmlPage page = wc.getPage(
-                "https://m.che300.com/estimate/result/3/3/2931/52541/1830830/2022-1/13/1/null/2023/2022?rt=1");
-        if (page == null) {
+        HtmlPage page = wc.getPage("https://m.che300.com/estimate/result/3/3/2931/52541/1830830/2022-1/13/1/null/2023/2022?rt=1");
+        if(page == null) {
             System.out.println("采集失败!!!");
         } else {
             Thread.sleep(1000);

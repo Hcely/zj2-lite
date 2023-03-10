@@ -21,8 +21,8 @@ public class BinaryKey implements Serializable, Comparable<BinaryKey> {
     }
 
     public BinaryKey write(int b) {
-        if (writeOff < keys.length) {
-            keys[writeOff] = (byte) b;
+        if(writeOff < keys.length) {
+            keys[writeOff] = (byte)b;
             ++writeOff;
         }
         return this;
@@ -37,14 +37,14 @@ public class BinaryKey implements Serializable, Comparable<BinaryKey> {
     }
 
     public BinaryKey append(long v) {
-        write((int) (0xFF & (v >>> 56)));
-        write((int) (0xFF & (v >>> 48)));
-        write((int) (0xFF & (v >>> 40)));
-        write((int) (0xFF & (v >>> 32)));
-        write((int) (0xFF & (v >>> 24)));
-        write((int) (0xFF & (v >>> 16)));
-        write((int) (0xFF & (v >>> 8)));
-        write((int) (0xFF & v));
+        write((int)(0xFF & (v >>> 56)));
+        write((int)(0xFF & (v >>> 48)));
+        write((int)(0xFF & (v >>> 40)));
+        write((int)(0xFF & (v >>> 32)));
+        write((int)(0xFF & (v >>> 24)));
+        write((int)(0xFF & (v >>> 16)));
+        write((int)(0xFF & (v >>> 8)));
+        write((int)(0xFF & v));
         return this;
     }
 
@@ -56,18 +56,18 @@ public class BinaryKey implements Serializable, Comparable<BinaryKey> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if(this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if(o == null || getClass() != o.getClass())
             return false;
-        BinaryKey byteKey = (BinaryKey) o;
+        BinaryKey byteKey = (BinaryKey)o;
         return Arrays.equals(keys, byteKey.keys);
     }
 
     @Override
     public int hashCode() {
-        if (hashcode != 0) { return hashcode; }
-        if (writeOff == keys.length) {
+        if(hashcode != 0) { return hashcode; }
+        if(writeOff == keys.length) {
             hashcode = Arrays.hashCode(keys);
             return hashcode;
         } else {

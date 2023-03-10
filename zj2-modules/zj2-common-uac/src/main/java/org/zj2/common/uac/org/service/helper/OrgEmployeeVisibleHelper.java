@@ -10,7 +10,7 @@ import org.zj2.common.uac.org.service.OrgEmployeeService;
 import org.zj2.lite.common.util.BooleanUtil;
 
 /**
- *  OrgEmployeeVisibleHelper
+ * OrgEmployeeVisibleHelper
  *
  * @author peijie.ye
  * @date 2023/1/1 21:10
@@ -24,7 +24,7 @@ public class OrgEmployeeVisibleHelper {
 
     public void handle(String employeeId, boolean visible) {
         OrgEmployeeDTO employee = orgEmployeeService.getIfAbsentError(employeeId);
-        if (BooleanUtil.isTrue(employee.getVisibleFlag()) != visible) {
+        if(BooleanUtil.isTrue(employee.getVisibleFlag()) != visible) {
             updateEmployee(employeeId, visible);
             addLog(employee, visible);
         }

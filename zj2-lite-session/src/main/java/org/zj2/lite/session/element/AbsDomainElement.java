@@ -4,8 +4,8 @@ package org.zj2.lite.session.element;
 import org.zj2.lite.session.DomainSession;
 
 /**
- *
  * <br>CreateDate 三月 24,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("rawtypes")

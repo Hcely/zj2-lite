@@ -12,7 +12,7 @@ import org.zj2.lite.util.ZRBuilder;
 import java.util.Objects;
 
 /**
- *  SequenceSetNumHandler
+ * SequenceSetNumHandler
  *
  * @author peijie.ye
  * @date 2022/12/11 23:57
@@ -26,9 +26,9 @@ public class SequenceSetNumHandler implements BizVHandler<NumNextContext> {
     public void handle(NumNextContext context) {
         String key = context.getSequenceKey();
         Long num = context.getSequenceNum();
-        for (int i = 0; i < 5; ++i) {
+        for(int i = 0; i < 5; ++i) {
             SysSequenceDTO sequence = sysSequenceService.getByKey(key);
-            if (sequence == null) {
+            if(sequence == null) {
                 try {
                     sequence = new SysSequenceDTO();
                     sequence.setSequenceKey(key);
@@ -36,11 +36,11 @@ public class SequenceSetNumHandler implements BizVHandler<NumNextContext> {
                     sequence.setSequenceNum(num);
                     sysSequenceService.add(sequence);
                     return;
-                } catch (Throwable ignore) {//NOSONAR
+                } catch(Throwable ignore) {//NOSONAR
                 }
             } else {
                 Long oldValue = ObjectUtils.defaultIfNull(sequence.getSequenceNum(), 0L);
-                if (Objects.equals(oldValue, num) || sysSequenceService.update(key, oldValue, num)) {
+                if(Objects.equals(oldValue, num) || sysSequenceService.update(key, oldValue, num)) {
                     return;
                 }
             }

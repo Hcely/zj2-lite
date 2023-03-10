@@ -22,7 +22,7 @@ public class WXClient {
 
     protected String getAppAccessToken(String wxAppId) {
         String accessToken = WXAppManager.getWXAccessToken(wxAppId);
-        if (StringUtils.isEmpty(accessToken)) {
+        if(StringUtils.isEmpty(accessToken)) {
             throw ZRBuilder.failureErr("缺失WX AccessToken");
         }
         return accessToken;
@@ -39,8 +39,8 @@ public class WXClient {
     }
 
     private <T extends WXBaseResp> T handleResponse(T resp) {
-        if (resp == null) { throw ZRBuilder.failureErr("NO WX Response"); }
-        if (!resp.isSuccess()) { throw ZRBuilder.failureErr(resp.getErrmsg()); }
+        if(resp == null) { throw ZRBuilder.failureErr("NO WX Response"); }
+        if(!resp.isSuccess()) { throw ZRBuilder.failureErr(resp.getErrmsg()); }
         return resp;
     }
 

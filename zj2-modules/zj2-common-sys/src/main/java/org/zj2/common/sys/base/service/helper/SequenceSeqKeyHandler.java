@@ -10,7 +10,7 @@ import org.zj2.lite.common.text.StrFormatter;
 import org.zj2.lite.helper.handler.BizVHandler;
 
 /**
- *  SequenceBakHandler
+ * SequenceBakHandler
  *
  * @author peijie.ye
  * @date 2022/12/11 23:57
@@ -23,15 +23,15 @@ public class SequenceSeqKeyHandler implements BizVHandler<NumNextContext> {
         StrFormatter formatter = SequenceUtil.STR_FORMATTER_MANAGER.getFormatter(keyFormat);
         TextStringBuilder sb = new TextStringBuilder(192);
         sb.append("SEQ:");// 前缀
-        sb.append(context.getNumRuleCode()).append(':');//
+        sb.append(context.getNumRuleCode()).append(':' );//
         //
         String appCode = context.getAppCode();
-        if (StringUtils.isNotEmpty(appCode)) { sb.append(appCode).append(':'); }
+        if(StringUtils.isNotEmpty(appCode)) { sb.append(appCode).append(':' ); }
         //
-        for (FormatPart part : formatter.getParts()) {
-            if (part instanceof SlotFormatPart) {
-                SlotFormatPart slotPart = (SlotFormatPart) part;
-                if (!StringUtils.startsWith(slotPart.getKey(), "seq")) {
+        for(FormatPart part : formatter.getParts()) {
+            if(part instanceof SlotFormatPart) {
+                SlotFormatPart slotPart = (SlotFormatPart)part;
+                if(!StringUtils.startsWith(slotPart.getKey(), "seq")) {
                     slotPart.appendObj(sb, context.getParams());
                 }
             }

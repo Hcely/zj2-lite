@@ -22,7 +22,7 @@ public class ResultPromise<T> extends AbstractPromise {
     }
 
     public ResultPromise<T> success(Object result) {
-        if (tryCompleted(STATE_SUCCESS)) {
+        if(tryCompleted(STATE_SUCCESS)) {
             this.result = result;
             completed();
         }
@@ -34,7 +34,7 @@ public class ResultPromise<T> extends AbstractPromise {
     }
 
     public ResultPromise<T> failure(Throwable error) {
-        if (tryCompleted(STATE_FAILURE)) {
+        if(tryCompleted(STATE_FAILURE)) {
             this.error = error;
             completed();
         }
@@ -51,7 +51,7 @@ public class ResultPromise<T> extends AbstractPromise {
 
     public T result() {
         //noinspection unchecked
-        return (T) result;
+        return (T)result;
     }
 
     public Throwable error() {

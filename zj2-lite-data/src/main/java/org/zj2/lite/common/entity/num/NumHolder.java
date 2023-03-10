@@ -52,8 +52,8 @@ public class NumHolder extends Number {
     }
 
     public NumHolder add(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.add(this.value, v, context);
         }
         return this;
@@ -64,8 +64,8 @@ public class NumHolder extends Number {
     }
 
     public NumHolder sub(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.sub(this.value, v, context);
         }
         return this;
@@ -76,7 +76,7 @@ public class NumHolder extends Number {
     }
 
     public NumHolder multi(Number v, MathContext context) {
-        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
         this.value = NumUtil.multi(this.value, v, context);
         return this;
     }
@@ -86,7 +86,7 @@ public class NumHolder extends Number {
     }
 
     public NumHolder divide(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        if(value instanceof NumHolder) { value = ((NumHolder)value).value; }
         this.value = NumUtil.divide(this.value, value, context);
         return this;
     }
@@ -97,7 +97,7 @@ public class NumHolder extends Number {
 
     public NumHolder operate(UnaryOperator<BigDecimal> operator, MathContext context) {
         value = operator.apply(value);
-        if (context != null) { value = NumUtil.of(value, context); }
+        if(context != null) { value = NumUtil.of(value, context); }
         return this;
     }
 
@@ -106,9 +106,9 @@ public class NumHolder extends Number {
     }
 
     public NumHolder operate(Number v, BiFunction<BigDecimal, Number, BigDecimal> operator, MathContext context) {
-        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
         this.value = operator.apply(this.value, v);
-        if (context != null) { this.value = NumUtil.of(this.value, context); }
+        if(context != null) { this.value = NumUtil.of(this.value, context); }
         return this;
     }
 

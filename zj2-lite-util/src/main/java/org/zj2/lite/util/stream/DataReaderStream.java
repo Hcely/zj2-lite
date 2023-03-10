@@ -24,19 +24,19 @@ public class DataReaderStream<T> implements DataStream<T>, Concurrent {
 
     @Override
     public T next() {//NOSONAR
-        while (hasMore || !bufferQueue.isEmpty()) {
-            if (bufferQueue.isEmpty()) { readMore(); }
+        while(hasMore || !bufferQueue.isEmpty()) {
+            if(bufferQueue.isEmpty()) { readMore(); }
             T value = bufferQueue.poll();
-            if (value != null) { return value; }
+            if(value != null) { return value; }
         }
         return null;
     }
 
     protected void readMore() {
-        synchronized (bufferQueue) {
-            if (bufferQueue.isEmpty()) {
+        synchronized(bufferQueue) {
+            if(bufferQueue.isEmpty()) {
                 Collection<T> coll;
-                if (reader.hasMore() && CollUtil.isNotEmpty(coll = reader.read())) {//NOSONAR
+                if(reader.hasMore() && CollUtil.isNotEmpty(coll = reader.read())) {//NOSONAR
                     hasMore = true;
                     CollUtil.addAll(bufferQueue, coll, true);
                 } else {

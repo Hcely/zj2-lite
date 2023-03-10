@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.zj2.lite.common.entity.result.ZStatusMsg;
 
 /**
- *  ZJRequestLogFilter
+ * ZJRequestLogFilter
  *
  * @author peijie.ye
  * @date 2022/12/27 22:06
@@ -25,7 +25,7 @@ public class AbstractRequestLogFilter {
     protected void logRequest(RequestLogContext context) {
         StringBuilder sb = new StringBuilder(192);
         sb.append(context.getRpc());
-        if (StringUtils.isEmpty(context.getMethod())) {
+        if(StringUtils.isEmpty(context.getMethod())) {
             sb.append(" REQ-");
         } else {
             sb.append(" REQ [").append(context.getMethod()).append("]-");
@@ -40,43 +40,43 @@ public class AbstractRequestLogFilter {
         long executeTake = context.getExecuteEndTime() - context.getExecuteStartTime();
         TextStringBuilder sb = new TextStringBuilder(256);
         sb.append(context.getRpc());
-        if (StringUtils.isEmpty(context.getMethod())) {
+        if(StringUtils.isEmpty(context.getMethod())) {
             sb.append(" RESP-");
         } else {
             sb.append(" RESP [").append(context.getMethod()).append("]-");
         }
-        sb.append(context.getUri()).append('(').append(take).append("ms");
-        if (context.isExecuted()) {
+        sb.append(context.getUri()).append('(' ).append(take).append("ms");
+        if(context.isExecuted()) {
             sb.append(",exe ").append(executeTake);
             sb.append(executeTake > SHOW_RESPONSE_THRESHOLD ? "ms SLOW)" : "ms)");
         } else {
-            sb.append(')');
+            sb.append(')' );
         }
         sb.append(",resp:").append(context.getResponseStatus());
         final Object result = context.getResponse();
         final Throwable error = context.getError();
         final Object[] params = context.getRequestParams();
         boolean resultError = false;
-        if (error != null) {
-            if (error instanceof ZStatusMsg) {
-                appendStatusMsg(sb, (ZStatusMsg) error);
+        if(error != null) {
+            if(error instanceof ZStatusMsg) {
+                appendStatusMsg(sb, (ZStatusMsg)error);
             } else {
                 resultError = true;
                 appendParams(sb, params);
             }
-        } else if (result == null) {
+        } else if(result == null) {
             sb.append(",result:null");
-        } else if (result instanceof ZStatusMsg) {
-            appendStatusMsg(sb, (ZStatusMsg) result);
-        } else if (BeanUtils.isSimpleValueType(result.getClass())) {
+        } else if(result instanceof ZStatusMsg) {
+            appendStatusMsg(sb, (ZStatusMsg)result);
+        } else if(BeanUtils.isSimpleValueType(result.getClass())) {
             sb.append(",result:").append(result);
-        } else if (result instanceof ResponseEntity) {
+        } else if(result instanceof ResponseEntity) {
             sb.append(",result:ResponseEntity");
         } else {
-            sb.append(",result:unknown(").append(result.getClass().getSimpleName()).append(')');
+            sb.append(",result:unknown(").append(result.getClass().getSimpleName()).append(')' );
         }
         String message = sb.toString();
-        if (resultError) {
+        if(resultError) {
             log.error(message, error);
         } else {
             log.info(message);
@@ -91,14 +91,14 @@ public class AbstractRequestLogFilter {
 
     private void appendParams(TextStringBuilder sb, Object[] params) {
         sb.append(",reqParams:[");
-        if (params != null && params.length > 0) {
+        if(params != null && params.length > 0) {
             int i = 0;
             sb.ensureCapacity(1024 * 4);
-            for (Object arg : params) {
-                if (++i > 1) { sb.append(','); }
+            for(Object arg : params) {
+                if(++i > 1) { sb.append(',' ); }
                 sb.append(arg);
             }
         }
-        sb.append(']');
+        sb.append(']' );
     }
 }

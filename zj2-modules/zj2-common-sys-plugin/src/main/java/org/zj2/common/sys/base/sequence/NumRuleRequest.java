@@ -5,7 +5,7 @@ import org.zj2.common.sys.base.dto.req.NumNextReq;
 import java.io.Serializable;
 
 /**
- *  NumRuleBuilder
+ * NumRuleBuilder
  *
  * @author peijie.ye
  * @date 2022/12/24 22:31

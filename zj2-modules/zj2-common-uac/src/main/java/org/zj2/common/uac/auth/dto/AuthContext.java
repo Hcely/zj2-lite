@@ -10,7 +10,7 @@ import org.zj2.common.uac.user.dto.UserDTO;
 import org.zj2.lite.service.auth.AuthorizationJWT;
 
 /**
- *  AuthContext
+ * AuthContext
  *
  * @author peijie.ye
  * @date 2022/12/3 7:50
@@ -32,6 +32,6 @@ public class AuthContext {
 
     public <T extends AuthReq> T getReq() {
         //noinspection unchecked
-        return (T) req;
+        return (T)req;
     }
 }

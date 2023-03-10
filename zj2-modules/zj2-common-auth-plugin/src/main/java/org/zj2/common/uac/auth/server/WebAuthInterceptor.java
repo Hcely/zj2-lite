@@ -28,13 +28,13 @@ public class WebAuthInterceptor extends AbstractAuthInterceptor {
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {// NOSONAR
         RequestContext requestContext = RequestContext.current();
         AuthContext authContext = initAuthContext(requestContext);
-        if (authContext != null) {
+        if(authContext != null) {
             authContext.setUriResource(UriResourceManager.get(joinPoint));
             authenticate(requestContext, authContext);// 认证
             onAuthenticated(requestContext, authContext);// 授权
         }
         Object result = joinPoint.proceed();
-        if (authContext != null) { onCompleted(requestContext, authContext, result); }
+        if(authContext != null) { onCompleted(requestContext, authContext, result); }
         return result;
     }
 }

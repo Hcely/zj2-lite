@@ -19,11 +19,11 @@ public class DataArrayStream<T> implements DataFixedStream<T>, Resettable {
 
     @Override
     public T next() {
-        while (idx < array.length) {
+        while(idx < array.length) {
             //noinspection unchecked
-            T value = (T) array[idx];
+            T value = (T)array[idx];
             ++idx;
-            if (value != null) { return value; }
+            if(value != null) { return value; }
         }
         return null;
     }

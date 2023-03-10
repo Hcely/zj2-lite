@@ -3,8 +3,8 @@ package org.zj2.common.uac.app.service.impl;
 import org.springframework.stereotype.Service;
 import org.zj2.common.uac.app.dto.AppUserDTO;
 import org.zj2.common.uac.app.dto.AppUserExtDTO;
-import org.zj2.common.uac.app.dto.req.AppUserQuery;
 import org.zj2.common.uac.app.dto.req.AppUserAddReq;
+import org.zj2.common.uac.app.dto.req.AppUserQuery;
 import org.zj2.common.uac.app.entity.AppUser;
 import org.zj2.common.uac.app.mapper.AppUserMapper;
 import org.zj2.common.uac.app.service.AppUserService;
@@ -30,7 +30,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     @Override
     public AppUserDTO addUser(AppUserAddReq req) {
         AppUserDTO exist = getAppUser(req.getAppCode(), req.getUserId());
-        if (exist == null) {
+        if(exist == null) {
             AppUserDTO appUser = new AppUserDTO();
             appUser.setAppCode(req.getAppCode());
             appUser.setUserId(req.getUserId());
@@ -46,13 +46,13 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     @Override
     public void removeUser(String appUserId) {
         AppUserDTO appUser = get(appUserId);
-        if (appUser != null) { delete(appUserId); }
+        if(appUser != null) { delete(appUserId); }
     }
 
     @Override
     public void enable(String appUserId) {
         AppUserDTO appUser = get(appUserId);
-        if (appUser != null && BooleanUtil.isFalse(appUser.getEnableFlag())) {
+        if(appUser != null && BooleanUtil.isFalse(appUser.getEnableFlag())) {
             AppUserDTO update = new AppUserDTO();
             update.setAppUserId(appUserId);
             update.setEnableFlag(1);
@@ -65,7 +65,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUserMapper, AppUser, 
     @Override
     public void disable(String appUserId) {
         AppUserDTO appUser = get(appUserId);
-        if (appUser != null && BooleanUtil.isTrue(appUser.getEnableFlag())) {
+        if(appUser != null && BooleanUtil.isTrue(appUser.getEnableFlag())) {
             AppUserDTO update = new AppUserDTO();
             update.setAppUserId(appUserId);
             update.setEnableFlag(0);

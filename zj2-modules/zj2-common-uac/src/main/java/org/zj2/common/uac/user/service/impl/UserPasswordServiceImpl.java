@@ -11,18 +11,17 @@ import org.zj2.lite.service.BaseServiceImpl;
 import java.time.LocalDateTime;
 
 /**
- *  UserPasswordServiceImpl
+ * UserPasswordServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
  */
 @Service
-public class UserPasswordServiceImpl extends BaseServiceImpl<UserPasswordMapper, UserPassword, UserPasswordDTO>
-        implements UserPasswordService {
+public class UserPasswordServiceImpl extends BaseServiceImpl<UserPasswordMapper, UserPassword, UserPasswordDTO> implements UserPasswordService {
     @Override
     public UserPasswordDTO addPassword(boolean editPassword, String userId, String password) {
         LocalDateTime now = DateUtil.now();
-        if (editPassword) {
+        if(editPassword) {
             // 作废之前的
             UserPasswordDTO update = new UserPasswordDTO();
             update.setEnableFlag(0).setDisabledTime(now);

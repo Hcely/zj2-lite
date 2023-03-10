@@ -8,7 +8,7 @@ import org.zj2.lite.common.function.PropGetter;
 import java.util.LinkedHashMap;
 
 /**
- *  UpdateWrapper
+ * UpdateWrapper
  *
  * @author peijie.ye
  * @date 2022/11/27 15:43
@@ -77,9 +77,9 @@ public class ZUpdateWrapper<T> extends AbstractWrapper<T, ZUpdateWrapper<T>> {
     }
 
     protected final ZUpdateWrapper<T> addUpdateField(boolean b, PropGetter<T, ?> prop, UpdateMode mode, Object value) {
-        if (!b) { return this; }
+        if(!b) { return this; }
         String name = getFieldName(prop);
-        if (updateFields == null) { updateFields = new LinkedHashMap<>(5); }
+        if(updateFields == null) { updateFields = new LinkedHashMap<>(5); }
         updateFields.put(name, new UpdateField(mode, value));
         return this;
     }

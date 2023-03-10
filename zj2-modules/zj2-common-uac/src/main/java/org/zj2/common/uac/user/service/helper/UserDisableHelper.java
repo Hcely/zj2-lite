@@ -14,7 +14,7 @@ import org.zj2.lite.common.util.DateUtil;
 import org.zj2.lite.helper.handler.BizVHandler;
 
 /**
- *  UserEditValueHelper
+ * UserEditValueHelper
  *
  * @author peijie.ye
  * @date 2022/12/2 18:38
@@ -30,7 +30,7 @@ public class UserDisableHelper implements BizVHandler<UserOperationReq> {
     @Transactional
     public void handle(UserOperationReq req) {
         UserDTO user = userService.getIfAbsentError(req.getUserId());
-        if (BooleanUtil.isFalse(user.getEnableFlag())) { return; }
+        if(BooleanUtil.isFalse(user.getEnableFlag())) { return; }
         //
         updateStatus(req.getUserId());
         //

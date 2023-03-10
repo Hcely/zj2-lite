@@ -4,9 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.zj2.common.uac.auth.server.hider.PropertyValueHider;
 import org.zj2.lite.common.bean.BeanPropertyContext;
-import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
-import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.service.auth.AuthorityResource;
@@ -28,18 +26,16 @@ import java.util.Set;
  */
 @Component
 public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements AuthAfterCompletedHandler {
-    private static final SpringBeanRef<PropertyValueHider[]> HIDERS_REF = new SpringBeanRef<>(
-            PropertyValueHider[].class);
+    private static final SpringBeanRef<PropertyValueHider[]> HIDERS_REF = new SpringBeanRef<>(PropertyValueHider[].class);
 
     @Override
     public boolean supports(RequestContext requestContext, AuthContext authContext, UriResource uriResource) {
-        if (authContext.getTokenType() != TokenType.JWT) { return false; }
+        if(authContext.getTokenType() != TokenType.JWT) { return false; }
         return uriResource.isRequiredPropertyAuthority();
     }
 
     @Override
-    public void authorize(RequestContext requestContext, AuthContext authContext, UriResource uriResource,
-            Object result) {
+    public void authorize(RequestContext requestContext, AuthContext authContext, UriResource uriResource, Object result) {
         final AuthoritySet authorities = getAuthoritySet(requestContext, authContext);
         PropertyUtil.scanSimpleProperties(result, new AuthorizePropertyScanHandler(this, authContext, authorities));
     }
@@ -49,8 +45,7 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
         private final AuthContext context;
         private final AuthoritySet authorities;
 
-        private AuthorizePropertyScanHandler(AuthorizeJWTPropertyHandler handler, AuthContext context,
-                AuthoritySet authorities) {
+        private AuthorizePropertyScanHandler(AuthorizeJWTPropertyHandler handler, AuthContext context, AuthoritySet authorities) {
             this.handler = handler;
             this.context = context;
             this.authorities = authorities;
@@ -58,11 +53,11 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
 
         @Override
         public void handle(BeanPropertyContext cxt) {
-            if (!cxt.isPropertyOfBean()) { return; }
+            if(!cxt.isPropertyOfBean()) { return; }
             String propertyAuthority = handler.getPropertyAuthority(cxt);
             Object value;
-            if (handler.isRequiredAuthority(context, propertyAuthority) && (value = cxt.propertyValue()) != null) {
-                if (!context.isAuthenticated() || authorities.notContainsAuthority(propertyAuthority)) {
+            if(handler.isRequiredAuthority(context, propertyAuthority) && (value = cxt.propertyValue()) != null) {
+                if(!context.isAuthenticated() || authorities.notContainsAuthority(propertyAuthority)) {
                     Object newValue = handler.hidePropertyValue(cxt.propertyName(), value);
                     cxt.propertyValue(newValue);
                 }
@@ -72,32 +67,32 @@ public class AuthorizeJWTPropertyHandler extends AuthAbstractHandler implements 
 
     protected String getPropertyAuthority(BeanPropertyContext cxt) {
         AuthorityResource resource = cxt.propertyAnnotation(AuthorityResource.class);
-        if (resource == null) { return null; }
+        if(resource == null) { return null; }
         String authority = resource.name();
-        if (StringUtils.isNotEmpty(authority)) { return authority; }
+        if(StringUtils.isNotEmpty(authority)) { return authority; }
         authority = resource.value();
-        if (StringUtils.isNotEmpty(authority)) { return authority; }
+        if(StringUtils.isNotEmpty(authority)) { return authority; }
         return cxt.propertyName();
     }
 
     protected boolean isRequiredAuthority(AuthContext context, String propertyAuthority) {
-        if (StringUtils.isEmpty(propertyAuthority)) { return false; }
-        if (context == null) { return true; }
+        if(StringUtils.isEmpty(propertyAuthority)) { return false; }
+        if(context == null) { return true; }
         UriResource uriResource = context.getUriResource();
-        if (uriResource == null) { return true; }
+        if(uriResource == null) { return true; }
         Set<String> authorities = uriResource.getPropertyAuthorities();
-        if (CollUtil.isEmpty(authorities)) { return true; }
+        if(CollUtil.isEmpty(authorities)) { return true; }
         return authorities.contains(propertyAuthority);
     }
 
     protected Object hidePropertyValue(String propertyName, Object value) {
-        if (!(value instanceof String)) { return null; }
+        if(!(value instanceof String)) { return null; }
         String valueStr = value.toString();
-        if (StringUtils.isEmpty(valueStr)) { return value; }
+        if(StringUtils.isEmpty(valueStr)) { return value; }
         PropertyValueHider[] hiders = HIDERS_REF.get();
-        if (CollUtil.isNotEmpty(hiders)) {
-            for (PropertyValueHider hider : hiders) {
-                if (hider.supports(propertyName)) {
+        if(CollUtil.isNotEmpty(hiders)) {
+            for(PropertyValueHider hider : hiders) {
+                if(hider.supports(propertyName)) {
                     return hider.hide(valueStr);
                 }
             }

@@ -17,13 +17,12 @@ import java.util.function.Function;
 @Slf4j
 class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     private static final int RETRY_COUNT = 100;
-    private static final ScheduledThreadPoolExecutor LOCAL_CACHE_POOL_EXECUTOR = new ScheduledThreadPoolExecutor(1,
-            r -> {
-                Thread thread = new Thread(r);
-                thread.setName("CACHE_CLEAR");
-                thread.setDaemon(true);
-                return thread;
-            });
+    private static final ScheduledThreadPoolExecutor LOCAL_CACHE_POOL_EXECUTOR = new ScheduledThreadPoolExecutor(1, r -> {
+        Thread thread = new Thread(r);
+        thread.setName("CACHE_CLEAR");
+        thread.setDaemon(true);
+        return thread;
+    });
     private final ConcurrentHashMap<String, CacheObjRef> cacheObjMap = new ConcurrentHashMap<>(4096);
 
     public LocalCacheHelper(long expireIn) {
@@ -39,9 +38,9 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
 
     private void prune() {
         long currentTime = System.currentTimeMillis();
-        for (Iterator<Map.Entry<String, CacheObjRef>> it = cacheObjMap.entrySet().iterator(); it.hasNext(); ) {
+        for(Iterator<Map.Entry<String, CacheObjRef>> it = cacheObjMap.entrySet().iterator(); it.hasNext(); ) {
             CacheObjRef ref = it.next().getValue();
-            if (ref.isTimeout(currentTime)) {
+            if(ref.isTimeout(currentTime)) {
                 it.remove();
                 ref.clear();
             }
@@ -49,11 +48,11 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     }
 
     public void clear() {
-        for (Iterator<CacheObjRef> it = cacheObjMap.values().iterator(); it.hasNext(); ) {
+        for(Iterator<CacheObjRef> it = cacheObjMap.values().iterator(); it.hasNext(); ) {
             CacheObjRef ref = it.next();
             try {
                 it.remove();
-            } catch (IllegalStateException ignored) {
+            } catch(IllegalStateException ignored) {
                 // NOTHING
             }
             ref.clear();
@@ -68,37 +67,36 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
     public void removeCache(String cacheKey) {
         try {
             CacheObjRef ref = cacheObjMap.remove(cacheKey);
-            if (ref != null) { ref.clear(); }
-        } catch (IllegalStateException ignored) {
+            if(ref != null) { ref.clear(); }
+        } catch(IllegalStateException ignored) {
             // NOTHING
         }
     }
 
     @Override
     public <T> void setCache(String cacheKey, T value, long timeout) {
-        for (int i = 0; i < RETRY_COUNT; ++i) {
+        for(int i = 0; i < RETRY_COUNT; ++i) {
             try {
                 cacheObjMap.put(cacheKey, new CacheObjRef(value, timeout));
-            } catch (IllegalStateException ignored) {
-                if (i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
+            } catch(IllegalStateException ignored) {
+                if(i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
             }
         }
     }
 
     @Override
-    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout,
-            boolean ignoreErr) {
+    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout, boolean ignoreErr) {
         CacheObjRef cacheObj = cacheObjMap.get(cacheKey);
-        if (cacheObj != null && !cacheObj.isTimeout()) { return (T) cacheObj.get(); }
-        if (getter == null || StringUtils.isEmpty(dataKey)) { return null; }
+        if(cacheObj != null && !cacheObj.isTimeout()) { return (T)cacheObj.get(); }
+        if(getter == null || StringUtils.isEmpty(dataKey)) { return null; }
         final CacheHandler handler = new CacheHandler(dataKey, getter, getTimeout(timeout), ignoreErr);
-        for (int i = 0; i < RETRY_COUNT; ++i) {
+        for(int i = 0; i < RETRY_COUNT; ++i) {
             try {
                 handler.result = null;
                 cacheObjMap.compute(cacheKey, handler);
-                return (T) handler.result;
-            } catch (IllegalStateException e) {
-                if (i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
+                return (T)handler.result;
+            } catch(IllegalStateException e) {
+                if(i < RETRY_COUNT - 1) { LockSupport.parkNanos(1000000); }
             }
         }
         // 缓存失效，直接读取数据
@@ -122,17 +120,17 @@ class LocalCacheHelper extends AbsCacheHelper implements Runnable {
 
         @Override
         public CacheObjRef apply(String k, CacheObjRef v) {
-            if (v != null && !v.isTimeout()) {
+            if(v != null && !v.isTimeout()) {
                 result = v.get();
                 return v;
             }
             try {
                 result = getter.apply(key);
                 return new CacheObjRef(result, timeout);
-            } catch (Throwable e) {//NOSONAR
+            } catch(Throwable e) {//NOSONAR
                 log.error("缓存获取异常", e);
                 result = null;
-                if (ignoreErr) {
+                if(ignoreErr) {
                     return new CacheObjRef(null, 10000);
                 } else {
                     throw e;

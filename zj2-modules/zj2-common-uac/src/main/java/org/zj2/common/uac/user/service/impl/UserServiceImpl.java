@@ -84,17 +84,15 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User, UserDTO> 
     @Override
     public UserDTO getIfAbsentError(String userId) {
         UserDTO user = get(userId);
-        if (user == null) { throw ZRBuilder.failureErr("用户账户不存在"); }
+        if(user == null) { throw ZRBuilder.failureErr("用户账户不存在"); }
         return user;
     }
 
     @Override
     public ZListResp<UserDTO> pageQuery(UserQuery query) {
-        return pageQuery(query, q -> query(
-                wrapper(true).eq(UserDTO::getUserMobile, CryptUtil.encrypt(q.getUserMobile()))
-                        .eq(UserDTO::getUserEmail, CryptUtil.encrypt(q.getUseremail()))
-                        .like(UserDTO::getUserName, q.getUserName()).eq(UserDTO::getActivateFlag, q.getActivateFlag())
-                        .eq(UserDTO::getEnableFlag, q.getEnableFlag()).orderByDesc(UserDTO::getUserId)));
+        return pageQuery(query, q -> query(wrapper(true).eq(UserDTO::getUserMobile, CryptUtil.encrypt(q.getUserMobile()))
+                .eq(UserDTO::getUserEmail, CryptUtil.encrypt(q.getUseremail())).like(UserDTO::getUserName, q.getUserName())
+                .eq(UserDTO::getActivateFlag, q.getActivateFlag()).eq(UserDTO::getEnableFlag, q.getEnableFlag()).orderByDesc(UserDTO::getUserId)));
     }
 
     @Override

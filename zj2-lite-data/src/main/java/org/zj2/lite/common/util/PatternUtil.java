@@ -6,7 +6,7 @@ import org.springframework.util.AntPathMatcher;
 import java.util.regex.Pattern;
 
 /**
- *  PatternUtil
+ * PatternUtil
  *
  * @author peijie.ye
  * @date 2022/12/1 11:39
@@ -35,21 +35,21 @@ public class PatternUtil {
     }
 
     public static boolean test(String pattern, String value) {
-        if (StringUtils.isEmpty(pattern) || StringUtils.isEmpty(value)) {
+        if(StringUtils.isEmpty(pattern) || StringUtils.isEmpty(value)) {
             return false;
         }
         return Pattern.matches(pattern, value);
     }
 
     public static boolean test(Pattern pattern, String value) {
-        if (pattern == null || StringUtils.isEmpty(value)) {
+        if(pattern == null || StringUtils.isEmpty(value)) {
             return false;
         }
         return pattern.matcher(value).matches();
     }
 
     public static boolean matchPath(String pattern, String path) {
-        if (StringUtils.isEmpty(pattern)) { return false; }
+        if(StringUtils.isEmpty(pattern)) { return false; }
         return pathMatcher.match(pattern, path);
     }
 }

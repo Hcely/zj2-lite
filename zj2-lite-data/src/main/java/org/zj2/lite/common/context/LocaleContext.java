@@ -19,9 +19,9 @@ public class LocaleContext extends ZContext {
     }
 
     public static void setLocale(Locale locale) {
-        if (locale == null) {
+        if(locale == null) {
             LocaleContext context = THREAD_CONTEXT.get();
-            if (context != null) { context.locale = null; }
+            if(context != null) { context.locale = null; }
         } else {
             THREAD_CONTEXT.get(LocaleContext::new).locale = locale;
         }

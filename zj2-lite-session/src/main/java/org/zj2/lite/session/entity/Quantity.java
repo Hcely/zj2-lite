@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 /**
- *
  * <br>CreateDate 三月 23,2022
+ *
  * @author peijie.ye
  */
 @Getter
@@ -17,8 +17,8 @@ public class Quantity implements Serializable {
     public static final Quantity ZERO = new Quantity(null, null);
 
     public static Quantity min(Quantity q, Number main, Number vice) {
-        if (main == null && vice == null) { return q == null ? ZERO : q; }
-        if (q == null) { return new Quantity(NumUtil.min(main, BigDecimal.ZERO), NumUtil.min(vice, BigDecimal.ZERO)); }
+        if(main == null && vice == null) { return q == null ? ZERO : q; }
+        if(q == null) { return new Quantity(NumUtil.min(main, BigDecimal.ZERO), NumUtil.min(vice, BigDecimal.ZERO)); }
         return new Quantity(NumUtil.min(q.main, main), NumUtil.min(q.vice, vice));
     }
 
@@ -27,8 +27,8 @@ public class Quantity implements Serializable {
     }
 
     public static Quantity max(Quantity q, Number main, Number vice) {
-        if (main == null && vice == null) { return q == null ? ZERO : q; }
-        if (q == null) { return new Quantity(NumUtil.max(main, BigDecimal.ZERO), NumUtil.max(vice, BigDecimal.ZERO)); }
+        if(main == null && vice == null) { return q == null ? ZERO : q; }
+        if(q == null) { return new Quantity(NumUtil.max(main, BigDecimal.ZERO), NumUtil.max(vice, BigDecimal.ZERO)); }
         return new Quantity(NumUtil.max(q.main, main), NumUtil.max(q.vice, vice));
     }
 
@@ -59,7 +59,7 @@ public class Quantity implements Serializable {
     }
 
     public Quantity sub(Number main, Number vice) {
-        if (NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
+        if(NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
             return this;
         } else {
             return new Quantity(NumUtil.sub(this.main, main), NumUtil.sub(this.vice, vice));
@@ -71,7 +71,7 @@ public class Quantity implements Serializable {
     }
 
     public Quantity add(Number main, Number vice) {
-        if (NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
+        if(NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
             return this;
         } else {
             return new Quantity(NumUtil.add(this.main, main), NumUtil.add(this.vice, vice));
@@ -91,7 +91,7 @@ public class Quantity implements Serializable {
     }
 
     public Quantity multi(Number main, Number vice, MathContext context) {
-        if (main == null && vice == null) { return ZERO; }
+        if(main == null && vice == null) { return ZERO; }
         return new Quantity(NumUtil.multi(this.main, main, context), NumUtil.multi(this.vice, vice, context));
     }
 
@@ -108,7 +108,7 @@ public class Quantity implements Serializable {
     }
 
     public Quantity negate() {
-        if (NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
+        if(NumUtil.eqZero(main) && NumUtil.eqZero(vice)) {
             return this;
         } else {
             return new Quantity(NumUtil.negate(this.main), NumUtil.negate(this.vice));
@@ -116,7 +116,7 @@ public class Quantity implements Serializable {
     }
 
     public boolean eq(Quantity quantity) {
-        if (quantity == null) { return eqZero(); }
+        if(quantity == null) { return eqZero(); }
         return NumUtil.eq(main, quantity.main) && NumUtil.eq(vice, quantity.vice);
     }
 

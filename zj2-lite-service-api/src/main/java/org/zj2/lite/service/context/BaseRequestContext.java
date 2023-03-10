@@ -54,10 +54,10 @@ public class BaseRequestContext extends RequestContext {
 
     @Override
     public void setRequestParam(String key, Object param) {
-        if (param == null) {
-            if (params != null) { params.remove(key); }
+        if(param == null) {
+            if(params != null) { params.remove(key); }
         } else {
-            if (params == null) { params = new LinkedHashMap<>(); }
+            if(params == null) { params = new LinkedHashMap<>(); }
             params.put(key, param);
         }
     }

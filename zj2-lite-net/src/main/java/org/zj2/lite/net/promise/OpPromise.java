@@ -16,7 +16,7 @@ public class OpPromise extends AbstractPromise {
     }
 
     public OpPromise finish() {
-        if (tryCompleted(STATE_SUCCESS)) { completed(); }
+        if(tryCompleted(STATE_SUCCESS)) { completed(); }
         return this;
     }
 }

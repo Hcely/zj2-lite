@@ -6,6 +6,7 @@ import org.zj2.lite.helper.handler.BizHandler;
 /**
  * CommonBizHelper
  * <br>CreateDate 一月 11,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */
@@ -15,9 +16,9 @@ public abstract class CommonBizHelper<T> implements BizHandler<T> {
 
     private BizHandler getHandler() {
         BizHandler result = handler;
-        if (result == null) {
-            synchronized (this) {
-                if ((result = handler) == null) {
+        if(result == null) {
+            synchronized(this) {
+                if((result = handler) == null) {
                     handler = result = BizReference.Helper.createHandler(AopUtils.getTargetClass(this));
                 }
             }

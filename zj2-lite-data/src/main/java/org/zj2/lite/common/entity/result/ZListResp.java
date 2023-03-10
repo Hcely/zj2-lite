@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  ZListResponse
+ * ZListResponse
  *
  * @author peijie.ye
  * @date 2022/11/23 9:50
@@ -33,7 +33,7 @@ public class ZListResp<T> extends ZResp<List<? extends T>> {
     }
 
     public ZListResp<T> putSumValue(String key, BigDecimal value) {
-        if (sumValues == null) { sumValues = new LinkedHashMap<>(); }
+        if(sumValues == null) { sumValues = new LinkedHashMap<>(); }
         sumValues.put(key, value);
         return this;
     }

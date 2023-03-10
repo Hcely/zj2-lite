@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 /**
  * MqEvent
  * <br>CreateDate 一月 16,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */

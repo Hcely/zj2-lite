@@ -7,7 +7,7 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.service.context.AuthContext;
 
 /**
- *  SequenceBakHandler
+ * SequenceBakHandler
  *
  * @author peijie.ye
  * @date 2022/12/11 23:57
@@ -25,23 +25,23 @@ public class SequencePrepareHandler implements BizVHandler<NumNextContext> {
 
     private void putAppCode(NumNextContext context) {
         String appCode = context.getAppCode();
-        if (StringUtils.isEmpty(appCode)) {
+        if(StringUtils.isEmpty(appCode)) {
             appCode = AuthContext.currentAppCode();
             context.setAppCode(appCode);
         }
-        if (StringUtils.isEmpty(appCode)) { return; }
+        if(StringUtils.isEmpty(appCode)) { return; }
         context.putParam("app", appCode);
         context.putParam("appCode", appCode);
     }
 
     private void putOrgCode(NumNextContext context) {
         String orgCode = context.getOrgCode();
-        if (StringUtils.isEmpty(orgCode)) {
+        if(StringUtils.isEmpty(orgCode)) {
             orgCode = AuthContext.currentOrgCode();
             context.setOrgCode(orgCode);
         }
-        if (StringUtils.isEmpty(orgCode)) { return; }
-        if (!context.hasParam("org")) { context.putParam("org", orgCode); }
-        if (!context.hasParam("orgCode")) { context.putParam("orgCode", orgCode); }
+        if(StringUtils.isEmpty(orgCode)) { return; }
+        if(!context.hasParam("org")) { context.putParam("org", orgCode); }
+        if(!context.hasParam("orgCode")) { context.putParam("orgCode", orgCode); }
     }
 }

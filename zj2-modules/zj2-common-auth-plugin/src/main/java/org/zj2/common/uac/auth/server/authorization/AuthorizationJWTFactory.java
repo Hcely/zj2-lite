@@ -28,7 +28,7 @@ public class AuthorizationJWTFactory implements AuthorizationFactory {
     @Override
     public AuthContext create(RequestContext requestContext, String authorization) {
         AuthorizationJWT jwt = JWTValidUtil.parse(authorization);
-        if (jwt == null) { throw AuthUtil.unAuthorityErr("无效token格式"); }
+        if(jwt == null) { throw AuthUtil.unAuthorityErr("无效token格式"); }
         AuthContext context = new AuthContext();
         context.setAuthorization(jwt);
         context.setTokenType(TokenType.JWT);

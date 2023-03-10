@@ -16,15 +16,15 @@ public class MessageUtil {
     private static final SpringBeanRef<MessageBundle> MESSAGE_BUNDLE_REF = new SpringBeanRef<>(MessageBundle.class);
 
     public static String get(String namespace, String code, Locale locale) {
-        if (StringUtils.isEmpty(code)) { return ""; }
+        if(StringUtils.isEmpty(code)) { return ""; }
         MessageBundle messageBundle = MESSAGE_BUNDLE_REF.get();
-        if (messageBundle == null) {
+        if(messageBundle == null) {
             return "";
         } else {
             try {
                 String msg = messageBundle.get(namespace, code, locale);
                 return msg == null ? "" : msg;
-            } catch (Throwable ignored) {// NOSONAR
+            } catch(Throwable ignored) {// NOSONAR
                 return "";
             }
         }

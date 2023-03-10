@@ -15,14 +15,13 @@ import org.zj2.lite.util.CryptUtil;
 import java.time.LocalDateTime;
 
 /**
- *  UserServiceImpl
+ * UserServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
  */
 @Service
-public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserValue, UserValueDTO>
-        implements UserValueService {
+public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserValue, UserValueDTO> implements UserValueService {
 
     @Override
     public boolean existUserValue(UserValueTypeEnum valueType, String userValue) {
@@ -31,42 +30,37 @@ public class UserValueServiceImpl extends BaseServiceImpl<UserValueMapper, UserV
 
     @Override
     public boolean existUserValue(UserValueTypeEnum valueType, String userValue, String userExtValue) {
-        if (StringUtils.isEmpty(userValue)) { return false; }
-        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
-        return exists(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
-                .eq(UserValueDTO::getUserValue, userValue)
-                .eq(UserValueDTO::getUserExtValue, StringUtils.defaultString(userExtValue))
-                .eq(UserValueDTO::getEnableFlag, 1));
+        if(StringUtils.isEmpty(userValue)) { return false; }
+        if(valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
+        return exists(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode()).eq(UserValueDTO::getUserValue, userValue)
+                .eq(UserValueDTO::getUserExtValue, StringUtils.defaultString(userExtValue)).eq(UserValueDTO::getEnableFlag, 1));
     }
 
     @Override
     public String findUserId(UserValueTypeEnum valueType, String userValue, String userExtValue) {
-        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
-        if (UserValueTypeEnum.MOBILE.eq(valueType)) {
-            if (StringUtils.isEmpty(userExtValue)) { userExtValue = UserConstants.DEF_MOBILE_AREA_CODE; }
+        if(valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
+        if(UserValueTypeEnum.MOBILE.eq(valueType)) {
+            if(StringUtils.isEmpty(userExtValue)) { userExtValue = UserConstants.DEF_MOBILE_AREA_CODE; }
         }
-        UserValueDTO value = getOne(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
-                .eq(UserValueDTO::getUserValue, userValue)
-                .eq(UserValueDTO::getUserExtValue, StringUtils.defaultString(userExtValue))
-                .eq(UserValueDTO::getEnableFlag, 1));
+        UserValueDTO value = getOne(wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode()).eq(UserValueDTO::getUserValue, userValue)
+                .eq(UserValueDTO::getUserExtValue, StringUtils.defaultString(userExtValue)).eq(UserValueDTO::getEnableFlag, 1));
         return value == null ? null : value.getUserId();
     }
 
     @Override
-    public UserValueDTO addUserValue(boolean editValue, String userId, UserValueTypeEnum valueType, String userValue,
-            String userExtValue) {
-        if (valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
+    public UserValueDTO addUserValue(boolean editValue, String userId, UserValueTypeEnum valueType, String userValue, String userExtValue) {
+        if(valueType.isCrypt()) { userValue = CryptUtil.encrypt(userValue); }
         LocalDateTime now = DateUtil.now();
         // 作废之前 value
-        if (editValue) {
+        if(editValue) {
             UserValueDTO update = new UserValueDTO();
             update.setEnableFlag(0);
             update.setDisabledTime(now);
-            update(update, wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode())
-                    .eq(UserValueDTO::getUserId, userId).eq(UserValueDTO::getEnableFlag, 1));
+            update(update, wrapper().eq(UserValueDTO::getUserValueType, valueType.getCode()).eq(UserValueDTO::getUserId, userId)
+                    .eq(UserValueDTO::getEnableFlag, 1));
         }
         // 仅作废
-        if (StringUtils.isEmpty(userValue)) { return null; }
+        if(StringUtils.isEmpty(userValue)) { return null; }
         // 新增
         UserValueDTO value = new UserValueDTO();
         value.setUserId(userId);

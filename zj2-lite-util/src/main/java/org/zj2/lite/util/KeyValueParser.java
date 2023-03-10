@@ -37,8 +37,7 @@ public class KeyValueParser<R> {
         this(DEF_EQUAL_CHAR, separatorChar, resultSupplier, handler);
     }
 
-    public KeyValueParser(char equalChar, char separatorChar, Supplier<? extends R> resultSupplier,
-            KeyValueHandler<R> handler) {
+    public KeyValueParser(char equalChar, char separatorChar, Supplier<? extends R> resultSupplier, KeyValueHandler<R> handler) {
         this.equalChar = equalChar;
         this.separatorChar = separatorChar;
         this.resultSupplier = resultSupplier;
@@ -62,7 +61,7 @@ public class KeyValueParser<R> {
     }
 
     public R parse(CharSequence value) {
-        if (StringUtils.isEmpty(value)) { return null; }
+        if(StringUtils.isEmpty(value)) { return null; }
         return parse0(value, 0, value.length());
     }
 
@@ -71,7 +70,7 @@ public class KeyValueParser<R> {
     }
 
     public R parse(CharSequence value, int startIdx, int endIdx) {
-        if (StringUtils.isEmpty(value) || startIdx < 0 || startIdx >= endIdx || endIdx > value.length()) {
+        if(StringUtils.isEmpty(value) || startIdx < 0 || startIdx >= endIdx || endIdx > value.length()) {
             return null;
         }
         return parse0(value, startIdx, endIdx);
@@ -80,7 +79,7 @@ public class KeyValueParser<R> {
     private R parse0(CharSequence value, int startIdx, int endIdx) {// NOSONAR
         final Supplier<? extends R> resultSupplier = this.resultSupplier;// NOSONAR
         final KeyValueHandler<R> handler = this.handler;// NOSONAR
-        if (resultSupplier == null || handler == null) { return null; }
+        if(resultSupplier == null || handler == null) { return null; }
         final char equalChar = this.equalChar, separatorChar = this.separatorChar;// NOSONAR
         R result = resultSupplier.get();
         int parseState = PARSE_STATE_START;
@@ -88,13 +87,13 @@ public class KeyValueParser<R> {
         int keyStartIdx = 0, keyEndIdx = 0;// NOSONAR
         int valueStartIdx = 0;
         char ch;
-        for (int idx = startIdx; idx < endIdx; ++idx) {
+        for(int idx = startIdx; idx < endIdx; ++idx) {
             ch = value.charAt(idx);
-            switch (parseState) {
+            switch(parseState) {
                 case PARSE_STATE_START: {
-                    if (ch != separatorChar && ch != ' ') {
+                    if(ch != separatorChar && ch != ' ' ) {
                         keyStartIdx = idx;
-                        if (ch == equalChar) {
+                        if(ch == equalChar) {
                             keyEndIdx = idx;
                             valueStartIdx = idx + 1;
                             startValue = false;
@@ -106,11 +105,11 @@ public class KeyValueParser<R> {
                     break;
                 }
                 case PARSE_STATE_KEY_ING: {
-                    if (ch == separatorChar) {
+                    if(ch == separatorChar) {
                         parseState = PARSE_STATE_START;
                         boolean ok = handleKeyValue(result, value, keyStartIdx, idx, idx, idx, handler);
-                        if (!ok) { return null; }
-                    } else if (ch == equalChar) {
+                        if(!ok) { return null; }
+                    } else if(ch == equalChar) {
                         keyEndIdx = idx;
                         valueStartIdx = idx + 1;
                         startValue = false;
@@ -119,38 +118,38 @@ public class KeyValueParser<R> {
                     break;
                 }
                 default: {
-                    if (ch == separatorChar) {
+                    if(ch == separatorChar) {
                         parseState = PARSE_STATE_START;
                         boolean ok = handleKeyValue(result, value, keyStartIdx, keyEndIdx, valueStartIdx, idx, handler);
-                        if (!ok) { return null; }
-                    } else if (!startValue) {
+                        if(!ok) { return null; }
+                    } else if(!startValue) {
                         startValue = ch != ' ';
                         valueStartIdx = idx;
                     }
                 }
             }
         }
-        if (parseState == PARSE_STATE_KEY_ING) {
+        if(parseState == PARSE_STATE_KEY_ING) {
             boolean ok = handleKeyValue(result, value, keyStartIdx, endIdx, endIdx, endIdx, handler);
-            if (!ok) { return null; }
-        } else if (parseState == PARSE_STATE_VALUE_ING) {
+            if(!ok) { return null; }
+        } else if(parseState == PARSE_STATE_VALUE_ING) {
             boolean ok = handleKeyValue(result, value, keyStartIdx, keyEndIdx, valueStartIdx, endIdx, handler);
-            if (!ok) { return null; }
+            if(!ok) { return null; }
         }
         return result;
     }
 
-    private boolean handleKeyValue(R result, CharSequence value, int keyStartIdx, int keyEndIdx, int valueStartIdx,
-            int valueEndIdx, KeyValueHandler<R> handler) {
+    private boolean handleKeyValue(R result, CharSequence value, int keyStartIdx, int keyEndIdx, int valueStartIdx, int valueEndIdx,
+            KeyValueHandler<R> handler) {
         //
         keyEndIdx = normalizeEndIdx(value, keyStartIdx, keyEndIdx);
         valueEndIdx = normalizeEndIdx(value, valueStartIdx, valueEndIdx);
-        if (valueStartIdx < valueEndIdx && value.charAt(valueStartIdx) == '"') {
+        if(valueStartIdx < valueEndIdx && value.charAt(valueStartIdx) == '"' ) {
             ++valueStartIdx;
-            if (value.charAt(valueEndIdx - 1) == '"') { --valueEndIdx; }
+            if(value.charAt(valueEndIdx - 1) == '"' ) { --valueEndIdx; }
             valueEndIdx = Math.max(valueStartIdx, valueEndIdx);
         }
-        if (keyStartIdx < keyEndIdx || valueStartIdx < valueEndIdx) {
+        if(keyStartIdx < keyEndIdx || valueStartIdx < valueEndIdx) {
             return handler.handle(result, value, keyStartIdx, keyEndIdx, valueStartIdx, valueEndIdx);
         } else {
             return true;
@@ -158,12 +157,11 @@ public class KeyValueParser<R> {
     }
 
     private static int normalizeEndIdx(CharSequence value, int startIdx, int endIdx) {
-        while (startIdx < endIdx && value.charAt(endIdx - 1) == ' ') { --endIdx; }
+        while(startIdx < endIdx && value.charAt(endIdx - 1) == ' ' ) { --endIdx; }
         return endIdx;
     }
 
     public interface KeyValueHandler<R> {
-        boolean handle(R result, CharSequence value, int keyStartIdx, int keyEndIdx, int valueStartIdx,
-                int valueEndIdx);
+        boolean handle(R result, CharSequence value, int keyStartIdx, int keyEndIdx, int valueStartIdx, int valueEndIdx);
     }
 }

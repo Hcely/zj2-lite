@@ -5,7 +5,7 @@ import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.lite.service.BaseInnerService;
 
 /**
- *  SysConfigService
+ * SysConfigService
  *
  * @author peijie.ye
  * @date 2022/12/10 2:31

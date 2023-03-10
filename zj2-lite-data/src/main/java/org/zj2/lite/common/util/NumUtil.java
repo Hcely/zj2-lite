@@ -34,17 +34,17 @@ public class NumUtil {
     }
 
     public static BigDecimal add(Number num1, Number num2, MathContext context) {
-        if (num1 == null) { return of(num2, context); }
-        if (num2 == null) { return of(num1, context); }
+        if(num1 == null) { return of(num2, context); }
+        if(num2 == null) { return of(num1, context); }
         BigDecimal result = of(num1).add(of(num2));
         return context == null ? result : result.setScale(context.getPrecision(), context.getRoundingMode());
     }
 
     public static BigDecimal add(Number... nums) {
-        if (nums == null || nums.length == 0) { return BigDecimal.ZERO; }
+        if(nums == null || nums.length == 0) { return BigDecimal.ZERO; }
         BigDecimal result = BigDecimal.ZERO;
-        for (Number num : nums) {
-            if (num != null) { result = result.add(of(num)); }
+        for(Number num : nums) {
+            if(num != null) { result = result.add(of(num)); }
         }
         return result;
     }
@@ -71,12 +71,12 @@ public class NumUtil {
     }
 
     public static BigDecimal multi(Number... nums) {
-        if (nums == null || nums.length == 0) { return BigDecimal.ZERO; }
+        if(nums == null || nums.length == 0) { return BigDecimal.ZERO; }
         BigDecimal result = of(nums[0], false);
-        if (result == null) { return BigDecimal.ZERO; }
-        for (int i = 1, len = nums.length; i < len; ++i) {
+        if(result == null) { return BigDecimal.ZERO; }
+        for(int i = 1, len = nums.length; i < len; ++i) {
             BigDecimal num = of(nums[i], false);
-            if (num == null) { return BigDecimal.ZERO; }
+            if(num == null) { return BigDecimal.ZERO; }
             result = result.multiply(num);
         }
         return result;
@@ -92,15 +92,15 @@ public class NumUtil {
     }
 
     public static BigDecimal divide(Number num1, Number num2, MathContext context) {
-        if (eqZero(num2)) { return null; }
+        if(eqZero(num2)) { return null; }
         context = context == null ? _8 : context;
         return of(num1).divide(of(num2), context.getPrecision(), context.getRoundingMode());
     }
 
     public static int compare(Number num1, Number num2) {
         //noinspection NumberEquality
-        if (num1 == num2) { return 0; }
-        if (num1 instanceof Integer && num2 instanceof Integer) {
+        if(num1 == num2) { return 0; }
+        if(num1 instanceof Integer && num2 instanceof Integer) {
             return Integer.compare(num1.intValue(), num2.intValue());
         }
         return of(num1).compareTo(of(num2));
@@ -111,25 +111,25 @@ public class NumUtil {
     }
 
     public static boolean anyEqZero(Number... nums) {
-        if (nums != null && nums.length > 0) {
-            for (Number n : nums) { if (eqZero(n)) { return true; } }
+        if(nums != null && nums.length > 0) {
+            for(Number n : nums) { if(eqZero(n)) { return true; } }
         }
         return false;
     }
 
     public static boolean allEqZero(Number... nums) {
-        if (nums != null && nums.length > 0) {
-            for (Number n : nums) { if (!eqZero(n)) { return false; } }
+        if(nums != null && nums.length > 0) {
+            for(Number n : nums) { if(!eqZero(n)) { return false; } }
         }
         return true;
     }
 
     public static boolean eqZero(Number num) {
-        if (num == null) {
+        if(num == null) {
             return true;
-        } else if (num instanceof Integer) {
+        } else if(num instanceof Integer) {
             return num.intValue() == 0;
-        } else if (num instanceof Long) {
+        } else if(num instanceof Long) {
             return num.longValue() == 0;
         } else {
             return of(num).compareTo(BigDecimal.ZERO) == 0;
@@ -169,12 +169,12 @@ public class NumUtil {
     }
 
     public static BigDecimal between(Number num, Number min, Number max) {
-        if (num == null) { return of(min); }
+        if(num == null) { return of(min); }
         BigDecimal bNum = of(num);
         BigDecimal bMin = of(min, false);
-        if (bMin != null && bNum.compareTo(bMin) < 0) { return bMin; }
+        if(bMin != null && bNum.compareTo(bMin) < 0) { return bMin; }
         BigDecimal bMax = of(max, false);
-        if (bMax != null && bNum.compareTo(bMax) > 0) { return bMax; }
+        if(bMax != null && bNum.compareTo(bMax) > 0) { return bMax; }
         return bNum;
     }
 
@@ -192,9 +192,9 @@ public class NumUtil {
 
     public static BigDecimal max(Number num1, Number... nums) {
         BigDecimal result = of(num1, false);
-        if (nums != null && nums.length > 0) {
-            for (Number e : nums) {
-                if (e != null) { result = result == null ? of(e, false) : max(result, e); }
+        if(nums != null && nums.length > 0) {
+            for(Number e : nums) {
+                if(e != null) { result = result == null ? of(e, false) : max(result, e); }
             }
         }
         return result;
@@ -202,9 +202,9 @@ public class NumUtil {
 
     public static BigDecimal min(Number num1, Number... nums) {
         BigDecimal result = of(num1, false);
-        if (nums != null && nums.length > 0) {
-            for (Number e : nums) {
-                if (e != null) { result = result == null ? of(e, false) : min(result, e); }
+        if(nums != null && nums.length > 0) {
+            for(Number e : nums) {
+                if(e != null) { result = result == null ? of(e, false) : min(result, e); }
             }
         }
         return result;
@@ -232,7 +232,7 @@ public class NumUtil {
 
     public static BigDecimal of(String num, boolean nullAsZero, MathContext context) {
         BigDecimal result = parse(num);
-        if (result == null) { return nullAsZero ? BigDecimal.ZERO : null; }
+        if(result == null) { return nullAsZero ? BigDecimal.ZERO : null; }
         return context == null ? result : result.setScale(context.getPrecision(), context.getRoundingMode());
     }
 
@@ -249,10 +249,10 @@ public class NumUtil {
     }
 
     public static BigDecimal of(Number num, boolean nullAsZero, MathContext context) {
-        if (num == null) {
+        if(num == null) {
             return nullAsZero ? BigDecimal.ZERO : null;
         } else {
-            BigDecimal result = num.getClass() == BigDecimal.class ? (BigDecimal) num : new BigDecimal(num.toString());
+            BigDecimal result = num.getClass() == BigDecimal.class ? (BigDecimal)num : new BigDecimal(num.toString());
             return context == null ? result : result.setScale(context.getPrecision(), context.getRoundingMode());
         }
     }
@@ -270,27 +270,27 @@ public class NumUtil {
     }
 
     public static String toAmountStr(Number num, String unit, MathContext context) {
-        if (num == null) { return ""; }
+        if(num == null) { return ""; }
         String numStr = toStr(num, context);
         int len = numStr.length();
         int idx = numStr.indexOf('.' );
-        if (idx == -1) { idx = len; }
+        if(idx == -1) { idx = len; }
         int i = 0;
         StringBuilder sb = new StringBuilder(len + StringUtils.length(unit) + 8);
-        for (int l = idx % 3; i < idx; l = 3) {
-            if (l == 3 && sb.length() > 0) { sb.append(',' ); }
-            for (int n = 0; n < l && i < idx; ++i, ++n) { sb.append(numStr.charAt(i)); }
+        for(int l = idx % 3; i < idx; l = 3) {
+            if(l == 3 && sb.length() > 0) { sb.append(',' ); }
+            for(int n = 0; n < l && i < idx; ++i, ++n) { sb.append(numStr.charAt(i)); }
         }
-        for (; i < len; ++i) { sb.append(numStr.charAt(i)); }
-        if (StringUtils.isNotEmpty(unit)) { sb.append(unit); }
+        for(; i < len; ++i) { sb.append(numStr.charAt(i)); }
+        if(StringUtils.isNotEmpty(unit)) { sb.append(unit); }
         return sb.toString();
     }
 
     public static String toStr(Number value) {
-        if (value == null) {
+        if(value == null) {
             return "null";
-        } else if (value instanceof BigDecimal) {
-            return ((BigDecimal) value).stripTrailingZeros().toPlainString();
+        } else if(value instanceof BigDecimal) {
+            return ((BigDecimal)value).stripTrailingZeros().toPlainString();
         } else {
             return value.toString();
         }
@@ -309,11 +309,11 @@ public class NumUtil {
     }
 
     public static String toStr(Number num, String unit, MathContext context) {
-        if (num == null) { return ""; }
+        if(num == null) { return ""; }
         String numStr = toStr(num, context);
         StringBuilder sb = new StringBuilder(numStr.length() + StringUtils.length(unit));
         sb.append(numStr);
-        if (StringUtils.isNotEmpty(unit)) { sb.append(unit); }
+        if(StringUtils.isNotEmpty(unit)) { sb.append(unit); }
         return sb.toString();
     }
 
@@ -340,36 +340,36 @@ public class NumUtil {
 
     @SuppressWarnings("unchecked")
     public static <T extends Number> T parse(Class<T> type, String value, T fallback) {
-        if (StringUtils.isEmpty(value)) { return fallback; }
+        if(StringUtils.isEmpty(value)) { return fallback; }
         try {
-            if (type == Integer.class) {
+            if(type == Integer.class) {
                 Number result = Integer.parseInt(value);
-                return (T) result;
-            } else if (type == Long.class) {
+                return (T)result;
+            } else if(type == Long.class) {
                 Number result = Long.parseLong(value);
-                return (T) result;
-            } else if (type == BigDecimal.class) {
-                return (T) new BigDecimal(value);
-            } else if (type == Double.class) {
+                return (T)result;
+            } else if(type == BigDecimal.class) {
+                return (T)new BigDecimal(value);
+            } else if(type == Double.class) {
                 Number result = Double.parseDouble(value);
-                return (T) result;
-            } else if (type == Byte.class) {
+                return (T)result;
+            } else if(type == Byte.class) {
                 Number result = Byte.parseByte(value);
-                return (T) result;
-            } else if (type == Short.class) {
+                return (T)result;
+            } else if(type == Short.class) {
                 Number result = Short.parseShort(value);
-                return (T) result;
-            } else if (type == Float.class) {
+                return (T)result;
+            } else if(type == Float.class) {
                 Number result = Float.parseFloat(value);
-                return (T) result;
+                return (T)result;
             }
-        } catch (Throwable ignored) { } //NOSONAR
+        } catch(Throwable ignored) { } //NOSONAR
         return fallback;
     }
 
     public static boolean isInt(Number value) {
-        return value == null || value instanceof Integer || value instanceof Long || value instanceof Short
-                || value instanceof Byte || value.longValue() == value.doubleValue();
+        return value == null || value instanceof Integer || value instanceof Long || value instanceof Short || value instanceof Byte
+                || value.longValue() == value.doubleValue();
     }
 
     public static BigDecimal defaultIfZero(Number number, Number defaultValue) {
@@ -413,9 +413,9 @@ public class NumUtil {
         }
 
         public int max(int num1, int... nums) {
-            if (nums != null && nums.length > 0) {
-                for (int n : nums) {
-                    if (n > num1) { num1 = n; }
+            if(nums != null && nums.length > 0) {
+                for(int n : nums) {
+                    if(n > num1) { num1 = n; }
                 }
             }
             return num1;
@@ -427,9 +427,9 @@ public class NumUtil {
         }
 
         public int min(int num1, int... nums) {
-            if (nums != null && nums.length > 0) {
-                for (int n : nums) {
-                    if (n < num1) { num1 = n; }
+            if(nums != null && nums.length > 0) {
+                for(int n : nums) {
+                    if(n < num1) { num1 = n; }
                 }
             }
             return num1;
@@ -454,24 +454,24 @@ public class NumUtil {
 
         public int ceilPower4(int i) {
             int shift = ceilLog2(i);
-            if (shift == 0) { return 1; }
+            if(shift == 0) { return 1; }
             return 1 << ceilMultipleOf(shift, 2);
         }
 
         public int ceilPower8(int i) {
             int shift = ceilLog2(i);
-            if (shift == 0) { return 1; }
+            if(shift == 0) { return 1; }
             return 1 << ceilMultipleOf(shift, 3);
         }
 
         public int ceilPower16(int i) {
             int shift = ceilLog2(i);
-            if (shift == 0) { return 1; }
+            if(shift == 0) { return 1; }
             return 1 << ceilMultipleOf(shift, 4);
         }
 
         public int ceilMultipleOf(int i, int multiple) {
-            if (i < multiple) { return multiple; }
+            if(i < multiple) { return multiple; }
             int value = (i / multiple) * multiple;
             return value < i ? (value + multiple) : value;
         }

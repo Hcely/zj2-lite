@@ -6,7 +6,6 @@ import org.zj2.lite.Destroyable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * TaskWorker
@@ -16,8 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Slf4j
 public class TaskWorker implements Executor, Destroyable {
-    private static final AtomicIntegerFieldUpdater<TaskWorker> RUNNING_UPDATER = AtomicIntegerFieldUpdater.newUpdater(
-            TaskWorker.class, "running");
+    private static final AtomicIntegerFieldUpdater<TaskWorker> RUNNING_UPDATER = AtomicIntegerFieldUpdater.newUpdater(TaskWorker.class, "running");
     private final ConcurrentLinkedQueue<Runnable> taskQueue = new ConcurrentLinkedQueue<>();
     private volatile int running;
     private volatile int wait;
@@ -40,38 +38,38 @@ public class TaskWorker implements Executor, Destroyable {
 
     @Override
     public void execute(Runnable command) {
-        if (isRunning()) {
+        if(isRunning()) {
             taskQueue.add(command);
-            if (wait > 0) {
-                synchronized (taskQueue) { taskQueue.notify(); }//NOSONAR
+            if(wait > 0) {
+                synchronized(taskQueue) { taskQueue.notify(); }//NOSONAR
             }
         }
     }
 
     @Override
     public void destroy() {
-        if (RUNNING_UPDATER.compareAndSet(this, 1, 0)) {
-            if (wait > 0) {
-                synchronized (taskQueue) { taskQueue.notify(); }//NOSONAR
+        if(RUNNING_UPDATER.compareAndSet(this, 1, 0)) {
+            if(wait > 0) {
+                synchronized(taskQueue) { taskQueue.notify(); }//NOSONAR
             }
         }
     }
 
     private Runnable poll() {
         Runnable runnable;
-        while (isRunning()) {
-            if ((runnable = taskQueue.poll()) != null) {
+        while(isRunning()) {
+            if((runnable = taskQueue.poll()) != null) {
                 return runnable;
             }
-            synchronized (taskQueue) {
+            synchronized(taskQueue) {
                 wait = 1;
-                if ((runnable = taskQueue.poll()) != null) {
+                if((runnable = taskQueue.poll()) != null) {
                     return runnable;
                 }
-                if (!isRunning()) { break; }
+                if(!isRunning()) { break; }
                 try {
                     taskQueue.wait(100);
-                } catch (Throwable ignored) { }//NOSONAR
+                } catch(Throwable ignored) { }//NOSONAR
                 finally {
                     wait = 0;
                 }
@@ -92,11 +90,11 @@ public class TaskWorker implements Executor, Destroyable {
         public void run() {
             Runnable runnable;
             TaskWorker localWorker = this.worker;
-            while (localWorker.isRunning()) {
-                if ((runnable = localWorker.poll()) != null) {
+            while(localWorker.isRunning()) {
+                if((runnable = localWorker.poll()) != null) {
                     try {
                         runnable.run();
-                    } catch (Throwable e) {//NOSONAR
+                    } catch(Throwable e) {//NOSONAR
                         TaskWorker.log.info("async task error!", e);
                     }
                 }

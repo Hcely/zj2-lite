@@ -52,7 +52,7 @@ public class DubboRequestContext extends BaseRequestContext {
     @Override
     public Object getRequestParam(String key) {
         Object value = super.getRequestParam(key);
-        if (value != null) { return value; }
+        if(value != null) { return value; }
         return invocation.getAttachment(key);
     }
 }

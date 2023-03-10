@@ -74,7 +74,7 @@ public abstract class AesCrypto implements Crypto {
 
     static byte[] normalizeParams(byte[] key, int keyLen) {
         int len = CollUtil.size(key);
-        if (len == 0) { return new byte[keyLen]; }
+        if(len == 0) { return new byte[keyLen]; }
         return len == keyLen ? key : Arrays.copyOf(key, keyLen);
     }
 }

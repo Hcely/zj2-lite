@@ -7,7 +7,7 @@ import org.zj2.lite.service.BaseApi;
 import java.util.List;
 
 /**
- *  AppApi
+ * AppApi
  *
  * @author peijie.ye
  * @date 2022/11/28 12:01

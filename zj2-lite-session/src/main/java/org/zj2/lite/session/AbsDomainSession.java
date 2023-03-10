@@ -18,8 +18,8 @@ import java.util.ListIterator;
  * @author peijie.ye
  */
 @SuppressWarnings("all")
-public abstract class AbsDomainSession<M extends SessionManager, D, V extends DomainElementView>
-        extends AbsStateSession<M> implements DomainSession<M, D, V> {
+public abstract class AbsDomainSession<M extends SessionManager, D, V extends DomainElementView> extends AbsStateSession<M>
+        implements DomainSession<M, D, V> {
     private List<SessionLog> rollbackLogs;
 
     protected AbsDomainSession(M sessionManager) {
@@ -35,8 +35,8 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
     @Override
     public void rollback() {
         List<SessionLog> logs = historyLogs();
-        if (logs != null) {
-            for (SessionLog log : logs) {
+        if(logs != null) {
+            for(SessionLog log : logs) {
                 rollback(log);
                 addRollbackLog(log);
             }
@@ -46,8 +46,8 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
     @Override
     public void resetOp() {
         List<SessionLog> logs = historyLogs();
-        if (logs != null) {
-            for (SessionLog log : logs) { reset(log); }
+        if(logs != null) {
+            for(SessionLog log : logs) { reset(log); }
         }
     }
 
@@ -56,12 +56,12 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
     protected abstract void reset(SessionLog<?> sessionLog);
 
     protected void addRollbackLog(SessionLog log) {
-        if (rollbackLogs == null) { rollbackLogs = new ArrayList<>(10); }
+        if(rollbackLogs == null) { rollbackLogs = new ArrayList<>(10); }
         rollbackLogs.add(log);
     }
 
     protected <T extends SessionLog> List<T> rollbackLogs() {
-        return rollbackLogs == null ? Collections.emptyList() : (List<T>) rollbackLogs;
+        return rollbackLogs == null ? Collections.emptyList() : (List<T>)rollbackLogs;
     }
 
     protected abstract V elementImpl(D data);
@@ -70,7 +70,7 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
     protected final SessionResult onSubmitted() {
         final SessionResult result = new DefSessionResult();
         List<? extends DomainElement> elements = currentElements();
-        if (elements != null && !elements.isEmpty()) {
+        if(elements != null && !elements.isEmpty()) {
             beforeSaveElements(elements);
             result.addLogs(sessionLogs());
             executeSaveElements(elements, result);
@@ -81,12 +81,12 @@ public abstract class AbsDomainSession<M extends SessionManager, D, V extends Do
 
     protected void beforeSaveElements(List<? extends DomainElement> elements) {
         ListIterator<? extends DomainElement> it = elements.listIterator(elements.size());
-        while (it.hasPrevious()) { it.previous().beforeSave(); }
+        while(it.hasPrevious()) { it.previous().beforeSave(); }
     }
 
     protected void executeSaveElements(List<? extends DomainElement> elements, SessionResult result) {
         ListIterator<? extends DomainElement> it = elements.listIterator(elements.size());
-        while (it.hasPrevious()) { it.previous().save(result); }
+        while(it.hasPrevious()) { it.previous().save(result); }
     }
 
     protected void saveResult(SessionResult result) {

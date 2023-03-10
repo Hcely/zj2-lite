@@ -21,17 +21,16 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
 
     @Override
     public boolean broadcast(String tag, String signal) {
-        if (StringUtils.isEmpty(tag) || StringUtils.isEmpty(signal)) { return false; }
-        if (tag.length() > 250) {
+        if(StringUtils.isEmpty(tag) || StringUtils.isEmpty(signal)) { return false; }
+        if(tag.length() > 250) {
             logger.warn("系统信号广播:tag[{}]不能超过250字符", tag);
             return false;
         }
-        if (signal.length() > 250) {
+        if(signal.length() > 250) {
             logger.warn("系统信号广播:signal[{}]不能超过250字符", signal);
             return false;
         }
-        final ServerSignal serverSignal = new ServerSignal(ServiceConstants.SERVER_ID, System.currentTimeMillis(), tag,
-                signal);
+        final ServerSignal serverSignal = new ServerSignal(ServiceConstants.SERVER_ID, System.currentTimeMillis(), tag, signal);
         AsyncUtil.execute(() -> {
             onMsg0(serverSignal);
             broadcast(serverSignal);
@@ -41,8 +40,8 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
 
     @Override
     public void addSignalListener(ServerSignalListener listener) {
-        if (listener != null) {
-            synchronized (this) { if (!listeners.contains(listener)) { listeners.add(listener); } }
+        if(listener != null) {
+            synchronized(this) { if(!listeners.contains(listener)) { listeners.add(listener); } }
         }
     }
 
@@ -53,25 +52,25 @@ public abstract class AbstractServerSignalBroadcast implements ServerSignalBroad
 
     @Override
     public void onMsg(ServerSignal signal) {
-        if (signal != null && !StringUtils.equalsIgnoreCase(ServiceConstants.SERVER_ID, signal.getServerId())) {
+        if(signal != null && !StringUtils.equalsIgnoreCase(ServiceConstants.SERVER_ID, signal.getServerId())) {
             onMsg0(signal);
         }
     }
 
     private void onMsg0(ServerSignal msg) {
         CopyOnWriteArrayList<ServerSignalListener> list = listeners;
-        for (int i = 0, len = list.size(); i < len; ++i) {
+        for(int i = 0, len = list.size(); i < len; ++i) {
             ServerSignalListener listener = list.get(0);
-            if (listener != null) { onMsg0(listener, msg); }
+            if(listener != null) { onMsg0(listener, msg); }
         }
     }
 
     private void onMsg0(ServerSignalListener listener, ServerSignal msg) {
         try {
-            if (listener.supports(msg.getTag())) {
+            if(listener.supports(msg.getTag())) {
                 listener.onMsg(msg);
             }
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             logger.error(listener.getClass().getSimpleName() + "-系统信号广播处理异常:" + JSON.toJSONString(msg), e);
         }
     }

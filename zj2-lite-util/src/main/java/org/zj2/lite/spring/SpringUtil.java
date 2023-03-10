@@ -37,29 +37,29 @@ public class SpringUtil implements ApplicationContextAware {
     public static <T> T self(T instance) {
         Integer identifyCode = System.identityHashCode(instance);
         Object result = SPRING_SELF_MAP.get(identifyCode);
-        if (result == null) {
-            synchronized (SPRING_SELF_MAP) {
+        if(result == null) {
+            synchronized(SPRING_SELF_MAP) {
                 result = SPRING_SELF_MAP.computeIfAbsent(identifyCode, i -> self0(instance));
             }
         }
         //noinspection unchecked
-        return (T) result;
+        return (T)result;
     }
 
     private static Object self0(Object instance) {
-        if (AopUtils.isAopProxy(instance)) { return instance; }
+        if(AopUtils.isAopProxy(instance)) { return instance; }
         try {
             Map<String, ?> beans = SpringUtil.getBeansOfType(instance.getClass());
-            if (CollUtil.isEmpty(beans)) {
+            if(CollUtil.isEmpty(beans)) {
                 return instance;
-            } else if (CollUtil.size(beans) == 1) {
+            } else if(CollUtil.size(beans) == 1) {
                 return CollUtil.getFirst(beans);
             } else {
-                for (Object bean : beans.values()) {
-                    if (getAopTargetObject(bean) == instance) { return bean; }
+                for(Object bean : beans.values()) {
+                    if(getAopTargetObject(bean) == instance) { return bean; }
                 }
             }
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
         }
         return instance;
     }
@@ -78,29 +78,29 @@ public class SpringUtil implements ApplicationContextAware {
 
     @SuppressWarnings("all")
     public static <T> T getBean(Class<T> type) throws BeansException {
-        if (type.isArray()) {
+        if(type.isArray()) {
             Map beans = context.getBeansOfType(type.getComponentType());
-            return (T) CollUtil.toArray(beans.values(), type.getComponentType());
+            return (T)CollUtil.toArray(beans.values(), type.getComponentType());
         } else {
             return context.getBean(type);
         }
     }
 
     public static Class<?> getAopTargetClass(Object proxy) {
-        if (!AopUtils.isAopProxy(proxy)) { return proxy.getClass(); }
+        if(!AopUtils.isAopProxy(proxy)) { return proxy.getClass(); }
         return AopUtils.getTargetClass(proxy);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T getAopTargetObject(T proxy) {
-        if (!AopUtils.isAopProxy(proxy)) { return proxy; }
+        if(!AopUtils.isAopProxy(proxy)) { return proxy; }
         try {
-            if (AopUtils.isJdkDynamicProxy(proxy)) {
-                return (T) getJdkDynamicProxyTargetObject(proxy);
-            } else if (AopUtils.isCglibProxy(proxy)) {
-                return (T) getCglibProxyTargetObject(proxy);
+            if(AopUtils.isJdkDynamicProxy(proxy)) {
+                return (T)getJdkDynamicProxyTargetObject(proxy);
+            } else if(AopUtils.isCglibProxy(proxy)) {
+                return (T)getCglibProxyTargetObject(proxy);
             }
-        } catch (Exception ignored) {
+        } catch(Exception ignored) {
             // nothing
         }
         return proxy;
@@ -112,15 +112,15 @@ public class SpringUtil implements ApplicationContextAware {
         Object dynamicAdvisedInterceptor = cglibField.get(proxy);
         Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
         advised.trySetAccessible();
-        return ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
+        return ((AdvisedSupport)advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
     }
 
     private static Object getJdkDynamicProxyTargetObject(Object proxy) throws Exception {
         Field jdkDynamicField = proxy.getClass().getSuperclass().getDeclaredField("jdkDynamicField");
         jdkDynamicField.trySetAccessible();
-        AopProxy aopProxy = (AopProxy) jdkDynamicField.get(proxy);
+        AopProxy aopProxy = (AopProxy)jdkDynamicField.get(proxy);
         Field advised = aopProxy.getClass().getDeclaredField("advised");
         advised.trySetAccessible();
-        return ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
+        return ((AdvisedSupport)advised.get(aopProxy)).getTargetSource().getTarget();
     }
 }

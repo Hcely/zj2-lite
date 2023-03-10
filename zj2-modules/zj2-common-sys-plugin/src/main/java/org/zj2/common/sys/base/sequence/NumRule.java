@@ -9,7 +9,7 @@ import org.zj2.lite.service.context.AuthContext;
 import java.io.Serializable;
 
 /**
- *  SequenceRule
+ * SequenceRule
  *
  * @author peijie.ye
  * @date 2022/12/23 17:48
@@ -62,7 +62,7 @@ public class NumRule {
         req.setAppCode(AuthContext.currentAppCode());
         req.setNumRuleCode(numRuleCode);
         SysNumRuleDTO rule = NumRuleUtil.getNumRule(numRuleCode);
-        if (rule == null) {
+        if(rule == null) {
             req.setNumRuleFormat(numRuleFormat);
             req.setSeqIncKeyFormat(seqIncKeyFormat);
         } else {

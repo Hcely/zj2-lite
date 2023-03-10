@@ -25,7 +25,7 @@ public abstract class DataAbstarctReader<T> implements DataReader<T> {
 
     @Override
     public Collection<T> read() {
-        if (hasMore) {
+        if(hasMore) {
             Collection<T> coll = read0(pageSize);
             hasMore = CollUtil.size(coll) >= pageSize;
             return coll;

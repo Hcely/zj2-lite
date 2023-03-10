@@ -5,8 +5,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * <br>CreateDate 三月 27,2022
+ *
  * @author peijie.ye
  */
 public class RedisSessionLock implements SessionLock {

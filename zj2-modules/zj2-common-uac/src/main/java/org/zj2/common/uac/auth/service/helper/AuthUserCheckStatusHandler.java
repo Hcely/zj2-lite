@@ -11,7 +11,7 @@ import org.zj2.lite.util.ZRBuilder;
 import java.time.LocalDateTime;
 
 /**
- *  AuthUserCheckHandler
+ * AuthUserCheckHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 7:59
@@ -21,14 +21,14 @@ public class AuthUserCheckStatusHandler implements BizVHandler<AuthContext> {
     @Override
     public void handle(AuthContext context) {
         UserDTO user = context.getUser();
-        if (BooleanUtil.isFalse(user.getEnableFlag())) {
+        if(BooleanUtil.isFalse(user.getEnableFlag())) {
             throw ZRBuilder.failureErr("用户账户被禁用");
         }
         LocalDateTime now = DateUtil.now();
-        if (user.getForbiddenExpireTime() != null && DateUtil.lt(now, user.getForbiddenExpireTime())) {
+        if(user.getForbiddenExpireTime() != null && DateUtil.lt(now, user.getForbiddenExpireTime())) {
             throw ZRBuilder.failureErr("用户账户被停用，截至到{}", user.getForbiddenExpireTime());
         }
-        if (user.getValidExpireTime() != null && DateUtil.gt(now, user.getValidExpireTime())) {
+        if(user.getValidExpireTime() != null && DateUtil.gt(now, user.getValidExpireTime())) {
             throw ZRBuilder.failureErr("用户账户到期停用");
         }
     }

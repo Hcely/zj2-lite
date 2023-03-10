@@ -2,8 +2,8 @@ package org.zj2.common.uac.auth.server.authorization;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.app.api.AppApi;
+import org.zj2.common.uac.app.dto.AppDTO;
 import org.zj2.common.uac.auth.api.JWTokenApi;
 import org.zj2.common.uac.auth.util.AuthUtil;
 import org.zj2.common.uac.auth.util.JWTValidUtil;
@@ -33,31 +33,30 @@ public class AuthenticateJWTHandler implements AuthenticateHandler {
 
     @Override
     public void authenticate(RequestContext requestContext, AuthContext authContext) {
-        if (authContext.getTokenTime() < System.currentTimeMillis() - 1000) {
+        if(authContext.getTokenTime() < System.currentTimeMillis() - 1000) {
             throw AuthUtil.unAuthenticationErr("Token过期");
         }
         AppDTO app = getApp(authContext.getAppCode());
-        if (!JWTValidUtil.valid(app.getAppSecret(), authContext.getToken())) {
+        if(!JWTValidUtil.valid(app.getAppSecret(), authContext.getToken())) {
             throw AuthUtil.unAuthenticationErr("Token无效");
         }
         //
-        if (StringUtils.isNotEmpty(authContext.getNamespace())) {
+        if(StringUtils.isNotEmpty(authContext.getNamespace())) {
             // 单点登录，检查token
             JWTokenApi jwtokenApi = TOKEN_API_REF.get();
             String errMsg = jwtokenApi == null ?
                     null :
-                    jwtokenApi.validToken(app.getAppCode(), AuthContext.currentUserId(), authContext.getNamespace(),
-                            authContext.getToken());
-            if (StringUtils.isNotEmpty(errMsg)) { throw AuthUtil.unAuthenticationErr(errMsg); }
+                    jwtokenApi.validToken(app.getAppCode(), AuthContext.currentUserId(), authContext.getNamespace(), authContext.getToken());
+            if(StringUtils.isNotEmpty(errMsg)) { throw AuthUtil.unAuthenticationErr(errMsg); }
         }
     }
 
     private AppDTO getApp(String appCode) {
         AppApi api = APP_API_REF.get();
-        if (api == null) { throw AuthUtil.unAuthenticationErr("请求应用无效"); }
+        if(api == null) { throw AuthUtil.unAuthenticationErr("请求应用无效"); }
         appCode = StringUtils.defaultIfEmpty(appCode, AppDTO.COMMON_APP_CODE);
         AppDTO app = CacheUtil.DEF_CACHE.getCache(AppDTO.getCacheKey(appCode), appCode, api::getByCode);
-        if (app == null || BooleanUtil.isFalse(app.getEnableFlag())) {
+        if(app == null || BooleanUtil.isFalse(app.getEnableFlag())) {
             throw AuthUtil.unAuthenticationErr("请求应用无效");
         }
         return app;

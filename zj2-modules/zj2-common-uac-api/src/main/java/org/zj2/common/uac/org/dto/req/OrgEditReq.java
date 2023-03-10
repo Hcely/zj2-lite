@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- *  OrgCreateReq
+ * OrgCreateReq
  *
  * @author peijie.ye
  * @date 2022/12/9 12:16

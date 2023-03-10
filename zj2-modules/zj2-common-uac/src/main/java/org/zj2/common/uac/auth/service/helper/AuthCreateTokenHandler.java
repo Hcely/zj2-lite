@@ -40,9 +40,8 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
     public void handle(AuthContext context) {
         AuthorizationJWT token = buildToken(context);
         context.setToken(token);
-        if (StringUtils.isNotEmpty(token.getNamespace())) {
-            jwtokenService.setToken(token.getAppCode(), token.getUserId(), token.getNamespace(), token.getToken(),
-                    token.getExpireAt());
+        if(StringUtils.isNotEmpty(token.getNamespace())) {
+            jwtokenService.setToken(token.getAppCode(), token.getUserId(), token.getNamespace(), token.getToken(), token.getExpireAt());
         }
         updateLoginTime(context);
         addLoginLog(context);
@@ -59,19 +58,19 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
         token.setUserName(user.getUserName());
         Long timeout = null;
         String namespace = null;
-        if (app != null) {
+        if(app != null) {
             token.setAppCode(app.getAppCode());
             timeout = app.getTokenTimeout();
-            if (client != null) {
+            if(client != null) {
                 timeout = client.getTokenTimeout();
                 namespace = client.getNamespace();
             }
-            if (BooleanUtil.isTrue(app.getSingleSignOn()) && StringUtils.isEmpty(namespace)) { namespace = "1"; }
+            if(BooleanUtil.isTrue(app.getSingleSignOn()) && StringUtils.isEmpty(namespace)) { namespace = "1"; }
         }
-        if (timeout == null) { timeout = 3600000L * 4; }
+        if(timeout == null) { timeout = 3600000L * 4; }
         token.setExpireAt(System.currentTimeMillis() + timeout);
         token.setNamespace(namespace);
-        if (org != null) { token.setOrgCode(org.getOrgCode()); }
+        if(org != null) { token.setOrgCode(org.getOrgCode()); }
         token.setToken(JWTBuildUtil.build(app == null ? null : app.getAppSecret(), token));
         return token;
     }
@@ -81,12 +80,12 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
         LocalDateTime now = DateUtil.now();
         UserDTO update = new UserDTO();
         update.setUserId(user.getUserId());
-        if (user.getFirstLoginTime() == null) { update.setFirstLoginTime(now); }
+        if(user.getFirstLoginTime() == null) { update.setFirstLoginTime(now); }
         update.setLastLoginTime(now);
         AppClientDTO client = context.getClient();
-        if (client != null) { update.setLastLoginClientCode(client.getClientCode()); }
+        if(client != null) { update.setLastLoginClientCode(client.getClientCode()); }
         AppDTO app = context.getApp();
-        if (app != null) { update.setLastLoginAppCode(app.getAppCode()); }
+        if(app != null) { update.setLastLoginAppCode(app.getAppCode()); }
         userService.updateById(update);
     }
 
@@ -100,9 +99,9 @@ public class AuthCreateTokenHandler implements BizVHandler<AuthContext> {
         log.setUserName(user.getUserName());
         log.setLogEvent(UserEventEnum.LOGIN.getCode());
         log.setLogTime(DateUtil.now());
-        if (client != null) { log.setLogClientCode(client.getClientCode()); }
-        if (app != null) { log.setAppCode(app.getAppCode()); }
-        if (org != null) { log.setOrgCode(org.getOrgCode()); }
+        if(client != null) { log.setLogClientCode(client.getClientCode()); }
+        if(app != null) { log.setAppCode(app.getAppCode()); }
+        if(org != null) { log.setOrgCode(org.getOrgCode()); }
         userLogService.addLogAfterCommit(log);
     }
 }

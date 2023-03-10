@@ -5,8 +5,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.zj2.lite.common.constant.ZJ2Constants;
-import org.zj2.lite.common.entity.key.BinaryKey;
 import org.zj2.lite.common.entity.Ternary;
+import org.zj2.lite.common.entity.key.BinaryKey;
 import org.zj2.lite.common.util.CollUtil;
 import org.zj2.lite.common.util.ReflectUtil;
 import org.zj2.lite.service.auth.AuthenticationIgnored;
@@ -94,11 +94,11 @@ public class UriResourceManager {
 
     public static UriResource get(ProceedingJoinPoint joinPoint) {
         Object target = joinPoint.getTarget();
-        if (target == null) { return null; }
+        if(target == null) { return null; }
         Signature signature = joinPoint.getSignature();
-        if (!(signature instanceof MethodSignature)) { return null; }
+        if(!(signature instanceof MethodSignature)) { return null; }
         Class<?> clazz = target.getClass();
-        Method method = ((MethodSignature) signature).getMethod();
+        Method method = ((MethodSignature)signature).getMethod();
         return get(clazz, method);
     }
 
@@ -117,9 +117,9 @@ public class UriResourceManager {
     private static UriResource get(Class<?> clazz, Method method, String methodName, Class<?>[] paramTypes) {
         BinaryKey key = getMethodKey(clazz, methodName, paramTypes);
         UriResource resource = resourceMap.get(key);
-        if (resource == null) {
-            synchronized (resourceMap) {
-                if ((resource = resourceMap.get(key)) == null) {
+        if(resource == null) {
+            synchronized(resourceMap) {
+                if((resource = resourceMap.get(key)) == null) {
                     resource = buildResource(clazz, method, methodName, paramTypes);
                     resourceMap.put(key, resource);
                 }
@@ -130,7 +130,7 @@ public class UriResourceManager {
 
     private static UriResource buildResource(Class<?> clazz, Method method, String methodName, Class<?>[] paramTypes) {
         UriResource0 resource = new UriResource0();
-        if (method == null) {
+        if(method == null) {
             method = ReflectUtil.findMethod(clazz, methodName, paramTypes);
         }
         resource.setName(ServiceUriUtil.getMethodName(clazz, methodName, paramTypes));
@@ -143,23 +143,23 @@ public class UriResourceManager {
 
     private static void fillResourceAuthentication(UriResource0 resource, Class<?> clazz, Method method) {
         // 无需认证
-        if (method != null) {
-            if (method.getAnnotation(AuthenticationIgnored.class) != null) {
+        if(method != null) {
+            if(method.getAnnotation(AuthenticationIgnored.class) != null) {
                 resource.setRequiredAuthentication(false);
                 return;
             }
         }
         AuthenticationRequired required = method == null ? null : method.getAnnotation(AuthenticationRequired.class);
-        if (required == null) {
+        if(required == null) {
             // 没指定认证，父级指定无需认证
-            if (clazz.getAnnotation(AuthenticationIgnored.class) != null) {
+            if(clazz.getAnnotation(AuthenticationIgnored.class) != null) {
                 resource.setRequiredAuthentication(false);
                 return;
             }
             // 读取父级的认证要求
             required = clazz.getAnnotation(AuthenticationRequired.class);
             // 非本身服务，默认无需处理
-            if (required == null && !StringUtils.startsWith(clazz.getName(), ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
+            if(required == null && !StringUtils.startsWith(clazz.getName(), ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
                 resource.setRequiredAuthentication(false);
                 return;
             }
@@ -172,7 +172,7 @@ public class UriResourceManager {
     private static void fillResourceAuthority(UriResource0 resource, Class<?> clazz, Method method) {
         AuthorityResource authorityResource = method == null ? null : method.getAnnotation(AuthorityResource.class);
         AuthorityResource parentResource = clazz.getAnnotation(AuthorityResource.class);
-        if (authorityResource == null && parentResource == null) {
+        if(authorityResource == null && parentResource == null) {
             resource.setRequiredUriAuthority(false);
             resource.setRequiredPropertyAuthority(false);
             resource.setRequiredDataAuthority(false);
@@ -180,30 +180,26 @@ public class UriResourceManager {
             String authorityUri = authorityResource == null ?
                     resource.getUriPath() :
                     StringUtils.defaultIfEmpty(authorityResource.name(), authorityResource.value());
-            if (StringUtils.isEmpty(authorityUri)) { authorityUri = resource.getName(); }
+            if(StringUtils.isEmpty(authorityUri)) { authorityUri = resource.getName(); }
             resource.setUriAuthority(authorityUri);
-            resource.setRequiredUriAuthority(
-                    getRequired(authorityResource, parentResource, AuthorityResource::requiredUriAuthority));
-            resource.setRequiredPropertyAuthority(
-                    getRequired(authorityResource, parentResource, AuthorityResource::requiredPropertyAuthority));
-            resource.setRequiredDataAuthority(
-                    getRequired(authorityResource, parentResource, AuthorityResource::requiredDataAuthority));
-            Set<String> propertyAuthorities = getValues(authorityResource, parentResource,
-                    AuthorityResource::propertyAuthority);
+            resource.setRequiredUriAuthority(getRequired(authorityResource, parentResource, AuthorityResource::requiredUriAuthority));
+            resource.setRequiredPropertyAuthority(getRequired(authorityResource, parentResource, AuthorityResource::requiredPropertyAuthority));
+            resource.setRequiredDataAuthority(getRequired(authorityResource, parentResource, AuthorityResource::requiredDataAuthority));
+            Set<String> propertyAuthorities = getValues(authorityResource, parentResource, AuthorityResource::propertyAuthority);
             resource.setPropertyAuthorities(propertyAuthorities);
             resource.setDataAuthority(getDataAuthority(authorityResource, parentResource));
             Set<String> tags = getValues(authorityResource, parentResource, AuthorityResource::tags);
             resource.setTags(tags);
-            if (StringUtils.isEmpty(resource.getDataAuthority())) { resource.setRequiredDataAuthority(false); }
+            if(StringUtils.isEmpty(resource.getDataAuthority())) { resource.setRequiredDataAuthority(false); }
         }
     }
 
     private static boolean getRequired(AuthorityResource authorityResource, AuthorityResource parentResource,
             Function<AuthorityResource, Ternary> getter) {
-        if (authorityResource != null && !Ternary.isDefault(getter.apply(authorityResource))) {
+        if(authorityResource != null && !Ternary.isDefault(getter.apply(authorityResource))) {
             return Ternary.of(true, getter.apply(authorityResource));
         }
-        if (parentResource != null && !Ternary.isDefault(getter.apply(parentResource))) {
+        if(parentResource != null && !Ternary.isDefault(getter.apply(parentResource))) {
             return Ternary.of(true, getter.apply(parentResource));
         }
         return true;
@@ -212,20 +208,20 @@ public class UriResourceManager {
     private static Set<String> getValues(AuthorityResource authorityResource, AuthorityResource parentResource,
             Function<AuthorityResource, String[]> getter) {
         String[] values;
-        if (authorityResource != null && CollUtil.isNotEmpty(values = getter.apply(authorityResource))) {//NOSONAR
+        if(authorityResource != null && CollUtil.isNotEmpty(values = getter.apply(authorityResource))) {//NOSONAR
             return CollUtil.newSet(values);
         }
-        if (parentResource != null && CollUtil.isNotEmpty(values = getter.apply(parentResource))) {//NOSONAR
+        if(parentResource != null && CollUtil.isNotEmpty(values = getter.apply(parentResource))) {//NOSONAR
             return CollUtil.newSet(values);
         }
         return CollUtil.emptySet();
     }
 
     private static String getDataAuthority(AuthorityResource authorityResource, AuthorityResource parentResource) {
-        if (authorityResource != null && StringUtils.isNotEmpty(authorityResource.dataAuthority())) {
+        if(authorityResource != null && StringUtils.isNotEmpty(authorityResource.dataAuthority())) {
             return authorityResource.dataAuthority();
         }
-        if (parentResource != null && StringUtils.isNotEmpty(parentResource.dataAuthority())) {
+        if(parentResource != null && StringUtils.isNotEmpty(parentResource.dataAuthority())) {
             return parentResource.dataAuthority();
         }
         return "";
@@ -234,7 +230,7 @@ public class UriResourceManager {
     private static BinaryKey getMethodKey(Class<?> clazz, String methodName, Class<?>[] paramsTypes) {
         BinaryKey key = new BinaryKey(16);
         key.append(clazz.hashCode()).append(methodName.hashCode());
-        if (paramsTypes != null && paramsTypes.length > 0) {
+        if(paramsTypes != null && paramsTypes.length > 0) {
             key.append(getParamHash(paramsTypes));
         }
         return key.flush();
@@ -242,7 +238,7 @@ public class UriResourceManager {
 
     private static long getParamHash(Class<?>[] paramsTypes) {
         long result = 1;
-        for (Class<?> e : paramsTypes) { result = 31 * result + e.getName().hashCode(); }
+        for(Class<?> e : paramsTypes) { result = 31 * result + e.getName().hashCode(); }
         return result;
     }
 }

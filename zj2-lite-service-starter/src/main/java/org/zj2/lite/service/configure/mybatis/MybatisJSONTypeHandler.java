@@ -6,8 +6,8 @@ import org.apache.ibatis.type.MappedTypes;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * <br>CreateDate 九月 02,2022
+ *
  * @author peijie.ye
  */
 @Component

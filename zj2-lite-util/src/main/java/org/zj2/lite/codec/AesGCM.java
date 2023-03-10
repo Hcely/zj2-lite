@@ -115,22 +115,21 @@ public class AesGCM {
 
         @SneakyThrows
         protected int doCrypt(boolean encrypt, byte[] src, int srcOff, int srcLen, byte[] dst, int dstOff) {
-            if (srcLen == 0) { return 0; }
+            if(srcLen == 0) { return 0; }
             return getCipher(encrypt).doFinal(src, srcOff, srcLen, dst, dstOff);
         }
 
         @SneakyThrows
         protected byte[] doCrypt(boolean encrypt, byte[] value, int offset, int length) {
-            if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
+            if(length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
             return getCipher(encrypt).doFinal(value, offset, length);
         }
 
         protected Cipher getCipher(boolean encrypt)
-                throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
-                InvalidKeyException {
+                throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, secretKeySpec, nonce);
-            if (CollUtil.isNotEmpty(aad)) { cipher.updateAAD(aad); }
+            if(CollUtil.isNotEmpty(aad)) { cipher.updateAAD(aad); }
             return cipher;
         }
     }

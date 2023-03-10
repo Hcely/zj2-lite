@@ -13,8 +13,7 @@ final class ChainBizFuncWrapper implements BizFunc {
     private static final StrFormatter EXECUTING_MSG = StrUtil.getFormatter("Chain handler[{}] executing");
     private static final StrFormatter EXECUTE_ERROR_MSG = StrUtil.getFormatter("Chain handler[{}] executing error");
     private static final StrFormatter COMPLETED_MSG = StrUtil.getFormatter("Chain handler[{}] on completed");
-    private static final StrFormatter COMPLETED_ERROR_MSG = StrUtil.getFormatter(
-            "Chain handler[{}] on completed error");
+    private static final StrFormatter COMPLETED_ERROR_MSG = StrUtil.getFormatter("Chain handler[{}] on completed error");
     private final ChainBizFuncExecutor executor;
     private final String instanceName;
     private final BizFunc instance;
@@ -39,15 +38,15 @@ final class ChainBizFuncWrapper implements BizFunc {
 
     boolean execute(ChainBizContext chainContext) {
         Object context = chainContext.currentContext();
-        if (executor == null || !isSupport(context)) { return true; }
+        if(executor == null || !isSupport(context)) { return true; }
         final ChainBizFuncStack stack = chainContext.startStack(this, context);
         Logger logger = chainContext.logger();
         try {
             logger.info(EXECUTING_MSG.format(instanceName));
             return executor.execute(chainContext, instance, context);
-        } catch (BizInterceptorError e) {
+        } catch(BizInterceptorError e) {
             return false;
-        } catch (Throwable e) {
+        } catch(Throwable e) {
             logger.error(EXECUTE_ERROR_MSG.format(instanceName), e);
             throw e;
         } finally {
@@ -56,10 +55,10 @@ final class ChainBizFuncWrapper implements BizFunc {
     }
 
     private boolean isSupport(Object context) {
-        if (supportable) {
+        if(supportable) {
             try {
-                return ((Supportable) instance).supports(context);
-            } catch (Throwable ignored) { }
+                return ((Supportable)instance).supports(context);
+            } catch(Throwable ignored) { }
             return false;
         } else {
             return true;
@@ -67,12 +66,12 @@ final class ChainBizFuncWrapper implements BizFunc {
     }
 
     void onCompleted(ChainBizContext chainContext, Object context, Throwable error, boolean interrupted) {
-        if (listenable) {
+        if(listenable) {
             Logger logger = chainContext.logger();
             try {
                 logger.info(COMPLETED_MSG.format(instanceName));
-                ((ChainCompletedListener) instance).onCompleted(context, error, interrupted);
-            } catch (Throwable e) {
+                ((ChainCompletedListener)instance).onCompleted(context, error, interrupted);
+            } catch(Throwable e) {
                 logger.error(COMPLETED_ERROR_MSG.format(instanceName), e);
             }
         }

@@ -1,7 +1,5 @@
 package org.zj2.lite.util.stream;
 
-import org.zj2.lite.batch.BatchTask;
-
 import java.util.Collection;
 
 /**
@@ -31,19 +29,18 @@ public class DataStreams {
         return new DataPageReader<>(query, pageSize).stream();
     }
 
-    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType,
-            DataOffsetReader.OffsetQuery<I, T> query, DataOffsetReader.OffsetGetter<I, T> offsetGetter) {
+    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
+            DataOffsetReader.OffsetGetter<I, T> offsetGetter) {
         return of(offsetType, query, offsetGetter, DEF_PAGE_SIZE);
     }
 
-    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType,
-            DataOffsetReader.OffsetQuery<I, T> query, DataOffsetReader.OffsetGetter<I, T> offsetGetter, int pageSize) {
+    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
+            DataOffsetReader.OffsetGetter<I, T> offsetGetter, int pageSize) {
         return new DataOffsetReader<>(query, offsetGetter, pageSize).stream();
     }
 
-    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType,
-            DataOffsetReader.OffsetQuery<I, T> query, DataOffsetReader.OffsetGetter<I, T> offsetGetter, I offset,
-            int pageSize) {
+    public static <I extends Comparable, T> DataStream<T> of(Class<I> offsetType, DataOffsetReader.OffsetQuery<I, T> query,
+            DataOffsetReader.OffsetGetter<I, T> offsetGetter, I offset, int pageSize) {
         return new DataOffsetReader<>(query, offsetGetter, offset, pageSize).stream();
     }
 }

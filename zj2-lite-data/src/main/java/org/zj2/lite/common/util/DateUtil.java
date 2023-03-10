@@ -35,16 +35,16 @@ public class DateUtil {
     private static final FastDateFormat FAST_MONTH_FORMATTER = FastDateFormat.getInstance("yyyy-MM");
     private static final FastDateFormat FAST_JSON_FORMATTER = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             TimeZone.getTimeZone("GMT+0"));
-    private static final FastDateFormat[] FAST_DATE_FORMATS = {FAST_DATE_TIME_FORMATTER, FAST_DATE_FORMATTER,
-            FAST_DATE_TIME_0_FORMATTER, FAST_JSON_FORMATTER, FAST_MONTH_FORMATTER};
+    private static final FastDateFormat[] FAST_DATE_FORMATS = {FAST_DATE_TIME_FORMATTER, FAST_DATE_FORMATTER, FAST_DATE_TIME_0_FORMATTER,
+            FAST_JSON_FORMATTER, FAST_MONTH_FORMATTER};
     // 无效值
     public static final LocalDateTime $INVALID = LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0);
 
     public static <T> Comparator<T> comparing(Function<T, LocalDateTime> dateGetter) {
         return (o1, o2) -> {
-            if (o1 == o2) { return 0; }
-            if (o1 == null) { return -1; }
-            if (o2 == null) { return 1; }
+            if(o1 == o2) { return 0; }
+            if(o1 == null) { return -1; }
+            if(o2 == null) { return 1; }
             return compare(dateGetter.apply(o1), dateGetter.apply(o2));
         };
     }
@@ -174,15 +174,13 @@ public class DateUtil {
     }
 
     public static String format(long time, String format) {
-        return StringUtils.isEmpty(format) ?
-                FAST_DATE_TIME_FORMATTER.format(time) :
-                FastDateFormat.getInstance(format).format(time);
+        return StringUtils.isEmpty(format) ? FAST_DATE_TIME_FORMATTER.format(time) : FastDateFormat.getInstance(format).format(time);
     }
 
     public static String format(Long time, String format) {
-        if (time == null) {
+        if(time == null) {
             return null;
-        } else if (StringUtils.isEmpty(format)) {
+        } else if(StringUtils.isEmpty(format)) {
             return FAST_DATE_TIME_FORMATTER.format(time);
         } else {
             return FastDateFormat.getInstance(format).format(time);
@@ -190,9 +188,9 @@ public class DateUtil {
     }
 
     public static String format(Date time, String format) {
-        if (time == null) {
+        if(time == null) {
             return null;
-        } else if (StringUtils.isEmpty(format)) {
+        } else if(StringUtils.isEmpty(format)) {
             return FAST_DATE_TIME_FORMATTER.format(time);
         } else {
             return FastDateFormat.getInstance(format).format(time);
@@ -200,9 +198,9 @@ public class DateUtil {
     }
 
     public static String format(LocalDateTime time, String format) {
-        if (time == null) {
+        if(time == null) {
             return null;
-        } else if (StringUtils.isEmpty(format)) {
+        } else if(StringUtils.isEmpty(format)) {
             return DATE_TIME_FORMATTER.format(time);
         } else {
             return format(getTimestamp(time), format);
@@ -210,9 +208,9 @@ public class DateUtil {
     }
 
     public static String format(LocalDate time, String format) {
-        if (time == null) {
+        if(time == null) {
             return null;
-        } else if (StringUtils.isEmpty(format)) {
+        } else if(StringUtils.isEmpty(format)) {
             return DATE_TIME_FORMATTER0.format(time);
         } else {
             return format(getTimestamp(time), format);
@@ -228,18 +226,18 @@ public class DateUtil {
     }
 
     public static String format(LocalDate time) {
-        if (time == null) { return null; }
+        if(time == null) { return null; }
         return DATE_TIME_FORMATTER0.format(time);
     }
 
     public static String format(LocalDateTime time) {
-        if (time == null) { return null; }
+        if(time == null) { return null; }
         return DATE_TIME_FORMATTER.format(time);
     }
 
     public static String format(TemporalAccessor time) {
-        if (time == null) { return null; }
-        if (time instanceof LocalDate) { return DATE_TIME_FORMATTER0.format(time); }
+        if(time == null) { return null; }
+        if(time instanceof LocalDate) { return DATE_TIME_FORMATTER0.format(time); }
         return DATE_TIME_FORMATTER.format(time);
     }
 
@@ -258,7 +256,7 @@ public class DateUtil {
     }
 
     public static int formatDateAsNum(Long time) {
-        if (time == null) {
+        if(time == null) {
             return 0;
         } else {
             Calendar calendar = Calendar.getInstance();
@@ -268,7 +266,7 @@ public class DateUtil {
     }
 
     public static int formatDateAsNum(Date time) {
-        if (time == null) {
+        if(time == null) {
             return 0;
         } else {
             Calendar calendar = Calendar.getInstance();
@@ -278,20 +276,18 @@ public class DateUtil {
     }
 
     public static int formatDateAsNum(Calendar calendar) {
-        if (calendar == null) {
+        if(calendar == null) {
             return 0;
         } else {
-            return calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(
-                    Calendar.DAY_OF_MONTH);
+            return calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
         }
     }
 
     public static int formatDateAsNum(TemporalAccessor time) {
-        if (time == null) {
+        if(time == null) {
             return 0;
         } else {
-            return time.get(ChronoField.YEAR) * 10000 + time.get(ChronoField.MONTH_OF_YEAR) * 100 + time.get(
-                    ChronoField.DAY_OF_MONTH);
+            return time.get(ChronoField.YEAR) * 10000 + time.get(ChronoField.MONTH_OF_YEAR) * 100 + time.get(ChronoField.DAY_OF_MONTH);
         }
     }
 
@@ -308,7 +304,7 @@ public class DateUtil {
     }
 
     public static int formatMonthAsNum(Date time) {
-        if (time == null) {
+        if(time == null) {
             return 0;
         } else {
             Calendar calendar = Calendar.getInstance();
@@ -318,7 +314,7 @@ public class DateUtil {
     }
 
     public static int formatMonthAsNum(TemporalAccessor time) {
-        if (time == null) {
+        if(time == null) {
             return 0;
         } else {
             return time.get(ChronoField.YEAR) * 100 + time.get(ChronoField.MONTH_OF_YEAR);
@@ -326,11 +322,11 @@ public class DateUtil {
     }
 
     public static Date parseAsDate(String date) {
-        if (StringUtils.isEmpty(date)) { return null; }
-        for (FastDateFormat format : FAST_DATE_FORMATS) {
-            try { return format.parse(date); } catch (Throwable ignored) { }//NOSONAR
+        if(StringUtils.isEmpty(date)) { return null; }
+        for(FastDateFormat format : FAST_DATE_FORMATS) {
+            try { return format.parse(date); } catch(Throwable ignored) { }//NOSONAR
         }
-        try { return new Date(Long.parseLong(date)); } catch (Throwable ignored) { }// NOSONAR
+        try { return new Date(Long.parseLong(date)); } catch(Throwable ignored) { }// NOSONAR
         return null;
     }
 
@@ -343,9 +339,7 @@ public class DateUtil {
     }
 
     public static long getTimestamp(LocalDate time) {
-        return time == null ?
-                Long.MIN_VALUE :
-                time.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return time == null ? Long.MIN_VALUE : time.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     public static long getTimestamp(LocalDateTime time) {
@@ -373,7 +367,7 @@ public class DateUtil {
     }
 
     public static int getYear(Date date) {
-        if (date == null) { return Integer.MIN_VALUE; }
+        if(date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
@@ -388,7 +382,7 @@ public class DateUtil {
     }
 
     public static int getMonth(Date date) {
-        if (date == null) { return Integer.MIN_VALUE; }
+        if(date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH) + 1;
@@ -403,7 +397,7 @@ public class DateUtil {
     }
 
     public static int getDayOfMonth(Date date) {
-        if (date == null) { return Integer.MIN_VALUE; }
+        if(date == null) { return Integer.MIN_VALUE; }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_MONTH);
@@ -472,72 +466,68 @@ public class DateUtil {
     }
 
     public static LocalDateTime atStartOfDay(LocalDateTime time) {
-        return time == null ?
-                null :
-                LocalDateTime.of(time.getYear(), time.getMonth(), time.getDayOfMonth(), 0, 0, 0, 0);
+        return time == null ? null : LocalDateTime.of(time.getYear(), time.getMonth(), time.getDayOfMonth(), 0, 0, 0, 0);
     }
 
     public static LocalDateTime atEndOfDay(LocalDateTime time) {
-        return time == null ?
-                null :
-                LocalDateTime.of(time.getYear(), time.getMonth(), time.getDayOfMonth(), 23, 59, 59, 999_999_999);
+        return time == null ? null : LocalDateTime.of(time.getYear(), time.getMonth(), time.getDayOfMonth(), 23, 59, 59, 999_999_999);
     }
 
 
     public static int compare(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == time2) { return 0; }
-        if (time1 == null) { return -1; }
-        if (time2 == null) { return 1; }
+        if(time1 == time2) { return 0; }
+        if(time1 == null) { return -1; }
+        if(time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static int compare(LocalDate time1, LocalDate time2) {
-        if (time1 == time2) { return 0; }
-        if (time1 == null) { return -1; }
-        if (time2 == null) { return 1; }
+        if(time1 == time2) { return 0; }
+        if(time1 == null) { return -1; }
+        if(time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static int compare(Date time1, Date time2) {
-        if (time1 == time2) { return 0; }
-        if (time1 == null) { return -1; }
-        if (time2 == null) { return 1; }
+        if(time1 == time2) { return 0; }
+        if(time1 == null) { return -1; }
+        if(time2 == null) { return 1; }
         return time1.compareTo(time2);
     }
 
     public static LocalDateTime max(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static LocalDateTime min(LocalDateTime time1, LocalDateTime time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
     public static LocalDate max(LocalDate time1, LocalDate time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static LocalDate min(LocalDate time1, LocalDate time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
     public static Date max(Date time1, Date time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) > 0 ? time1 : time2;
     }
 
     public static Date min(Date time1, Date time2) {
-        if (time1 == null) { return time2; }
-        if (time2 == null) { return time1; }
+        if(time1 == null) { return time2; }
+        if(time2 == null) { return time1; }
         return compare(time1, time2) < 0 ? time1 : time2;
     }
 
@@ -590,24 +580,24 @@ public class DateUtil {
     }
 
     public static int diffDay(Date leftTime, Date rightTime) {
-        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
+        if(leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
         return diffDay(leftTime.getTime(), rightTime.getTime());
     }
 
     public static int diffDay(LocalDate leftTime, LocalDate rightTime) {
-        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
-        return (int) leftTime.until(rightTime, ChronoUnit.DAYS);
+        if(leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
+        return (int)leftTime.until(rightTime, ChronoUnit.DAYS);
     }
 
     public static int diffDay(LocalDateTime leftTime, LocalDateTime rightTime) {
-        if (leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
-        return (int) leftTime.until(rightTime, ChronoUnit.DAYS);
+        if(leftTime == null || rightTime == null) { return Integer.MIN_VALUE; }
+        return (int)leftTime.until(rightTime, ChronoUnit.DAYS);
     }
 
     public static int diffDay(long leftTime, long rightTime) {
         int offset = TimeZone.getDefault().getRawOffset();
         leftTime += offset;
         rightTime += offset;
-        return (int) ((leftTime / 86400000L) - (rightTime / 86400000L));
+        return (int)((leftTime / 86400000L) - (rightTime / 86400000L));
     }
 }

@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * <br>CreateDate 三月 27,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("all")
@@ -20,12 +20,12 @@ public class DefSessionResult implements SessionResult, Serializable {
 
     @Override
     public void addLog(SessionLog log) {
-        if (logs == null) { logs = new ArrayList<>(10); }
+        if(logs == null) { logs = new ArrayList<>(10); }
         logs.add(log);
     }
 
     @Override
     public <T extends SessionLog> List<T> getLogs() {
-        return logs == null ? Collections.emptyList() : (List<T>) logs;
+        return logs == null ? Collections.emptyList() : (List<T>)logs;
     }
 }

@@ -27,10 +27,10 @@ public class AuthenticateServerSignHandler implements AuthenticateHandler {
     public void authenticate(RequestContext requestContext, AuthContext authContext) {
         long timestamp = authContext.getTokenTime();
         long now = System.currentTimeMillis();
-        if (timestamp > now - 1000 || timestamp < now - SIGN_TIMEOUT) {
+        if(timestamp > now - 1000 || timestamp < now - SIGN_TIMEOUT) {
             throw AuthUtil.unAuthenticationErr("请求过期");
         }
-        if (!ServerSignUtil.valid(requestContext, authContext)) {
+        if(!ServerSignUtil.valid(requestContext, authContext)) {
             throw AuthUtil.unAuthenticationErr("非法请求");
         }
     }

@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.lite.service.entity.request.PageRequest;
 
-import java.io.Serializable;
-
 /**
  * OrgQuery
  *

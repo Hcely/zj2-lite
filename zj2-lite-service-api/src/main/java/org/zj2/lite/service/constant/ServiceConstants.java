@@ -64,17 +64,17 @@ public class ServiceConstants {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream(256);
             Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-            while (en.hasMoreElements()) {
+            while(en.hasMoreElements()) {
                 NetworkInterface networkInterface = en.nextElement();
                 List<InterfaceAddress> addresses = networkInterface.getInterfaceAddresses();
-                for (InterfaceAddress addr : addresses) {
+                for(InterfaceAddress addr : addresses) {
                     InetAddress ip = addr.getAddress();
                     NetworkInterface network = NetworkInterface.getByInetAddress(ip);
                     out.write(network.getHardwareAddress());
                 }
             }
             machineCode = DigestUtils.md5DigestAsHex(out.toByteArray());
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             machineCode = Long.toString(System.nanoTime(), 36);
         }
         SERVER_MACHINE = StringUtils.upperCase(machineCode);
@@ -83,7 +83,7 @@ public class ServiceConstants {
         //noinspection StringBufferReplaceableByString
         StringBuilder sb = new StringBuilder(64);
         sb.append(StringUtils.upperCase(Long.toString(time, 36)));
-        sb.append('.');
+        sb.append('.' );
         sb.append(SERVER_MACHINE);
         SERVER_ID = sb.toString();
     }

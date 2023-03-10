@@ -1,9 +1,14 @@
 package org.zj2.lite.common.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.text.TextStringBuilder;
+import org.zj2.lite.common.constant.ZJ2Constants;
+import org.zj2.lite.common.entity.result.ZError;
 import org.zj2.lite.common.text.StrFormatter;
 import org.zj2.lite.common.text.StrFormatterManager;
+
+import java.lang.reflect.Field;
 
 /**
  * StrUtil
@@ -13,6 +18,70 @@ import org.zj2.lite.common.text.StrFormatterManager;
  * @since 1.0
  */
 public class StrUtil {
+    private static final Field STACK_TRACE_FIELD;
+
+    static {
+        Field field;
+        try {
+            field = FieldUtils.getDeclaredField(Throwable.class, "stackTrace");
+            if(!field.trySetAccessible()) { field = null; }
+        } catch(Throwable e) {//NOSONAR
+            field = null;
+        }
+        STACK_TRACE_FIELD = field;
+    }
+
+    public static String buildErrorStackStr(Throwable error) {
+        return buildErrorStackStr(error, Integer.MAX_VALUE);
+    }
+
+    public static String buildErrorStackStr(Throwable error, int maxStrCapacity) {
+        if(error == null) { return ""; }
+        if(error instanceof ZError && !((ZError)error).isStack()) { return StringUtils.abbreviate(error.toString(), maxStrCapacity); }
+        StringBuilder sb = new StringBuilder();
+        for(int errorCount = 0; sb.length() < maxStrCapacity && error != null; ++errorCount) {
+            appendError(sb, error, errorCount == 0, maxStrCapacity);
+            error = error.getCause();
+        }
+        return StringUtils.abbreviate(sb.toString(), maxStrCapacity);
+    }
+
+    private static void appendError(StringBuilder sb, Throwable error, boolean isFirstError, int maxStrCapacity) {
+        if(isFirstError) {
+            // 先加入message 再明细扩容
+            sb.append(error.toString());
+            sb.ensureCapacity(Math.min(maxStrCapacity, 1024 * 4));
+        } else {
+            sb.append("\nCause by: ").append(error.toString());
+        }
+        if(sb.length() >= maxStrCapacity) { return; }
+        StackTraceElement[] elements = getErrorStackTrace(error);
+        int systemStackCount = 0;
+        for(int i = 0, len = CollUtil.size(elements); i < len; ++i) {
+            StackTraceElement e = elements[i];
+            if(i == 0 || StringUtils.startsWithIgnoreCase(e.getClassName(), ZJ2Constants.ZJ2_PACKAGE_PREFIX)) {
+                if(systemStackCount > 0) {
+                    sb.append("\n - sys.stack[").append(systemStackCount).append(']' );
+                    systemStackCount = 0;
+                }
+                sb.append("\n - ").append(e.getClassName()).append('#' ).append(e.getMethodName()).append(':' ).append(e.getLineNumber());
+                if(sb.length() >= maxStrCapacity) { return; }
+            } else {
+                ++systemStackCount;
+            }
+        }
+        if(systemStackCount > 0) { sb.append("\n - sys.stack[").append(systemStackCount).append(']' ); }
+    }
+
+    private static StackTraceElement[] getErrorStackTrace(Throwable error) {
+        try {
+            if(STACK_TRACE_FIELD != null) {
+                return (StackTraceElement[])STACK_TRACE_FIELD.get(error);
+            }
+        } catch(Throwable e) {//NOSONAR
+        }
+        return error.getStackTrace();
+    }
 
     public static String toStrIfNullEmpty(Object value) {
         return value == null ? "" : value.toString();
@@ -73,29 +142,29 @@ public class StrUtil {
 
     public static String concat(String value1, String value2) {
         int len = length(value1) + length(value2);
-        if (len == 0) { return ""; }
+        if(len == 0) { return ""; }
         TextStringBuilder sb = new TextStringBuilder(len);
-        if (value1 != null) { sb.append(value1); }
-        if (value2 != null) { sb.append(value2); }
+        if(value1 != null) { sb.append(value1); }
+        if(value2 != null) { sb.append(value2); }
         return sb.toString();
     }
 
     public static String concat(String value1, char value2, String value3) {
         int len = length(value1) + length(value3) + 1;
         TextStringBuilder sb = new TextStringBuilder(len);
-        if (value1 != null) { sb.append(value1); }
+        if(value1 != null) { sb.append(value1); }
         sb.append(value2);
-        if (value3 != null) { sb.append(value3); }
+        if(value3 != null) { sb.append(value3); }
         return sb.toString();
     }
 
     public static String concat(String value1, String value2, String value3) {
         int len = length(value1) + length(value2) + length(value3);
-        if (len == 0) { return ""; }
+        if(len == 0) { return ""; }
         TextStringBuilder sb = new TextStringBuilder(len);
-        if (value1 != null) { sb.append(value1); }
-        if (value2 != null) { sb.append(value2); }
-        if (value3 != null) { sb.append(value3); }
+        if(value1 != null) { sb.append(value1); }
+        if(value2 != null) { sb.append(value2); }
+        if(value3 != null) { sb.append(value3); }
         return sb.toString();
     }
 
@@ -107,27 +176,26 @@ public class StrUtil {
         return concat(value1, value2, value3, value4, value5, null);
     }
 
-    public static String concat(String value1, String value2, String value3, String value4, String value5,
-            String value6) {
+    public static String concat(String value1, String value2, String value3, String value4, String value5, String value6) {
         int len = length(value1) + length(value2) + length(value3) + length(value4) + length(value5) + length(value6);
-        if (len == 0) { return ""; }
+        if(len == 0) { return ""; }
         TextStringBuilder sb = new TextStringBuilder(len);
-        if (value1 != null) { sb.append(value1); }
-        if (value2 != null) { sb.append(value2); }
-        if (value3 != null) { sb.append(value3); }
-        if (value4 != null) { sb.append(value4); }
-        if (value5 != null) { sb.append(value5); }
-        if (value5 != null) { sb.append(value6); }
+        if(value1 != null) { sb.append(value1); }
+        if(value2 != null) { sb.append(value2); }
+        if(value3 != null) { sb.append(value3); }
+        if(value4 != null) { sb.append(value4); }
+        if(value5 != null) { sb.append(value5); }
+        if(value5 != null) { sb.append(value6); }
         return sb.toString();
     }
 
     public static String concat(String... values) {
-        if (values == null || values.length == 0) { return ""; }
+        if(values == null || values.length == 0) { return ""; }
         int len = 0;
-        for (String value : values) { len += (value == null ? 0 : value.length()); }
-        if (len == 0) { return ""; }
+        for(String value : values) { len += (value == null ? 0 : value.length()); }
+        if(len == 0) { return ""; }
         TextStringBuilder sb = new TextStringBuilder(len);
-        for (String value : values) { if (value != null) { sb.append(value); } }
+        for(String value : values) { if(value != null) { sb.append(value); } }
         return sb.toString();
     }
 
@@ -155,15 +223,14 @@ public class StrUtil {
         return isNotEmpty(str0) || isNotEmpty(str1) || isNotEmpty(str2) || isNotEmpty(str3);
     }
 
-    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3,
-            CharSequence str4) {
+    public static boolean isAnyNotEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3, CharSequence str4) {
         return isNotEmpty(str0) || isNotEmpty(str1) || isNotEmpty(str2) || isNotEmpty(str3) || isNotEmpty(str4);
     }
 
     public static boolean isAnyNotEmpty(CharSequence... strs) {
-        if (strs == null || strs.length == 0) { return false; }
-        for (CharSequence s : strs) {
-            if (isNotEmpty(s)) { return true; }
+        if(strs == null || strs.length == 0) { return false; }
+        for(CharSequence s : strs) {
+            if(isNotEmpty(s)) { return true; }
         }
         return false;
     }
@@ -184,15 +251,14 @@ public class StrUtil {
         return isNotEmpty(str0) && isNotEmpty(str1) && isNotEmpty(str2) && isNotEmpty(str3);
     }
 
-    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3,
-            CharSequence str4) {
+    public static boolean isNoneEmpty(CharSequence str0, CharSequence str1, CharSequence str2, CharSequence str3, CharSequence str4) {
         return isNotEmpty(str0) && isNotEmpty(str1) && isNotEmpty(str2) && isNotEmpty(str3) && isNotEmpty(str4);
     }
 
     public static boolean isNoneEmpty(CharSequence... strs) {
-        if (strs == null || strs.length == 0) { return true; }
-        for (CharSequence s : strs) {
-            if (isEmpty(s)) { return false; }
+        if(strs == null || strs.length == 0) { return true; }
+        for(CharSequence s : strs) {
+            if(isEmpty(s)) { return false; }
         }
         return true;
     }
@@ -203,12 +269,12 @@ public class StrUtil {
     }
 
     public static String substring(CharSequence str, int startIdx, int endIdx) {
-        if (isEmpty(str)) { return ""; }
+        if(isEmpty(str)) { return ""; }
         int len = str.length();
-        if (startIdx >= len) { return ""; }
+        if(startIdx >= len) { return ""; }
         startIdx = Math.max(startIdx, 0);
         endIdx = Math.min(endIdx, len);
-        if (startIdx >= endIdx) { return ""; }
+        if(startIdx >= endIdx) { return ""; }
         return str.subSequence(startIdx, endIdx).toString();
     }
 
@@ -222,24 +288,24 @@ public class StrUtil {
 
     public static boolean equals(CharSequence value1, CharSequence value2, int start2, int end2) {
         final int len = end2 - start2;
-        if (len != length(value1)) { return false; }
-        if (len == 0) { return true; }
-        for (int i = 0; i < len; ++i, ++start2) {
-            if (value1.charAt(i) != value2.charAt(start2)) { return false; }
+        if(len != length(value1)) { return false; }
+        if(len == 0) { return true; }
+        for(int i = 0; i < len; ++i, ++start2) {
+            if(value1.charAt(i) != value2.charAt(start2)) { return false; }
         }
         return true;
     }
 
     public static boolean equalsIgnoreCase(CharSequence value1, CharSequence value2, int start2, int end2) {
         final int len = end2 - start2;
-        if (len != StringUtils.length(value1)) { return false; }
-        if (len == 0) { return true; }
-        for (int i = 0; i < len; ++i, ++start2) {
+        if(len != StringUtils.length(value1)) { return false; }
+        if(len == 0) { return true; }
+        for(int i = 0; i < len; ++i, ++start2) {
             int ch1 = value1.charAt(i);
             int ch2 = value2.charAt(start2);
-            if (ch1 == ch2) { continue; }
-            if (ch1 < 128 && ch2 < 128) {
-                if (Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
+            if(ch1 == ch2) { continue; }
+            if(ch1 < 128 && ch2 < 128) {
+                if(Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
                     return false;
                 }
             } else {
@@ -252,13 +318,13 @@ public class StrUtil {
     public static int leftCompare(String str1, String str2) {
         final int len1 = StringUtils.length(str1);
         final int len2 = StringUtils.length(str2);
-        if (len1 == 0) { return len2 == 0 ? 0 : -1; }
-        if (len2 == 0) { return 1; }
+        if(len1 == 0) { return len2 == 0 ? 0 : -1; }
+        if(len2 == 0) { return 1; }
         final int len = Math.max(len1, len2);
-        for (int idx1 = len1 - len, idx2 = len2 - len; idx1 < len1; ++idx1, ++idx2) {
+        for(int idx1 = len1 - len, idx2 = len2 - len; idx1 < len1; ++idx1, ++idx2) {
             char ch1 = idx1 < 0 ? 0 : str1.charAt(idx1);
             char ch2 = idx2 < 0 ? 0 : str2.charAt(idx2);
-            if (ch1 != ch2) { return Integer.compare(ch1, ch2); }
+            if(ch1 != ch2) { return Integer.compare(ch1, ch2); }
         }
         return 0;
     }
@@ -284,11 +350,11 @@ public class StrUtil {
     }
 
     public static int indexOf(CharSequence str, char ch, int startIdx, int endIdx) {
-        if (str == null || startIdx < 0) { return -1; }
+        if(str == null || startIdx < 0) { return -1; }
         endIdx = Math.min(endIdx, str.length());
-        if (startIdx >= endIdx) { return -1; }
-        for (; startIdx < endIdx; ++startIdx) {
-            if (str.charAt(startIdx) == ch) { return startIdx; }
+        if(startIdx >= endIdx) { return -1; }
+        for(; startIdx < endIdx; ++startIdx) {
+            if(str.charAt(startIdx) == ch) { return startIdx; }
         }
         return -1;
     }

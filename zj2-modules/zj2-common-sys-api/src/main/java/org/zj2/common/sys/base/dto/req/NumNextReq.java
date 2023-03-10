@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- *  SequenceRule
+ * SequenceRule
  *
  * @author peijie.ye
  * @date 2022/12/10 3:13
@@ -43,7 +43,7 @@ public class NumNextReq implements Serializable {
     }
 
     public <T extends Serializable> void putParam(String key, T value) {
-        if (params == null) { params = new JSONObject(); }
+        if(params == null) { params = new JSONObject(); }
         params.put(key, value);
     }
 }

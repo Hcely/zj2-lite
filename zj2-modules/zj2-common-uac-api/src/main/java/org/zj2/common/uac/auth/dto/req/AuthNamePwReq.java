@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *  LoginUserPasswordReq
+ * LoginUserPasswordReq
  *
  * @author peijie.ye
  * @date 2022/11/28 1:40

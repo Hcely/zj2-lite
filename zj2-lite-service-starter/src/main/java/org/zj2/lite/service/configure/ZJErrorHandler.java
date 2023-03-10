@@ -32,7 +32,7 @@ public class ZJErrorHandler {
     @ExceptionHandler(ZError.class)
     @ResponseBody
     public ZResult error(ZError error) {
-        if (error.isStack()) {
+        if(error.isStack()) {
             log.error(error.toString(), error);
         } else {
             log.error(error.toString());
@@ -43,12 +43,11 @@ public class ZJErrorHandler {
     @ExceptionHandler(BindException.class)
     @ResponseBody
     public ZResult validError(BindException exception) {
-        Set<String> messages = CollUtil.toSet(exception.getBindingResult().getAllErrors(),
-                DefaultMessageSourceResolvable::getDefaultMessage, true);
+        Set<String> messages = CollUtil.toSet(exception.getBindingResult().getAllErrors(), DefaultMessageSourceResolvable::getDefaultMessage, true);
         ZMultiMsgResult result = new ZMultiMsgResult();
         result.setSuccess(false);
         result.setStatus(ZStatusMsg.FAILURE_STATUS);
-        if (CollUtil.isNotEmpty(messages)) {
+        if(CollUtil.isNotEmpty(messages)) {
             result.setMsg(ZRBuilder.ofMsg(CollUtil.getFirst(messages)));
             result.setMsgs(CollUtil.toList(messages, ZRBuilder::ofMsg));
         } else {

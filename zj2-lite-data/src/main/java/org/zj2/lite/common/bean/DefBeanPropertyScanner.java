@@ -45,20 +45,19 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public void scan(Object bean, BeanPropertyScanHandler propertyHandler) {
-        if (propertyHandler == null) { return; }
+        if(propertyHandler == null) { return; }
         scan0(bean, propertyHandler, null);
     }
 
     @Override
     public void scan(Object bean, BeanSimplePropertyScanHandler propertyHandler) {
-        if (propertyHandler == null) { return; }
+        if(propertyHandler == null) { return; }
         scan0(bean, null, propertyHandler);
     }
 
-    private void scan0(Object bean, BeanPropertyScanHandler propertyHandler,
-            BeanSimplePropertyScanHandler simplePropertyHandler) {
+    private void scan0(Object bean, BeanPropertyScanHandler propertyHandler, BeanSimplePropertyScanHandler simplePropertyHandler) {
         try {
-            if (bean == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
+            if(bean == null || BeanUtils.isSimpleValueType(bean.getClass())) { return; }
             this.beanIdentifySet = loadBeanIdentifySet();
             this.rootBean = bean;
             this.propertyHandler = propertyHandler;
@@ -72,7 +71,7 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
     private Set<Integer> loadBeanIdentifySet() {
         Set<Integer> result;
         SoftReference<Set<Integer>> setRef = beanIdentifySetRef;
-        if (setRef == null || (result = setRef.get()) == null) {
+        if(setRef == null || (result = setRef.get()) == null) {
             beanIdentifySetRef = new SoftReference<>(result = new HashSet<>(64));
         }
         return result;
@@ -80,8 +79,8 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     private void recyleBeanIdentifySet(Set<Integer> set) {
         SoftReference<Set<Integer>> setRef = beanIdentifySetRef;
-        if (setRef != null && set != null) {
-            if (set.size() < 256) {
+        if(setRef != null && set != null) {
+            if(set.size() < 256) {
                 set.clear();
             } else {
                 setRef.clear();
@@ -91,55 +90,53 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
     }
 
     protected void scanImpl(Object bean) {
-        if (bean == null || !beanIdentifySet.add(System.identityHashCode(bean))) { return; }
+        if(bean == null || !beanIdentifySet.add(System.identityHashCode(bean))) { return; }
         final Object last = currentBean;
         this.currentBean = bean;
-        if (bean.getClass().isArray()) {
+        if(bean.getClass().isArray()) {
             Class<?> type = bean.getClass().getComponentType();
             final int len = Array.getLength(bean);
-            for (int idx = 0; idx < len; ++idx) {
+            for(int idx = 0; idx < len; ++idx) {
                 Object value = Array.get(bean, idx);
-                if (value != null) { handle(null, null, null, idx, type, value); }
+                if(value != null) { handle(null, null, null, idx, type, value); }
             }
-        } else if (bean instanceof Map) {
-            for (Map.Entry entry : ((Map<?, ?>) bean).entrySet()) {
+        } else if(bean instanceof Map) {
+            for(Map.Entry entry : ((Map<?, ?>)bean).entrySet()) {
                 Object value = entry.getValue();
-                if (value != null) { handle(null, entry, null, -1, null, value); }
+                if(value != null) { handle(null, entry, null, -1, null, value); }
             }
-        } else if (bean instanceof Iterable) {
-            Iterator it = ((Iterable) bean).iterator();
-            for (int idx = 0; it.hasNext(); ++idx) {
+        } else if(bean instanceof Iterable) {
+            Iterator it = ((Iterable)bean).iterator();
+            for(int idx = 0; it.hasNext(); ++idx) {
                 Object value = it.next();
-                if (value != null) { handle(null, null, it, idx, null, value); }
+                if(value != null) { handle(null, null, it, idx, null, value); }
             }
         } else {
             BeanDescriptor descriptors = BeanDescriptor.getBeanDescriptor(bean.getClass());
-            for (BeanPropertyDescriptor descriptor : descriptors.propertyDescriptors) {
+            for(BeanPropertyDescriptor descriptor : descriptors.propertyDescriptors) {
                 handle(descriptor, null, null, -1, null, LAZY_READ);
             }
         }
         this.currentBean = last;
     }
 
-    private void handle(BeanPropertyDescriptor descriptor, Map.Entry entry, Iterator it, int idx,
-            Class<?> componentType, Object value) {
+    private void handle(BeanPropertyDescriptor descriptor, Map.Entry entry, Iterator it, int idx, Class<?> componentType, Object value) {
         this.propertyDescriptor = descriptor;
         this.propertyMapEntry = entry;
         this.propertyIterator = it;
         this.propertyIdx = idx;
         this.propertyArrayComponentType = componentType;
         this.propertyValue = value;
-        this.simplePropertyType =
-                descriptor != null ? descriptor.isSimplePropertyType() : BeanUtils.isSimpleValueType(value.getClass());
+        this.simplePropertyType = descriptor != null ? descriptor.isSimplePropertyType() : BeanUtils.isSimpleValueType(value.getClass());
         //
         PropScanMode mode;
-        if (propertyHandler != null) {
+        if(propertyHandler != null) {
             mode = propertyHandler.handle(this);
         } else {
-            if (simplePropertyType) { simplePropertyHandler.handle(this); }
+            if(simplePropertyType) { simplePropertyHandler.handle(this); }
             mode = PropScanMode.DEEP;
         }
-        if (mode == PropScanMode.DEEP && !simplePropertyType) { scanImpl(propertyValue()); }
+        if(mode == PropScanMode.DEEP && !simplePropertyType) { scanImpl(propertyValue()); }
     }
 
     public void reset() {
@@ -159,7 +156,7 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public <T> T flag() {
-        return (T) flag;
+        return (T)flag;
     }
 
     @Override
@@ -174,12 +171,12 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public String propertyName() {
-        if (propertyDescriptor != null) {
+        if(propertyDescriptor != null) {
             return propertyDescriptor.propertyName();
-        } else if (propertyMapEntry != null) {
+        } else if(propertyMapEntry != null) {
             Object key = propertyMapEntry.getKey();
             return key == null ? "" : key.toString();
-        } else if (propertyIdx > -1) {
+        } else if(propertyIdx > -1) {
             return String.valueOf(propertyIdx);
         } else {
             return "";
@@ -208,13 +205,13 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public Class<?> propertyType() {
-        if (propertyDescriptor != null) { return propertyDescriptor.propertyType(); }
+        if(propertyDescriptor != null) { return propertyDescriptor.propertyType(); }
         return propertyValue == null ? Void.class : propertyValue.getClass();
     }
 
     @Override
     public Type propertyGenericType() {
-        if (propertyDescriptor != null) { propertyDescriptor.propertyGenericType(); }
+        if(propertyDescriptor != null) { propertyDescriptor.propertyGenericType(); }
         return propertyValue == null ? null : propertyValue.getClass();
     }
 
@@ -225,7 +222,7 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public Object propertyValue() {
-        if (propertyValue == LAZY_READ) {
+        if(propertyValue == LAZY_READ) {
             propertyValue = propertyDescriptor == null ? null : propertyDescriptor.read(currentBean);
         }
         return propertyValue;
@@ -233,30 +230,30 @@ public class DefBeanPropertyScanner implements BeanPropertyScanner, BeanProperty
 
     @Override
     public boolean propertyValue(Object value) {
-        if (value == propertyValue) { return true; }
+        if(value == propertyValue) { return true; }
         try {
-            if (propertyDescriptor != null) {
-                if (propertyDescriptor.write(currentBean, value)) {
+            if(propertyDescriptor != null) {
+                if(propertyDescriptor.write(currentBean, value)) {
                     this.propertyValue = value;
                     return true;
                 }
-            } else if (propertyMapEntry != null) {
+            } else if(propertyMapEntry != null) {
                 propertyMapEntry.setValue(value);
                 this.propertyValue = value;
                 return true;
-            } else if (propertyIterator != null) {
-                if (propertyIterator instanceof ListIterator) {
-                    ((ListIterator) propertyIterator).set(value);
+            } else if(propertyIterator != null) {
+                if(propertyIterator instanceof ListIterator) {
+                    ((ListIterator)propertyIterator).set(value);
                     this.propertyValue = value;
                     return true;
                 }
-            } else if (propertyArrayComponentType != null) {
-                if (ClassUtils.isAssignableValue(propertyArrayComponentType, value)) {
+            } else if(propertyArrayComponentType != null) {
+                if(ClassUtils.isAssignableValue(propertyArrayComponentType, value)) {
                     Array.set(currentBean, propertyIdx, value);
                     return true;
                 }
             }
-        } catch (Throwable ignored) { }
+        } catch(Throwable ignored) { }
         return false;
     }
 }

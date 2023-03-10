@@ -61,7 +61,7 @@ public class Aes256Crypto extends AesCrypto {
 
 
     protected byte[] doCrypt(AesCipher cipher, byte[] src, int srcOff, int srcLen) {
-        if (srcLen == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
+        if(srcLen == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
         int len = cipher.getOutputSize(srcLen);
         byte[] dst = new byte[len];
         doCrypt(cipher, src, srcOff, srcLen, dst, 0);
@@ -70,7 +70,7 @@ public class Aes256Crypto extends AesCrypto {
 
     @SneakyThrows
     protected int doCrypt(AesCipher cipher, byte[] src, int srcOff, int srcLen, byte[] dst, int dstOff) {
-        if (srcLen == 0) { return 0; }
+        if(srcLen == 0) { return 0; }
         int len = cipher.update(src, srcOff, srcLen, dst, dstOff);
         int lastLen = cipher.doFinal(dst, dstOff + len);
         return len + lastLen;
@@ -78,7 +78,7 @@ public class Aes256Crypto extends AesCrypto {
 
 
     protected CipherParameters buildParams(byte[] secret, byte[] iv) {
-        if (CollUtil.isEmpty(iv)) {
+        if(CollUtil.isEmpty(iv)) {
             return new KeyParameter(secret);
         } else {
             return new ParametersWithIV(new KeyParameter(secret), iv);
@@ -88,18 +88,16 @@ public class Aes256Crypto extends AesCrypto {
 
     protected static class InnerPaddingCipher extends PaddedBufferedBlockCipher implements AesCipher {
         public InnerPaddingCipher(AesMode aesMode, CryptPadding padding) {
-            super(buildCipher(aesMode),
-                    padding == CryptPadding.PKCSPadding ? new PKCS7Padding() : new ZeroBytePadding());
+            super(buildCipher(aesMode), padding == CryptPadding.PKCSPadding ? new PKCS7Padding() : new ZeroBytePadding());
         }
 
         @Override
-        public int update(byte[] in, int inOff, int len, byte[] out, int outOff)
-                throws DataLengthException, IllegalStateException {
+        public int update(byte[] in, int inOff, int len, byte[] out, int outOff) throws DataLengthException, IllegalStateException {
             return processBytes(in, inOff, len, out, outOff);
         }
 
         protected static BlockCipher buildCipher(AesMode aesMode) {
-            switch (aesMode) {
+            switch(aesMode) {
                 case CFB:
                     return new CFBBlockCipher(new AESEngine(), 128);
                 case OFB:
@@ -115,10 +113,8 @@ public class Aes256Crypto extends AesCrypto {
 
         int getOutputSize(int len);
 
-        int update(byte[] in, int inOff, int len, byte[] out, int outOff)
-                throws DataLengthException, IllegalStateException;
+        int update(byte[] in, int inOff, int len, byte[] out, int outOff) throws DataLengthException, IllegalStateException;
 
-        int doFinal(byte[] out, int outOff)
-                throws DataLengthException, IllegalStateException, InvalidCipherTextException;
+        int doFinal(byte[] out, int outOff) throws DataLengthException, IllegalStateException, InvalidCipherTextException;
     }
 }

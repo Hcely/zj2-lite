@@ -6,6 +6,7 @@ import org.zj2.lite.spring.SpringUtil;
 /**
  * ApplicationPublisher
  * <br>CreateDate 一月 18,2022
+ *
  * @author peijie.ye
  * @since 1.0
  */

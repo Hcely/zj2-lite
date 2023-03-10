@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- *  SysConfigEditReq
+ * SysConfigEditReq
  *
  * @author peijie.ye
  * @date 2022/12/12 14:56

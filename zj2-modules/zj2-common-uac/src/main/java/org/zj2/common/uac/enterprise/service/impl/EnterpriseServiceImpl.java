@@ -8,12 +8,11 @@ import org.zj2.common.uac.enterprise.service.EnterpriseService;
 import org.zj2.lite.service.BaseServiceImpl;
 
 /**
- *  EnterpriseServiceImpl
+ * EnterpriseServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
  */
 @Service
-public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Enterprise, EnterpriseDTO>
-        implements EnterpriseService {
+public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Enterprise, EnterpriseDTO> implements EnterpriseService {
 }

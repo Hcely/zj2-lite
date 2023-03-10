@@ -21,7 +21,7 @@ public class EventPublishManager {
         EventPublisher[] publishers = new EventPublisher[coll.size() + 1];
         publishers[0] = new ApplicationPublisher();
         int i = 1;
-        for (EventPublisher publisher : coll) {
+        for(EventPublisher publisher : coll) {
             publishers[i] = publisher;
             ++i;
         }
@@ -42,41 +42,43 @@ public class EventPublishManager {
 
     /**
      * 发布事件
+     *
      * @param event
      */
     public static void publish(BaseEvent<?> event) {
-        if (event != null) { publish(event, false); }
+        if(event != null) { publish(event, false); }
     }
 
     /**
      * 事务提交后发布事件
+     *
      * @param event
      */
     public static void publishAfterCommit(BaseEvent<?> event) {
-        if (event != null) { TransactionSyncUtil.afterCommit(event, e -> publish(e, true)); }
+        if(event != null) { TransactionSyncUtil.afterCommit(event, e -> publish(e, true)); }
     }
 
     public static void publishIgnoreError(BaseEvent<?> event) {
-        if (event != null) { publish(event, true); }
+        if(event != null) { publish(event, true); }
     }
 
     private static void publish(BaseEvent<?> event, boolean ignoreError) {
         EventPublisher[] publishers = eventPublishers.get();
-        if (CollUtil.isEmpty(publishers)) {
+        if(CollUtil.isEmpty(publishers)) {
             logger.debug("没有可供使用 EventPublisher");
         } else {
             try {
                 //noinspection StringBufferReplaceableByString
-                String msg = new StringBuilder(96).append("事件[").append(event.getClass().getSimpleName()).append('-')
-                        .append(event.getTag()).append("]发送").toString();
+                String msg = new StringBuilder(96).append("事件[").append(event.getClass().getSimpleName()).append('-' ).append(event.getTag())
+                        .append("]发送").toString();
                 logger.info(msg);
                 PUBLISH_IGNORE_ERR_FLAG.set(ignoreError);
-                for (EventPublisher publisher : publishers) {
+                for(EventPublisher publisher : publishers) {
                     try {
                         publisher.publish(event);
-                    } catch (Throwable e) {// NOSONAR
+                    } catch(Throwable e) {// NOSONAR
                         logger.error("事件推送异常", e);
-                        if (ignoreError) {
+                        if(ignoreError) {
                             //  SysError.error("事件推送异常").errorData(event).throwable(e).record();
                         } else {
                             throw e;

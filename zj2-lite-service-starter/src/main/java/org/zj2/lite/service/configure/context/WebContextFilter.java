@@ -24,12 +24,11 @@ import java.io.IOException;
 @Component
 @Order(-99999)
 public class WebContextFilter implements Filter {
-    private static final String[] IP_HEADERS = {"x-forwarded-for", "X-Forwarded-Host", "WL-Proxy-Client-IP",
-            "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
+    private static final String[] IP_HEADERS = {"x-forwarded-for", "X-Forwarded-Host", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP",
+            "HTTP_X_FORWARDED_FOR"};
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             initRequestContext(request);
             chain.doFilter(request, response);
@@ -40,8 +39,8 @@ public class WebContextFilter implements Filter {
 
     private void initRequestContext(ServletRequest request) {
         ServletRequestContext requestContext = new ServletRequestContext(request);
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if(request instanceof HttpServletRequest) {
+            HttpServletRequest httpRequest = (HttpServletRequest)request;
             requestContext.setRootUri(httpRequest.getHeader(ServiceConstants.REQUEST_ROOT_URI));
             requestContext.setMethod(httpRequest.getMethod());
             requestContext.setUri(httpRequest.getRequestURI());
@@ -52,9 +51,9 @@ public class WebContextFilter implements Filter {
     }
 
     private String getAttrIp(HttpServletRequest request) {
-        for (String header : IP_HEADERS) {
+        for(String header : IP_HEADERS) {
             String ip = request.getHeader(header);
-            if (StringUtils.isNotEmpty(ip) && !StringUtils.equalsIgnoreCase("unknown", ip)) { return ip; }
+            if(StringUtils.isNotEmpty(ip) && !StringUtils.equalsIgnoreCase("unknown", ip)) { return ip; }
         }
         return request.getRemoteAddr();
     }

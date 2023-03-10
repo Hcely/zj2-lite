@@ -30,7 +30,7 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     @Override
     public AppOrgDTO addOrg(AppOrgAddReq req) {
         AppOrgDTO exist = getAppOrg(req.getAppCode(), req.getOrgCode());
-        if (exist == null) {
+        if(exist == null) {
             AppOrgDTO appOrg = new AppOrgDTO();
             appOrg.setAppCode(req.getAppCode());
             appOrg.setOrgCode(req.getOrgCode());
@@ -45,13 +45,13 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     @Override
     public void removeOrg(String appOrgId) {
         AppOrgDTO appOrg = get(appOrgId);
-        if (appOrg != null) { delete(appOrgId); }
+        if(appOrg != null) { delete(appOrgId); }
     }
 
     @Override
     public void enable(String appOrgId) {
         AppOrgDTO appOrg = get(appOrgId);
-        if (appOrg != null && BooleanUtil.isFalse(appOrg.getEnableFlag())) {
+        if(appOrg != null && BooleanUtil.isFalse(appOrg.getEnableFlag())) {
             AppOrgDTO update = new AppOrgDTO();
             update.setAppOrgId(appOrgId);
             update.setEnableFlag(1);
@@ -64,7 +64,7 @@ public class AppOrgServiceImpl extends BaseServiceImpl<AppOrgMapper, AppOrg, App
     @Override
     public void disable(String appOrgId) {
         AppOrgDTO appOrg = get(appOrgId);
-        if (appOrg != null && BooleanUtil.isTrue(appOrg.getEnableFlag())) {
+        if(appOrg != null && BooleanUtil.isTrue(appOrg.getEnableFlag())) {
             AppOrgDTO update = new AppOrgDTO();
             update.setAppOrgId(appOrgId);
             update.setEnableFlag(0);

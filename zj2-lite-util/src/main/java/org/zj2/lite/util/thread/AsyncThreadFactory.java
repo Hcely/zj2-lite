@@ -16,8 +16,8 @@ public class AsyncThreadFactory implements ThreadFactory {
 
     public Thread newThread(Runnable r) {
         Thread t = new AsyncTaskThread(this, r, "ASYNC-" + THREAD_NUMBER.getAndIncrement());
-        if (t.isDaemon()) { t.setDaemon(false); }
-        if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
+        if(t.isDaemon()) { t.setDaemon(false); }
+        if(t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
         return t;
     }
 

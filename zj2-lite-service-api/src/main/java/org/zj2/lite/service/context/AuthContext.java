@@ -75,9 +75,9 @@ public class AuthContext extends ZContext {
     protected boolean authenticated = false;
 
     public String getDataAuthority() {
-        if (StringUtils.isNotEmpty(dataAuthority)) {
+        if(StringUtils.isNotEmpty(dataAuthority)) {
             return dataAuthority;
-        } else if (uriResource != null) {
+        } else if(uriResource != null) {
             return uriResource.getDataAuthority();
         } else {
             return "";

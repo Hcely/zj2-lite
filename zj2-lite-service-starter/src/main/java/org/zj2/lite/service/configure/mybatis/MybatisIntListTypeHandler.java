@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import org.zj2.lite.service.entity.IntList;
 
 /**
- *
  * <br>CreateDate 九月 02,2022
+ *
  * @author peijie.ye
  */
 @Component

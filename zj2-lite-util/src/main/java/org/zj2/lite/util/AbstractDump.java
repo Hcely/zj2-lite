@@ -2,9 +2,6 @@ package org.zj2.lite.util;
 
 import org.zj2.lite.common.util.NumUtil;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * Dump
  *
@@ -30,9 +27,9 @@ public class AbstractDump<E extends Comparable> {
 
     protected void ensureCapacity(int capacity, int incMultiple) {
         final int length = dump == null ? 0 : dump.length;
-        if (capacity < length) { return; }
+        if(capacity < length) { return; }
         final int newCapacity = NumUtil.plus.ceilMultipleOf(capacity, incMultiple);
-        if (dump == null) {
+        if(dump == null) {
             dump = new Object[newCapacity];
         } else {
             Object[] newDump = new Object[newCapacity];
@@ -42,13 +39,13 @@ public class AbstractDump<E extends Comparable> {
     }
 
     public boolean contains(Object value) {
-        if (value == null) { return false; }
+        if(value == null) { return false; }
         final Object[] dump = this.dump;
         final int len = size;
-        if (len < 0 || dump == null) { return false; }
-        for (int i = 0; i < len; ++i) {
+        if(len < 0 || dump == null) { return false; }
+        for(int i = 0; i < len; ++i) {
             Object v = dump[i];
-            if (v == value || (v != null && v.equals(value))) {
+            if(v == value || (v != null && v.equals(value))) {
                 return true;
             }
         }
@@ -56,15 +53,15 @@ public class AbstractDump<E extends Comparable> {
     }
 
     protected boolean addEnum(E e) {
-        if (e == null) { return false; }
+        if(e == null) { return false; }
         int idx = size;
         ensureCapacity(idx + 1);
         dump[idx] = e;
         ++size;
-        for (; idx > 0; ) {
+        for(; idx > 0; ) {
             int pIdx = (idx - 1) >>> 1;
-            E pEnum = (E) dump[pIdx];
-            if (lte(pEnum, e)) {
+            E pEnum = (E)dump[pIdx];
+            if(lte(pEnum, e)) {
                 break;
             } else {
                 dump[pIdx] = e;
@@ -76,10 +73,10 @@ public class AbstractDump<E extends Comparable> {
     }
 
     protected E pollEnum() {
-        if (size > 0 && dump != null) {
-            E value = (E) dump[0];
+        if(size > 0 && dump != null) {
+            E value = (E)dump[0];
             int lastIdx = --size;
-            if (lastIdx == 0) {
+            if(lastIdx == 0) {
                 dump[0] = null;
             } else {
                 dump[0] = dump[lastIdx];
@@ -92,7 +89,7 @@ public class AbstractDump<E extends Comparable> {
     }
 
     protected E headerEnum() {
-        return size > 0 && dump != null ? (E) dump[0] : null;
+        return size > 0 && dump != null ? (E)dump[0] : null;
     }
 
     public int size() {
@@ -102,14 +99,14 @@ public class AbstractDump<E extends Comparable> {
     protected void updateHeader() {
         final Object[] dump = this.dump;
         final int len = size;
-        if (len <= 1 || dump == null) { return; }
-        E value = (E) dump[0];
-        for (int pIdx = 0, cIdx1 = 1, cIdx2; cIdx1 < len; ) {
-            E c1 = (E) dump[cIdx1];
+        if(len <= 1 || dump == null) { return; }
+        E value = (E)dump[0];
+        for(int pIdx = 0, cIdx1 = 1, cIdx2; cIdx1 < len; ) {
+            E c1 = (E)dump[cIdx1];
             cIdx2 = cIdx1 + 1;
-            E c2 = cIdx2 < len ? (E) dump[cIdx2] : null;
-            if (gt(value, c1)) {
-                if (c2 == null || gt(c2, c1)) {
+            E c2 = cIdx2 < len ? (E)dump[cIdx2] : null;
+            if(gt(value, c1)) {
+                if(c2 == null || gt(c2, c1)) {
                     dump[cIdx1] = value;
                     dump[pIdx] = c1;
                     pIdx = cIdx1;
@@ -118,7 +115,7 @@ public class AbstractDump<E extends Comparable> {
                     dump[pIdx] = c2;
                     pIdx = cIdx2;
                 }
-            } else if (c2 != null && gt(value, c2)) {
+            } else if(c2 != null && gt(value, c2)) {
                 dump[cIdx2] = value;
                 dump[pIdx] = c2;
                 pIdx = cIdx2;
@@ -134,8 +131,8 @@ public class AbstractDump<E extends Comparable> {
     }
 
     private boolean lte(E e1, E e2) {
-        if (e1 == null) { return false; }
-        if (e2 == null) { return true; }
+        if(e1 == null) { return false; }
+        if(e2 == null) { return true; }
         return compare(e1, e2) < 1;
     }
 

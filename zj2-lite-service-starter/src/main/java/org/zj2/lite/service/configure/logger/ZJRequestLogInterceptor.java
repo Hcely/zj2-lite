@@ -15,7 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- *  ZJWebLogIn
+ * ZJWebLogIn
  *
  * @author peijie.ye
  * @date 2022/12/26 19:12
@@ -38,11 +38,11 @@ public class ZJRequestLogInterceptor {
             context = getContext();
             result = joinPoint.proceed();
             return result;
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             error = e;
             throw e;
         } finally {
-            if (context != null) {
+            if(context != null) {
                 setResponse(context, joinPoint, result, error);
             }
         }
@@ -50,7 +50,7 @@ public class ZJRequestLogInterceptor {
 
     private RequestLogContext getContext() {
         RequestLogContext context = RequestLogContext.current();
-        if (context != null && context.request()) {
+        if(context != null && context.request()) {
             return context;
         } else {
             return null;
@@ -63,19 +63,19 @@ public class ZJRequestLogInterceptor {
     }
 
     private Object[] buildArgs(Object[] args) {
-        if (args == null || args.length == 0) { return ArrayUtils.EMPTY_OBJECT_ARRAY; }
+        if(args == null || args.length == 0) { return ArrayUtils.EMPTY_OBJECT_ARRAY; }
         int i = 0;
         Object[] params = new Object[args.length];
-        for (Object arg : args) {
-            if (arg == null) {
+        for(Object arg : args) {
+            if(arg == null) {
                 params[i] = "null";
-            } else if (BeanUtils.isSimpleValueType(arg.getClass())) {
+            } else if(BeanUtils.isSimpleValueType(arg.getClass())) {
                 params[i] = (arg);
-            } else if (arg instanceof ServletRequest) {
+            } else if(arg instanceof ServletRequest) {
                 params[i] = "ServletRequest";
-            } else if (arg instanceof ServletResponse) {
+            } else if(arg instanceof ServletResponse) {
                 params[i] = "ServletResponse";
-            } else if (arg instanceof InputStreamSource) {
+            } else if(arg instanceof InputStreamSource) {
                 params[i] = "StreamSource";
             } else {
                 params[i] = SafeLogUtil.toJSONStr(arg);

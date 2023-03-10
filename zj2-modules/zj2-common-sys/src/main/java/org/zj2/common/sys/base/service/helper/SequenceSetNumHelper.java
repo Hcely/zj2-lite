@@ -5,7 +5,7 @@ import org.zj2.lite.helper.BizReference;
 import org.zj2.lite.helper.CommonBizHelper;
 
 /**
- *  SysSequenceNextHelper
+ * SysSequenceNextHelper
  *
  * @author peijie.ye
  * @date 2022/12/11 13:34

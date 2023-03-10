@@ -6,7 +6,7 @@ import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.lite.service.ApiReference;
 
 /**
- *  SysSequenceApi
+ * SysSequenceApi
  *
  * @author peijie.ye
  * @date 2022/12/10 2:16

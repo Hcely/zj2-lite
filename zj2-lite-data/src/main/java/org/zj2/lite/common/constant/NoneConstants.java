@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- *  NoneConstants
+ * NoneConstants
  *
  * @author peijie.ye
  * @date 2022/11/24 2:08

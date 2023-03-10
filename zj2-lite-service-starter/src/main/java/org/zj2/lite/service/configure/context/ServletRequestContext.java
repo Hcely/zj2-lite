@@ -33,15 +33,15 @@ public class ServletRequestContext extends BaseRequestContext {
     @Override
     public Object getRequestParam(String key) {
         Object value = super.getRequestParam(key);
-        if (value != null) { return value; }
+        if(value != null) { return value; }
         //
         value = request.getAttribute(key);
-        if (value != null) { return value; }
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if(value != null) { return value; }
+        if(request instanceof HttpServletRequest) {
+            HttpServletRequest httpRequest = (HttpServletRequest)request;
             String valueStr = httpRequest.getHeader(key);
-            if (StringUtils.isNotEmpty(valueStr)) { return valueStr; }
-            if (StringUtils.equalsIgnoreCase(key, ServiceConstants.AUTHORIZATION)) {
+            if(StringUtils.isNotEmpty(valueStr)) { return valueStr; }
+            if(StringUtils.equalsIgnoreCase(key, ServiceConstants.AUTHORIZATION)) {
                 return getAuthorization(httpRequest);
             }
         }
@@ -51,18 +51,18 @@ public class ServletRequestContext extends BaseRequestContext {
     private String getAuthorization(HttpServletRequest httpRequest) {
         Cookie[] cookies = httpRequest.getCookies();
         String value = null;
-        if (CollUtil.isNotEmpty(cookies)) {
-            for (Cookie c : cookies) {
-                if (StringUtils.equalsIgnoreCase(c.getName(), ServiceConstants.AUTHORIZATION)) {
+        if(CollUtil.isNotEmpty(cookies)) {
+            for(Cookie c : cookies) {
+                if(StringUtils.equalsIgnoreCase(c.getName(), ServiceConstants.AUTHORIZATION)) {
                     value = c.getValue();
                     break;
                 }
             }
-            if (StringUtils.isNotEmpty(value)) { return value; }
+            if(StringUtils.isNotEmpty(value)) { return value; }
         }
-        if (!StringUtils.equalsIgnoreCase(HttpMethod.GET.name(), httpRequest.getMethod())) {
+        if(!StringUtils.equalsIgnoreCase(HttpMethod.GET.name(), httpRequest.getMethod())) {
             value = httpRequest.getParameter(ServiceConstants.AUTHORIZATION);
-            if (StringUtils.isNotEmpty(value)) { return value; }
+            if(StringUtils.isNotEmpty(value)) { return value; }
         }
         return null;
     }

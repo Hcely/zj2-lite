@@ -20,8 +20,6 @@ import org.zj2.lite.common.entity.result.ZListResp;
 import org.zj2.lite.service.BaseServiceImpl;
 import org.zj2.lite.util.ZRBuilder;
 
-import java.time.LocalDateTime;
-
 /**
  * OrgEmployeeServiceImpl
  *
@@ -29,8 +27,7 @@ import java.time.LocalDateTime;
  * @date 2022/11/27 20:40
  */
 @Service
-public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, OrgEmployee, OrgEmployeeDTO>
-        implements OrgEmployeeService {
+public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, OrgEmployee, OrgEmployeeDTO> implements OrgEmployeeService {
     @Autowired
     private OrgEmployeeHelper orgEmployeeHelper;
     @Autowired
@@ -49,7 +46,7 @@ public class OrgEmployeeServiceImpl extends BaseServiceImpl<OrgEmployeeMapper, O
     @Override
     public OrgEmployeeDTO getIfAbsentError(String employeeId) {
         OrgEmployeeDTO employee = get(employeeId);
-        if (employee == null) { throw ZRBuilder.failureErr("职员不存在"); }
+        if(employee == null) { throw ZRBuilder.failureErr("职员不存在"); }
         return employee;
     }
 

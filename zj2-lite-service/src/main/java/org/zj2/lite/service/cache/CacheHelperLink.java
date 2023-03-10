@@ -18,21 +18,20 @@ class CacheHelperLink implements CacheHelper {
 
     @Override
     public void removeCache(String cacheKey) {
-        if (next != null) { next.removeCache(cacheKey); }
+        if(next != null) { next.removeCache(cacheKey); }
         helper.removeCache(cacheKey);
     }
 
     @Override
     public <T> void setCache(String cacheKey, T value, long timeout) {
         helper.setCache(cacheKey, value, timeout);
-        if (next != null) { next.setCache(cacheKey, value, timeout << 1); }
+        if(next != null) { next.setCache(cacheKey, value, timeout << 1); }
     }
 
     @Override
-    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout,
-            boolean ignoreErr) {
+    public <T> T getCache(String cacheKey, String dataKey, Function<String, T> getter, long timeout, boolean ignoreErr) {
         final Function<String, T> finalGetter;
-        if (next == null) {
+        if(next == null) {
             finalGetter = getter;
         } else {
             final long t = Math.max(next.getExpireIn(), timeout + helper.getExpireIn());

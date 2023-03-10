@@ -18,14 +18,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *  SafeJSON
+ * SafeJSON
  *
  * @author peijie.ye
  * @date 2022/12/1 14:51
  */
 public class SafeLogUtil {
     private static final SerializeFilter[] PROPERTY_FILTERS = {
-            (ValueFilter) (object, name, value) -> isNotEmpty(value) && isSensitiveProperty(name) ? "****" : value};
+            (ValueFilter)(object, name, value) -> isNotEmpty(value) && isSensitiveProperty(name) ? "****" : value};
     private static final SerializerFeature[] EMPTY_FEATURES = {};
 
     private static final String[] SENSITIVE_SUFFIX_WORDS = {"mobile", "phone", "email", "password"};
@@ -33,9 +33,9 @@ public class SafeLogUtil {
     private static final Set<String> SENSITIVE_PROPERTIES = ConcurrentHashMap.newKeySet(1024);
 
     private static boolean isNotEmpty(Object value) {
-        if (value == null) { return false; }
-        if (value instanceof CharSequence) {
-            return ((CharSequence) value).length() > 0;
+        if(value == null) { return false; }
+        if(value instanceof CharSequence) {
+            return ((CharSequence)value).length() > 0;
         } else {
             return true;
         }
@@ -51,10 +51,10 @@ public class SafeLogUtil {
 
     public static void addSensitiveProperty(Class<?> type) {
         BeanDescriptor bd = PropertyUtil.getBeanDescriptor(type);
-        if (bd == null) { return; }
-        for (int idx = 0, size = bd.propertySize(); idx < size; ++idx) {
+        if(bd == null) { return; }
+        for(int idx = 0, size = bd.propertySize(); idx < size; ++idx) {
             BeanPropertyDescriptor pd = bd.propertyDescriptor(idx);
-            if (isSensitiveProperty(pd)) { addSensitiveProperty(pd.propertyName()); }
+            if(isSensitiveProperty(pd)) { addSensitiveProperty(pd.propertyName()); }
         }
     }
 
@@ -68,9 +68,9 @@ public class SafeLogUtil {
     }
 
     public static boolean isSensitiveProperty(String name) {
-        if (StringUtils.isEmpty(name)) { return false; }
-        for (String suffix : SENSITIVE_SUFFIX_WORDS) {
-            if (StringUtils.endsWithIgnoreCase(name, suffix)) { return true; }
+        if(StringUtils.isEmpty(name)) { return false; }
+        for(String suffix : SENSITIVE_SUFFIX_WORDS) {
+            if(StringUtils.endsWithIgnoreCase(name, suffix)) { return true; }
         }
         return SENSITIVE_PROPERTIES.contains(name);
     }

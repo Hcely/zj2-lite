@@ -1,5 +1,6 @@
 package org.zj2.lite.common.bean;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.BeanUtils;
 import org.zj2.lite.common.util.CollUtil;
@@ -33,11 +34,11 @@ public class BeanDescriptor {
     protected final BeanPropertyDescriptor[] propertyDescriptors;
 
     public static BeanDescriptor getBeanDescriptor(Class<?> type) {
-        if (type == null) { return BeanDescriptor.NONE_DESCRIPTOR; }
+        if(type == null) { return BeanDescriptor.NONE_DESCRIPTOR; }
         final String name = type.getName();
         BeanDescriptor descriptors = BEAN_PROPERTY_MAP.get(name);
-        if (descriptors == null) {
-            synchronized (BEAN_PROPERTY_MAP) {
+        if(descriptors == null) {
+            synchronized(BEAN_PROPERTY_MAP) {
                 descriptors = BEAN_PROPERTY_MAP.computeIfAbsent(name, k -> BeanDescriptor.create(type));
             }
         }
@@ -45,44 +46,44 @@ public class BeanDescriptor {
     }
 
     static BeanDescriptor create(Class<?> type) {
-        if (type.isArray()) {
+        if(type.isArray()) {
             return new BeanDescriptor(type);
-        } else if (type == Map.class) {
+        } else if(type == Map.class) {
             return new BeanDescriptor(type, LinkedHashMap.class);
-        } else if (type == Iterable.class || type == Collection.class || type == List.class) {
+        } else if(type == Iterable.class || type == Collection.class || type == List.class) {
             return new BeanDescriptor(type, ArrayList.class);
-        } else if (type == Queue.class || type == Deque.class) {
+        } else if(type == Queue.class || type == Deque.class) {
             return new BeanDescriptor(type, LinkedList.class);
-        } else if (type == Set.class) {
+        } else if(type == Set.class) {
             return new BeanDescriptor(type, LinkedHashSet.class);
-        } else if (BeanUtils.isSimpleValueType(type) || Map.class.isAssignableFrom(type)
-                || Iterable.class.isAssignableFrom(type)) {
+        } else if(BeanUtils.isSimpleValueType(type) || Map.class.isAssignableFrom(type) || Iterable.class.isAssignableFrom(type)) {
             return new BeanDescriptor(type);
         }
         PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(type);
-        if (descriptors.length == 0) { return new BeanDescriptor(type); }
+        if(descriptors.length == 0) { return new BeanDescriptor(type); }
         List<Field> fields = FieldUtils.getAllFieldsList(type);
         Map<String, Field> fieldMap = new HashMap<>(fields.size());
-        for (Field f : fields) {
-            if (!Modifier.isStatic(f.getModifiers())) { fieldMap.putIfAbsent(f.getName(), f); }
+        for(Field f : fields) {
+            if(!Modifier.isStatic(f.getModifiers())) { fieldMap.putIfAbsent(f.getName(), f); }
         }
         Map<String, BeanPropertyDescriptor> map = new LinkedHashMap<>(descriptors.length);
-        for (PropertyDescriptor descriptor : descriptors) {
+        for(PropertyDescriptor descriptor : descriptors) {
             String name = descriptor.getName();
-            map.put(name, new BeanPropertyDescriptor(descriptor, fieldMap.get(name)));
+            if(!StringUtils.equals(name, "class")) {
+                map.put(name, new BeanPropertyDescriptor(descriptor, fieldMap.get(name)));
+            }
         }
         return new BeanDescriptor(type, map, CollUtil.toArray(map.values(), BeanPropertyDescriptor.class));
     }
 
     private static Constructor getConstructor(Class<?> type) {
         try {
-            Constructor constructor =
-                    type == null || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) ?
-                            null :
-                            BeanUtils.getResolvableConstructor(type);
+            Constructor constructor = type == null || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) ?
+                    null :
+                    BeanUtils.getResolvableConstructor(type);
             constructor.trySetAccessible();
             return constructor;
-        } catch (Throwable e) {
+        } catch(Throwable e) {
             return null;
         }
     }
@@ -98,11 +99,8 @@ public class BeanDescriptor {
         this.constructor = getConstructor(newInstanceType);
     }
 
-    private BeanDescriptor(Class<?> type, Map<String, BeanPropertyDescriptor> propertyDescriptorMap,
-            BeanPropertyDescriptor[] propertyDescriptors) {
-        this.propertyDescriptorMap = propertyDescriptorMap == null ?
-                Collections.emptyMap() :
-                Collections.unmodifiableMap(propertyDescriptorMap);
+    private BeanDescriptor(Class<?> type, Map<String, BeanPropertyDescriptor> propertyDescriptorMap, BeanPropertyDescriptor[] propertyDescriptors) {
+        this.propertyDescriptorMap = propertyDescriptorMap == null ? Collections.emptyMap() : Collections.unmodifiableMap(propertyDescriptorMap);
         this.propertyDescriptors = propertyDescriptors == null ? EMPTY_DESCRIPTORS : propertyDescriptors;
         this.type = type;
         this.constructor = getConstructor(type);
@@ -114,15 +112,15 @@ public class BeanDescriptor {
 
     public Object newInstance() {
         Class<?> t = type();
-        if (t == null) { return null; }
-        if (t.isArray()) {
+        if(t == null) { return null; }
+        if(t.isArray()) {
             return Array.newInstance(t.getComponentType(), 0);
         } else {
             Constructor c = this.constructor;
-            if (c != null) {
+            if(c != null) {
                 try {
                     return c.newInstance();
-                } catch (Throwable e) {
+                } catch(Throwable e) {
                     return null;
                 }
             }

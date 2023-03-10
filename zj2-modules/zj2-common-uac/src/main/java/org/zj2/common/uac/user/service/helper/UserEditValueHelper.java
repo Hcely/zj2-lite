@@ -18,7 +18,7 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  UserEditValueHelper
+ * UserEditValueHelper
  *
  * @author peijie.ye
  * @date 2022/12/2 18:38
@@ -40,13 +40,13 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
         //
         checkParams(req);
         // 检查是否需要更新
-        if (!needUpdate(user, req)) {
+        if(!needUpdate(user, req)) {
             userService.logger().info("用户值[{}]无需更新", req.getValueType());
             return;
         }
         // 检查唯一性
-        if (StringUtils.isNotEmpty(req.getUserValue())) {
-            if (userValueService.existUserValue(req.getValueType(), req.getUserValue(), req.getUserExtValue())) {
+        if(StringUtils.isNotEmpty(req.getUserValue())) {
+            if(userValueService.existUserValue(req.getValueType(), req.getUserValue(), req.getUserExtValue())) {
                 throw ZRBuilder.failureErr("{}已存在", req.getValueType().getDesc());
             }
         }
@@ -59,10 +59,10 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
     private void fillParams(UserEditValueReq req) {
         req.setUserValue(StringUtils.trimToEmpty(req.getUserValue()));
         req.setUserExtValue(StringUtils.trimToEmpty(req.getUserExtValue()));
-        if (UserValueTypeEnum.MOBILE.eq(req.getValueType())) {
-            if (StringUtils.isEmpty(req.getUserValue())) {
+        if(UserValueTypeEnum.MOBILE.eq(req.getValueType())) {
+            if(StringUtils.isEmpty(req.getUserValue())) {
                 req.setUserExtValue("");
-            } else if (StringUtils.isEmpty(req.getUserExtValue())) {
+            } else if(StringUtils.isEmpty(req.getUserExtValue())) {
                 req.setUserExtValue(UserConstants.DEF_MOBILE_AREA_CODE);
             }
         }
@@ -70,23 +70,23 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
 
     private void checkParams(UserEditValueReq req) {
         UserValueTypeEnum valueType = req.getValueType();
-        if (valueType == null) { throw ZRBuilder.failureErr("未知用户值类型"); }
+        if(valueType == null) { throw ZRBuilder.failureErr("未知用户值类型"); }
         String userValue = req.getUserValue();
-        if (StringUtils.isEmpty(userValue)) { return; }
-        if (UserValueTypeEnum.MOBILE.eq(valueType)) {
-            if (!UserUtil.isMobile(userValue)) { throw ZRBuilder.failureErr("不合法手机号"); }
-        } else if (UserValueTypeEnum.EMAIL.eq(valueType)) {
-            if (!UserUtil.isEmail(userValue)) { throw ZRBuilder.failureErr("不合法邮箱"); }
+        if(StringUtils.isEmpty(userValue)) { return; }
+        if(UserValueTypeEnum.MOBILE.eq(valueType)) {
+            if(!UserUtil.isMobile(userValue)) { throw ZRBuilder.failureErr("不合法手机号"); }
+        } else if(UserValueTypeEnum.EMAIL.eq(valueType)) {
+            if(!UserUtil.isEmail(userValue)) { throw ZRBuilder.failureErr("不合法邮箱"); }
         }
     }
 
     private boolean needUpdate(UserDTO user, UserEditValueReq req) {
-        switch (req.getValueType()) {
+        switch(req.getValueType()) {
             case ACCOUNT_NAME:
                 return !StringUtils.equalsIgnoreCase(user.getUserAccountName(), req.getUserValue());
             case MOBILE:
-                return !StringUtils.equalsIgnoreCase(user.getUserMobile(), req.getUserValue())
-                        || !StringUtils.equalsIgnoreCase(user.getUserMobileAreaCode(), req.getUserExtValue());
+                return !StringUtils.equalsIgnoreCase(user.getUserMobile(), req.getUserValue()) || !StringUtils.equalsIgnoreCase(
+                        user.getUserMobileAreaCode(), req.getUserExtValue());
             case EMAIL:
                 return !StringUtils.equalsIgnoreCase(user.getUserEmail(), req.getUserValue());
             default:
@@ -98,17 +98,16 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
         UserDTO update = new UserDTO();
         update.setUserId(req.getUserId());
         UserValueTypeEnum valueType = req.getValueType();
-        if (UserValueTypeEnum.ACCOUNT_NAME.eq(valueType)) {
+        if(UserValueTypeEnum.ACCOUNT_NAME.eq(valueType)) {
             update.setUserAccountName(req.getUserValue());
-        } else if (UserValueTypeEnum.MOBILE.eq(valueType)) {
+        } else if(UserValueTypeEnum.MOBILE.eq(valueType)) {
             update.setUserMobile(req.getUserValue());
             update.setUserMobileAreaCode(req.getUserExtValue());
-        } else if (UserValueTypeEnum.EMAIL.eq(valueType)) {
+        } else if(UserValueTypeEnum.EMAIL.eq(valueType)) {
             update.setUserEmail(req.getUserValue());
         }
         userService.updateById(update);
-        return userValueService.addUserValue(true, req.getUserId(), req.getValueType(), req.getUserValue(),
-                req.getUserExtValue());
+        return userValueService.addUserValue(true, req.getUserId(), req.getValueType(), req.getUserValue(), req.getUserExtValue());
     }
 
     private void addLog(UserDTO user, UserEditValueReq req, UserValueDTO userValue) {
@@ -116,14 +115,14 @@ public class UserEditValueHelper implements BizVHandler<UserEditValueReq> {
         log.setUserId(user.getUserId());
         log.setUserName(user.getUserName());
         UserValueTypeEnum valueType = req.getValueType();
-        if (UserValueTypeEnum.ACCOUNT_NAME.eq(valueType)) {
+        if(UserValueTypeEnum.ACCOUNT_NAME.eq(valueType)) {
             log.setLogEvent(UserEventEnum.EDIT_ACCOUNT_NAME.getCode());
-        } else if (UserValueTypeEnum.MOBILE.eq(valueType)) {
+        } else if(UserValueTypeEnum.MOBILE.eq(valueType)) {
             log.setLogEvent(UserEventEnum.EDIT_MOBILE.getCode());
-        } else if (UserValueTypeEnum.EMAIL.eq(valueType)) {
+        } else if(UserValueTypeEnum.EMAIL.eq(valueType)) {
             log.setLogEvent(UserEventEnum.EDIT_EMAIL.getCode());
         }
-        if (userValue == null) {
+        if(userValue == null) {
             log.setLogRemark("设置成空");
         } else {
             log.setLogReferenceType(UacReferences.USER_VALUE.getCode());

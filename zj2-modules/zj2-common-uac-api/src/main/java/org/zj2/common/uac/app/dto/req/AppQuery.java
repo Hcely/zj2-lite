@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.zj2.lite.service.entity.request.PageRequest;
 
 /**
- *  AppQuery
+ * AppQuery
  *
  * @author peijie.ye
  * @date 2023/1/2 18:16

@@ -23,8 +23,8 @@ public class WXAppClient extends WXClient {
 
 
     public WXAccessTokenResp getAccessToken(String wxAppId, String wxAppSecret) {
-        ResponseEntity<WXAccessTokenResp> response = restTemplate.getForEntity(GET_ACCESS_TOKEN_URL,
-                WXAccessTokenResp.class, Map.of("grant_type", GRANT_TYPE, "appid", wxAppId, "secret", wxAppSecret));
+        ResponseEntity<WXAccessTokenResp> response = restTemplate.getForEntity(GET_ACCESS_TOKEN_URL, WXAccessTokenResp.class,
+                Map.of("grant_type", GRANT_TYPE, "appid", wxAppId, "secret", wxAppSecret));
         return response.getBody();
     }
 }

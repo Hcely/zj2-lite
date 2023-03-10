@@ -9,7 +9,7 @@ import org.zj2.common.sys.base.service.SysSequenceService;
 import org.zj2.lite.helper.handler.BizHandler;
 
 /**
- *  SequenceBakHandler
+ * SequenceBakHandler
  *
  * @author peijie.ye
  * @date 2022/12/11 23:57
@@ -22,7 +22,7 @@ public class SequenceBackNoHandler implements BizHandler<NumNextContext> {
     @Override
     public boolean handle(NumNextContext context) {
         String sequenceNo = sysSequenceService.getBackSequenceNo(context.getSequenceKey());
-        if (StringUtils.isNotEmpty(sequenceNo)) {
+        if(StringUtils.isNotEmpty(sequenceNo)) {
             context.setSequenceNo(new SequenceNo(context.getNumRuleCode(), context.getSequenceKey(), sequenceNo));
             return false;
         } else {

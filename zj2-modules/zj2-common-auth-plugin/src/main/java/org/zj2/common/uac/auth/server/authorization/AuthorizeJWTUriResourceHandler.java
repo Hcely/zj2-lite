@@ -25,7 +25,7 @@ import java.util.Map;
 public class AuthorizeJWTUriResourceHandler extends AuthAbstractHandler implements AuthAfterAuthenticatedHandler {
     @Override
     public boolean supports(RequestContext requestContext, AuthContext authContext, UriResource uriResource) {
-        if (authContext.getTokenType() != TokenType.JWT) { return false; }
+        if(authContext.getTokenType() != TokenType.JWT) { return false; }
         UriResource resource = authContext.getUriResource();
         return resource != null && resource.isRequiredUriAuthority();
     }
@@ -34,7 +34,7 @@ public class AuthorizeJWTUriResourceHandler extends AuthAbstractHandler implemen
     public void authorize(RequestContext requestContext, AuthContext authContext, UriResource uriResource) {
         String authority = getUriAuthority(requestContext, uriResource);
         final AuthoritySet authorities = getAuthoritySet(requestContext, authContext);
-        if (authorities.notContainsAuthority(authority)) {
+        if(authorities.notContainsAuthority(authority)) {
             throw AuthUtil.unAuthorityErr("权限不足");
         }
     }
@@ -42,10 +42,9 @@ public class AuthorizeJWTUriResourceHandler extends AuthAbstractHandler implemen
     private static String getUriAuthority(RequestContext requestContext, UriResource uriResource) {
         String uriAuthority = uriResource.getUriAuthority();
         Object request = requestContext.rawRequest();
-        if (request instanceof HttpServletRequest) {
-            Object pathParams = ((HttpServletRequest) request).getAttribute(
-                    HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-            if (pathParams instanceof Map && CollUtil.isNotEmpty((Map<?, ?>) pathParams)) {
+        if(request instanceof HttpServletRequest) {
+            Object pathParams = ((HttpServletRequest)request).getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+            if(pathParams instanceof Map && CollUtil.isNotEmpty((Map<?, ?>)pathParams)) {
                 return StrUtil.formatObj(uriAuthority, pathParams);
             }
         }

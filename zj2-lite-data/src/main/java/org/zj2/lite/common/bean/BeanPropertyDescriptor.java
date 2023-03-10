@@ -22,9 +22,9 @@ public class BeanPropertyDescriptor {
         this.propertyField = propertyField;
         this.simplePropertyType = BeanUtils.isSimpleValueType(propertyType());
         this.annotationCaches = new Object[ANNO_CACHE_SIZE];
-        if (propertyField != null) { propertyField.trySetAccessible(); }
-        if (propertyDescriptor.getReadMethod() != null) { propertyDescriptor.getReadMethod().trySetAccessible(); }
-        if (propertyDescriptor.getWriteMethod() != null) { propertyDescriptor.getWriteMethod().trySetAccessible(); }
+        if(propertyField != null) { propertyField.trySetAccessible(); }
+        if(propertyDescriptor.getReadMethod() != null) { propertyDescriptor.getReadMethod().trySetAccessible(); }
+        if(propertyDescriptor.getWriteMethod() != null) { propertyDescriptor.getWriteMethod().trySetAccessible(); }
     }
 
     public boolean isSimplePropertyType() {
@@ -58,10 +58,10 @@ public class BeanPropertyDescriptor {
 
     public Type propertyGenericType() {
         Field field = propertyField();
-        if (field != null) { return field.getGenericType(); }
+        if(field != null) { return field.getGenericType(); }
         Method method = propertyDescriptor.getReadMethod();
-        if (method != null) { return method.getGenericReturnType(); }
-        if ((method = propertyDescriptor.getWriteMethod()) != null) { return method.getGenericParameterTypes()[0]; }
+        if(method != null) { return method.getGenericReturnType(); }
+        if((method = propertyDescriptor.getWriteMethod()) != null) { return method.getGenericParameterTypes()[0]; }
         return null;
     }
 
@@ -73,17 +73,17 @@ public class BeanPropertyDescriptor {
         final int idx = getCacheIdx(annotationType);
         final Object[] caches = annotationCaches;
         final Object cache = caches[idx];
-        if (annotationType == cache) { return null; }
-        if (cache != null && cache.getClass() == annotationType) { return (T) cache; }
+        if(annotationType == cache) { return null; }
+        if(cache != null && cache.getClass() == annotationType) { return (T)cache; }
         //
         T annotation;
-        if ((annotation = annotationFromReadMethod(annotationType)) != null) {
+        if((annotation = annotationFromReadMethod(annotationType)) != null) {
             caches[idx] = annotation;
             return annotation;
-        } else if ((annotation = annotationFromWriteMethod(annotationType)) != null) {
+        } else if((annotation = annotationFromWriteMethod(annotationType)) != null) {
             caches[idx] = annotation;
             return annotation;
-        } else if ((annotation = annotationFromField(annotationType)) != null) {
+        } else if((annotation = annotationFromField(annotationType)) != null) {
             caches[idx] = annotation;
             return annotation;
         } else {
@@ -111,82 +111,82 @@ public class BeanPropertyDescriptor {
     }
 
     public Object read(Object bean) {
-        if (bean == null) { return null; }
+        if(bean == null) { return null; }
         try {
             Method readMethod = propertyDescriptor.getReadMethod();
-            if (readMethod != null) { return readMethod.invoke(bean); }
+            if(readMethod != null) { return readMethod.invoke(bean); }
             Field field = propertyField();
-            if (field != null) { return field.get(bean); }
-        } catch (Throwable ignored) {
+            if(field != null) { return field.get(bean); }
+        } catch(Throwable ignored) {
         }
         return null;
     }
 
     public boolean write(Object bean, Object value) {
-        if (bean == null) { return false; }
-        if (!ClassUtils.isAssignableValue(propertyType(), value)) { return false; }
+        if(bean == null) { return false; }
+        if(!ClassUtils.isAssignableValue(propertyType(), value)) { return false; }
         try {
             Method writeMethod = propertyDescriptor.getWriteMethod();
-            if (writeMethod != null) {
+            if(writeMethod != null) {
                 writeMethod.invoke(bean, value);
                 return true;
             } else {
                 Field field = propertyField();
-                if (field != null) {
+                if(field != null) {
                     field.set(bean, value);
                     return true;
                 }
             }
-        } catch (Throwable ignored) {
+        } catch(Throwable ignored) {
         }
         return false;
     }
 
     public Object readByMethod(Object bean) {
-        if (bean == null) { return null; }
+        if(bean == null) { return null; }
         Method readMethod = propertyDescriptor.getReadMethod();
-        if (readMethod != null) {
+        if(readMethod != null) {
             try {
                 return readMethod.invoke(bean);
-            } catch (Throwable ignored) {
+            } catch(Throwable ignored) {
             }
         }
         return null;
     }
 
     public boolean writeByMethod(Object bean, Object value) {
-        if (bean == null) { return false; }
+        if(bean == null) { return false; }
         Method writeMethod = propertyDescriptor.getWriteMethod();
-        if (writeMethod != null && ClassUtils.isAssignableValue(writeMethod.getParameterTypes()[0], value)) {
+        if(writeMethod != null && ClassUtils.isAssignableValue(writeMethod.getParameterTypes()[0], value)) {
             try {
                 writeMethod.invoke(bean, value);
                 return true;
-            } catch (Throwable ignored) {
+            } catch(Throwable ignored) {
             }
         }
         return false;
     }
 
     public Object readByField(Object bean) {
-        if (bean == null) { return null; }
+        if(bean == null) { return null; }
         Field field = propertyField();
-        if (field != null) {
+        if(field != null) {
             try {
                 return field.get(bean);
-            } catch (Throwable ignored) {
+            } catch(Throwable ignored) {
             }
         }
         return null;
     }
 
     public boolean writeByField(Object bean, Object value) {
-        if (bean == null) { return false; }
+        if(bean == null) { return false; }
         Field field = propertyField();
-        if (field != null && ClassUtils.isAssignableValue(field.getType(), value)) {
+        if(field != null && ClassUtils.isAssignableValue(field.getType(), value)) {
             try {
                 field.set(bean, value);
                 return true;
-            } catch (Throwable ignored) {
+            } catch(Throwable ignored) {
             }
         }
         return false;

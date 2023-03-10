@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.zj2.lite.service.auth.AuthorityResource;
 
 /**
- *  AppUserPlusDTO
+ * AppUserPlusDTO
  *
  * @author peijie.ye
  * @date 2023/1/7 12:48

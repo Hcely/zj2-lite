@@ -13,7 +13,7 @@ import org.zj2.lite.helper.handler.BizVHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  AuthAppUserCheckHandler
+ * AuthAppUserCheckHandler
  *
  * @author peijie.ye
  * @date 2022/12/3 7:59
@@ -33,9 +33,9 @@ public class AuthAppUserCheckStatusHandler implements Supportable<AuthContext>, 
         AppDTO app = context.getApp();
         UserDTO user = context.getUser();
         AppUserDTO appUser = appUserService.getAppUser(app.getAppCode(), user.getUserId());
-        if (appUser == null) {
-            if (BooleanUtil.isFalse(app.getAllowAllUser())) { throw ZRBuilder.failureErr("应用账号无法使用"); }
-        } else if (BooleanUtil.isFalse(appUser.getEnableFlag())) {
+        if(appUser == null) {
+            if(BooleanUtil.isFalse(app.getAllowAllUser())) { throw ZRBuilder.failureErr("应用账号无法使用"); }
+        } else if(BooleanUtil.isFalse(appUser.getEnableFlag())) {
             throw ZRBuilder.failureErr("应用账号无法使用");
         }
     }

@@ -11,6 +11,6 @@ import lombok.SneakyThrows;
 public abstract class ZContext implements Cloneable {
     @SneakyThrows
     protected ZContext copy() {
-        return (ZContext) clone();
+        return (ZContext)clone();
     }
 }

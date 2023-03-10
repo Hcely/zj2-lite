@@ -30,7 +30,7 @@ public class CacheUtil {
     //    }
 
     public static void sendCacheSign(String fullKey) {
-        if (StringUtils.isNotEmpty(fullKey)) { sendCacheSign0(fullKey); }
+        if(StringUtils.isNotEmpty(fullKey)) { sendCacheSign0(fullKey); }
     }
 
     private static void sendCacheSign0(String fullKey) {
@@ -38,7 +38,7 @@ public class CacheUtil {
     }
 
     public static void clearLocalCaches() {
-        for (LocalCacheHelper helper : CACHE_HELPERS) { helper.clear(); }
+        for(LocalCacheHelper helper : CACHE_HELPERS) { helper.clear(); }
     }
 
     public static CacheHelper createLocal() {
@@ -74,7 +74,7 @@ public class CacheUtil {
     public static CacheHelper createMultiLevel(CacheHelper... cacheHelpers) {
         int idx = cacheHelpers.length - 1;
         CacheHelper helper = cacheHelpers[idx];
-        for (--idx; idx > -1; --idx) { helper = new CacheHelperLink(cacheHelpers[idx], helper); }
+        for(--idx; idx > -1; --idx) { helper = new CacheHelperLink(cacheHelpers[idx], helper); }
         return helper;
     }
 
@@ -83,16 +83,16 @@ public class CacheUtil {
         StringBuilder sb = new StringBuilder(length);
         appendClassIdentifyName(sb, type);
         sb.append(':' );
-        if (StringUtils.isNotEmpty(key)) { sb.append(key); }
+        if(StringUtils.isNotEmpty(key)) { sb.append(key); }
         return sb.toString();
     }
 
     public static String getFullKey(String prefix, String key) {
         int length = StringUtils.length(prefix) + StringUtils.length(key) + 1;
         StringBuilder sb = new StringBuilder(length);
-        if (StringUtils.isNotEmpty(prefix)) { sb.append(prefix); }
+        if(StringUtils.isNotEmpty(prefix)) { sb.append(prefix); }
         sb.append(':' );
-        if (StringUtils.isNotEmpty(key)) { sb.append(key); }
+        if(StringUtils.isNotEmpty(key)) { sb.append(key); }
         return sb.toString();
     }
 

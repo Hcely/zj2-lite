@@ -40,7 +40,7 @@ public class Aes128Crypto extends AesCrypto {
 
     protected static String getTransformation(AesMode aesMode, CryptPadding padding) {
         StringBuilder sb = new StringBuilder(24).append("AES/").append(aesMode).append('/' );
-        if (padding == CryptPadding.PKCSPadding) {
+        if(padding == CryptPadding.PKCSPadding) {
             sb.append("PKCS5Padding");
         } else {
             sb.append("NoPadding");
@@ -72,13 +72,13 @@ public class Aes128Crypto extends AesCrypto {
 
     @SneakyThrows
     protected int doCrypt(Cipher cipher, byte[] src, int srcOff, int srcLen, byte[] dst, int dstOff) {
-        if (srcLen == 0) { return 0; }
+        if(srcLen == 0) { return 0; }
         return cipher.doFinal(src, srcOff, srcLen, dst, dstOff);
     }
 
     @SneakyThrows
     protected byte[] doCrypt(Cipher cipher, byte[] value, int offset, int length) {
-        if (length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
+        if(length == 0) { return ArrayUtils.EMPTY_BYTE_ARRAY; }
         return cipher.doFinal(value, offset, length);
     }
 }

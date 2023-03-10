@@ -55,7 +55,7 @@ class RequestLogContext extends ZContext {
 
 
     public boolean request() {
-        if (logState == STATE_INITIALIZED) {
+        if(logState == STATE_INITIALIZED) {
             logState = STATE_REQUEST;
             executed = true;
             executeStartTime = System.currentTimeMillis();

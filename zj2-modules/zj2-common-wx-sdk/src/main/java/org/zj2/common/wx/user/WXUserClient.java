@@ -1,11 +1,9 @@
 package org.zj2.common.wx.user;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.zj2.common.wx.WXClient;
 import org.zj2.common.wx.app.WXApp;
 import org.zj2.common.wx.app.WXAppManager;
-import org.zj2.common.wx.app.resp.WXAccessTokenResp;
 import org.zj2.common.wx.user.resp.WXUserInfoResp;
 import org.zj2.common.wx.user.resp.WXUserOAuthResp;
 import org.zj2.lite.util.ZRBuilder;
@@ -28,10 +26,9 @@ public class WXUserClient extends WXClient {
 
     public WXUserOAuthResp oauth(String appid, String code) {
         WXApp app = WXAppManager.getApp(appid);
-        if (app == null) { throw ZRBuilder.failureErr("缺失WX app"); }
+        if(app == null) { throw ZRBuilder.failureErr("缺失WX app"); }
         return doGet(WXUserOAuthResp.class, SNS_OAUTH_URL,
-                Map.of("appid", appid, "secret", app.getWxAppSecret(), "code", code, "grant_type",
-                        "authorization_code"));
+                Map.of("appid", appid, "secret", app.getWxAppSecret(), "code", code, "grant_type", "authorization_code"));
     }
 
     public WXUserInfoResp userInfo(String openid, String userAccessToken) {
@@ -39,7 +36,6 @@ public class WXUserClient extends WXClient {
     }
 
     public WXUserInfoResp userInfo(String openid, String userAccessToken, String lang) {
-        return doGet(WXUserInfoResp.class, SNS_USER_INFO,
-                Map.of("openid", openid, "access_token", userAccessToken, "lang", lang));
+        return doGet(WXUserInfoResp.class, SNS_USER_INFO, Map.of("openid", openid, "access_token", userAccessToken, "lang", lang));
     }
 }

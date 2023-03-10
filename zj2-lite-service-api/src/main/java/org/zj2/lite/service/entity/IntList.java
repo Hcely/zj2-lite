@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- *  StrList
+ * StrList
  *
  * @author peijie.ye
  * @date 2022/12/23 9:52

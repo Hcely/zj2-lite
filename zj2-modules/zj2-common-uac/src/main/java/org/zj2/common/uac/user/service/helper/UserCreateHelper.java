@@ -20,7 +20,7 @@ import org.zj2.lite.helper.handler.BizRespHandler;
 import org.zj2.lite.util.ZRBuilder;
 
 /**
- *  UserCreateHelper
+ * UserCreateHelper
  *
  * @author peijie.ye
  * @date 2022/12/1 9:53
@@ -60,7 +60,7 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
         user.setUserMobileAreaCode(StringUtils.trimToEmpty(user.getUserMobileAreaCode()));
         user.setUserEmail(StringUtils.trimToEmpty(user.getUserEmail()));
         user.setUserName(StringUtils.trimToEmpty(user.getUserName()));
-        if (StringUtils.isNotEmpty(user.getUserMobile()) && StringUtils.isEmpty(user.getUserMobileAreaCode())) {
+        if(StringUtils.isNotEmpty(user.getUserMobile()) && StringUtils.isEmpty(user.getUserMobileAreaCode())) {
             user.setUserMobileAreaCode(UserConstants.DEF_MOBILE_AREA_CODE);
         }
         user.setUserPassword(UserUtil.buildPassword(user.getUserPassword()));
@@ -70,34 +70,34 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
 
     private void checkAccountName(UserDTO user) {
         String accountName = user.getUserAccountName();
-        if (StringUtils.isEmpty(accountName)) { return; }
-        if (!UserUtil.isAccountName(accountName)) {
+        if(StringUtils.isEmpty(accountName)) { return; }
+        if(!UserUtil.isAccountName(accountName)) {
             throw ZRBuilder.failureErr("用户名不合法");
         }
-        if (StringUtils.equalsIgnoreCase(accountName, user.getUserMobile())) {
+        if(StringUtils.equalsIgnoreCase(accountName, user.getUserMobile())) {
             throw ZRBuilder.failureErr("用户名不能与手机号相同");
         }
-        if (StringUtils.equalsIgnoreCase(accountName, user.getUserEmail())) {
+        if(StringUtils.equalsIgnoreCase(accountName, user.getUserEmail())) {
             throw ZRBuilder.failureErr("用户名不能与邮箱相同");
         }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.ACCOUNT_NAME, accountName);
-        if (exist) { throw ZRBuilder.failureErr("用户名已存在"); }
+        if(exist) { throw ZRBuilder.failureErr("用户名已存在"); }
     }
 
     private void checkUserMobile(UserDTO user) {
         String mobile = user.getUserMobile();
-        if (StringUtils.isEmpty(mobile)) { return; }
-        if (!UserUtil.isMobile(mobile)) { throw ZRBuilder.failureErr("手机号不合法"); }
+        if(StringUtils.isEmpty(mobile)) { return; }
+        if(!UserUtil.isMobile(mobile)) { throw ZRBuilder.failureErr("手机号不合法"); }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.MOBILE, mobile, user.getUserMobileAreaCode());
-        if (exist) { throw ZRBuilder.failureErr("手机号已存在"); }
+        if(exist) { throw ZRBuilder.failureErr("手机号已存在"); }
     }
 
     private void checkUserEmail(UserDTO user) {
         String email = user.getUserEmail();
-        if (StringUtils.isEmpty(email)) { return; }
-        if (!UserUtil.isEmail(email)) { throw ZRBuilder.failureErr("邮箱不合法"); }
+        if(StringUtils.isEmpty(email)) { return; }
+        if(!UserUtil.isEmail(email)) { throw ZRBuilder.failureErr("邮箱不合法"); }
         boolean exist = userValueService.existUserValue(UserValueTypeEnum.EMAIL, email);
-        if (exist) { throw ZRBuilder.failureErr("邮箱已存在"); }
+        if(exist) { throw ZRBuilder.failureErr("邮箱已存在"); }
     }
 
 
@@ -105,18 +105,16 @@ public class UserCreateHelper implements BizRespHandler<UserCreateReq, UserDTO> 
         userService.add(user);
         String userId = user.getUserId();
         //
-        if (StringUtils.isNotEmpty(user.getUserAccountName())) {
-            userValueService.addUserValue(false, userId, UserValueTypeEnum.ACCOUNT_NAME, user.getUserAccountName(),
-                    null);
+        if(StringUtils.isNotEmpty(user.getUserAccountName())) {
+            userValueService.addUserValue(false, userId, UserValueTypeEnum.ACCOUNT_NAME, user.getUserAccountName(), null);
         }
-        if (StringUtils.isNotEmpty(user.getUserMobile())) {
-            userValueService.addUserValue(false, userId, UserValueTypeEnum.MOBILE, user.getUserMobile(),
-                    user.getUserMobileAreaCode());
+        if(StringUtils.isNotEmpty(user.getUserMobile())) {
+            userValueService.addUserValue(false, userId, UserValueTypeEnum.MOBILE, user.getUserMobile(), user.getUserMobileAreaCode());
         }
-        if (StringUtils.isNotEmpty(user.getUserEmail())) {
+        if(StringUtils.isNotEmpty(user.getUserEmail())) {
             userValueService.addUserValue(false, userId, UserValueTypeEnum.EMAIL, user.getUserEmail(), null);
         }
-        if (StringUtils.isNotEmpty(user.getUserPassword())) {
+        if(StringUtils.isNotEmpty(user.getUserPassword())) {
             userPasswordService.addPassword(false, userId, user.getUserPassword());
         }
     }

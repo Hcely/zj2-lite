@@ -8,7 +8,7 @@ import org.zj2.lite.util.CryptUtil;
 import javax.annotation.PostConstruct;
 
 /**
- *  ZJCryptConfiguration
+ * ZJCryptConfiguration
  *
  * @author peijie.ye
  * @date 2022/12/21 16:08
@@ -20,6 +20,6 @@ public class ZJCryptConfiguration {
 
     @PostConstruct
     public void init() {
-        if (StringUtils.isNotEmpty(cryptSecret)) { CryptUtil.setDefCryptProvider(cryptSecret); }
+        if(StringUtils.isNotEmpty(cryptSecret)) { CryptUtil.setDefCryptProvider(cryptSecret); }
     }
 }

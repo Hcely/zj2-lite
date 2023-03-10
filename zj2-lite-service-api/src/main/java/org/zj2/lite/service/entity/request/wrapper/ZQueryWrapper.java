@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- *  Condition
+ * Condition
  *
  * @author peijie.ye
  * @date 2022/11/25 11:29
@@ -40,16 +40,16 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     boolean forUpdate = false;
 
     public ZQueryWrapper<T> select(PropGetter<T, ?> prop) {
-        if (prop == null) { return this; }
+        if(prop == null) { return this; }
         String fieldName = getFieldName(prop);
-        if (selectProps == null) { selectProps = new LinkedHashSet<>(); }
+        if(selectProps == null) { selectProps = new LinkedHashSet<>(); }
         selectProps.add(fieldName);
         return this;
     }
 
     public ZQueryWrapper<T> select(PropGetter<T, ?>... props) {
-        if (props != null && props.length > 0) {
-            for (PropGetter<T, ?> prop : props) {
+        if(props != null && props.length > 0) {
+            for(PropGetter<T, ?> prop : props) {
                 select(prop);
             }
         }
@@ -77,7 +77,7 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     }
 
     public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropGetter<T, ?>... props) {
-        if (!b) { return this; }
+        if(!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.toList(props, AbstractWrapper::getFieldName);
         return this;
@@ -104,7 +104,7 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     }
 
     public ZQueryWrapper<T> orderBy(boolean b, boolean asc, PropGetter<T, ?> prop) {
-        if (!b) { return this; }
+        if(!b) { return this; }
         this.sortAsc = asc;
         this.sorts = CollUtil.singletonList(getFieldName(prop));
         return this;
@@ -116,14 +116,14 @@ public class ZQueryWrapper<T> extends AbstractWrapper<T, ZQueryWrapper<T>> {
     }
 
     public ZQueryWrapper<T> limitPage(PageRequest request) {
-        if (request != null) {
+        if(request != null) {
             limitPage(request.getPageNumber(), request.getPageSize());
         }
         return this;
     }
 
     public ZQueryWrapper<T> limitPage(Integer pageNumber, Integer pageSize) {
-        if (pageSize == null || pageSize < 1) {
+        if(pageSize == null || pageSize < 1) {
             return limit(0, -1);
         } else {
             int num = pageNumber == null || pageNumber < 1 ? 1 : pageNumber;

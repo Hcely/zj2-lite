@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 /**
- *
  * <br>CreateDate 三月 25,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("all")
 public abstract class AbsStateSession<M extends SessionManager> implements Session<M> {
-    private static final AtomicIntegerFieldUpdater<AbsStateSession> STATUS_UPDATER = AtomicIntegerFieldUpdater.newUpdater(
-            AbsStateSession.class, "state");
+    private static final AtomicIntegerFieldUpdater<AbsStateSession> STATUS_UPDATER = AtomicIntegerFieldUpdater.newUpdater(AbsStateSession.class,
+            "state");
     private static final int INIT = 0;
     private static final int STARTING = 1;
     private static final int STARTED = 2;
@@ -45,17 +45,17 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public void start() {
-        if (casStatus(INIT, STARTING)) {
+        if(casStatus(INIT, STARTING)) {
             lock = sessionManager.getLock(this);
-            if (lock == null) { lock = SessionLock.EMPTY_LOCK; }
+            if(lock == null) { lock = SessionLock.EMPTY_LOCK; }
             boolean b;
             try {
                 b = lock.lock();
-            } catch (Throwable e) {
+            } catch(Throwable e) {
                 casStatus(STARTING, ERROR);
                 throw ZRBuilder.builder().msg("session启动失败").buildError(e);
             }
-            if (b) {
+            if(b) {
                 casStatus(STARTING, STARTED);
                 onStarted();
             } else {
@@ -67,11 +67,11 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public SessionResult submit() {
-        if (casStatus(STARTED, FINISHED)) {
+        if(casStatus(STARTED, FINISHED)) {
             try {
                 return onSubmitted();
             } finally {
-                if (lock != null) { lock.unlock(); }
+                if(lock != null) { lock.unlock(); }
             }
         } else {
             return null;
@@ -80,11 +80,11 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public void close() {
-        if (casStatus(STARTED, CLOSED)) {
+        if(casStatus(STARTED, CLOSED)) {
             try {
                 onClosed();
             } finally {
-                if (lock != null) { lock.unlock(); }
+                if(lock != null) { lock.unlock(); }
             }
         }
     }
@@ -96,7 +96,7 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public void addSessionLog(SessionLog log) {
-        if (sessionLogs == null) { sessionLogs = new LinkedHashMap<>(); }
+        if(sessionLogs == null) { sessionLogs = new LinkedHashMap<>(); }
         sessionLogs.compute(log.logKey(), (key, l) -> l == null ? log : l.addModify(log));
     }
 
@@ -107,14 +107,14 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public List historyLogs() {
-        if (historyLogs == null) {
+        if(historyLogs == null) {
             historyLogs = sessionManager.getHistoryLogs(this);
         }
         return historyLogs;
     }
 
     protected final void checkStatus() {
-        if (state != STARTED) { throw ZRBuilder.builder().msg("session未启动!").buildError(); }
+        if(state != STARTED) { throw ZRBuilder.builder().msg("session未启动!").buildError(); }
     }
 
     private boolean casStatus(int oldValue, int newValue) {
@@ -133,9 +133,9 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public <T> T attr(String key) {
-        if (attrs != null && StringUtils.isNotEmpty(key)) {
-            for (SessionAttr e : attrs) {
-                if (key.equals(e.getKey())) { return (T) e.getValue(); }
+        if(attrs != null && StringUtils.isNotEmpty(key)) {
+            for(SessionAttr e : attrs) {
+                if(key.equals(e.getKey())) { return (T)e.getValue(); }
             }
         }
         return null;
@@ -143,20 +143,20 @@ public abstract class AbsStateSession<M extends SessionManager> implements Sessi
 
     @Override
     public Object attr(String key, Object value) {
-        if (StringUtils.isEmpty(key)) {
+        if(StringUtils.isEmpty(key)) {
             return null;
-        } else if (attrs == null) {
-            if (value != null) {
+        } else if(attrs == null) {
+            if(value != null) {
                 attrs = new ArrayList<>(5);
                 attrs.add(new SessionAttr(key, value));
             }
             return null;
         } else {
-            for (Iterator<SessionAttr> it = attrs.iterator(); it.hasNext(); ) {
+            for(Iterator<SessionAttr> it = attrs.iterator(); it.hasNext(); ) {
                 Map.Entry<String, Object> e = it.next();
-                if (key.equals(e.getKey())) {
+                if(key.equals(e.getKey())) {
                     Object tmp = e.getValue();
-                    if (value == null) { it.remove(); } else { e.setValue(value); }
+                    if(value == null) { it.remove(); } else { e.setValue(value); }
                     return tmp;
                 }
             }

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *  UserLogQuery
+ * UserLogQuery
  *
  * @author peijie.ye
  * @date 2023/1/2 18:21

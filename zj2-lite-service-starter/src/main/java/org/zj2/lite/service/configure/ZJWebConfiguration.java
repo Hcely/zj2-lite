@@ -2,7 +2,6 @@ package org.zj2.lite.service.configure;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,7 @@ public class ZJWebConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         ZJ2WebProperties webProperties = properties.getWeb();
-        if (StringUtils.isNotEmpty(webProperties.getIndex())) {
+        if(StringUtils.isNotEmpty(webProperties.getIndex())) {
             registry.addResourceHandler("/", "/index.html").addResourceLocations(webProperties.getIndex());
         }
     }
@@ -44,11 +43,11 @@ public class ZJWebConfiguration implements WebMvcConfigurer {
     }
 
     private String[] buildParams(String value) {
-        if (StringUtils.isEmpty(value) || StringUtils.equals("*", value)) {
+        if(StringUtils.isEmpty(value) || StringUtils.equals("*", value)) {
             return new String[]{"*"};
         } else {
-            String[] values = StringUtils.split(value, ',');
-            for (int i = 0, len = values.length; i < len; ++i) {
+            String[] values = StringUtils.split(value, ',' );
+            for(int i = 0, len = values.length; i < len; ++i) {
                 values[i] = StringUtils.trimToEmpty(values[i]);
             }
             return values;

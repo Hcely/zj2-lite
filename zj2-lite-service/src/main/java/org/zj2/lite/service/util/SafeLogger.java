@@ -5,7 +5,7 @@ import org.slf4j.Marker;
 import org.springframework.beans.BeanUtils;
 
 /**
- *  SaleLog
+ * SaleLog
  *
  * @author peijie.ye
  * @date 2022/12/2 17:18
@@ -323,13 +323,13 @@ class SafeLogger implements Logger {
     }
 
     private static Object safeObject(Object obj) {
-        if (obj == null) { return null; }
+        if(obj == null) { return null; }
         return BeanUtils.isSimpleValueType(obj.getClass()) ? obj : SafeLogUtil.toJSONStr(obj);
     }
 
     private static Object[] safeObjects(Object[] objs) {
-        if (objs == null || objs.length == 0) { return objs; }
-        for (int i = 0, len = objs.length; i < len; ++i) {
+        if(objs == null || objs.length == 0) { return objs; }
+        for(int i = 0, len = objs.length; i < len; ++i) {
             objs[i] = safeObject(objs[i]);
         }
         return objs;

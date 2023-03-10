@@ -15,9 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 import org.zj2.lite.common.annotation.CryptProperty;
 import org.zj2.lite.common.bean.BeanPropertyContext;
-import org.zj2.lite.common.bean.BeanPropertyScanHandler;
 import org.zj2.lite.common.bean.BeanSimplePropertyScanHandler;
-import org.zj2.lite.common.bean.PropScanMode;
 import org.zj2.lite.common.util.PropertyUtil;
 import org.zj2.lite.util.CryptUtil;
 
@@ -30,10 +28,9 @@ import org.zj2.lite.util.CryptUtil;
 @Component
 @Intercepts({//
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
-        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-                RowBounds.class, ResultHandler.class}),
-        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-                RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})})
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class,
+                CacheKey.class, BoundSql.class})})
 public class MybatisCryptInterceptor implements Interceptor {
     private static final PropertyCryptHandler ENCRYPT_HANDLER = new PropertyCryptHandler(true);
     private static final PropertyCryptHandler DECRYPT_HANDLER = new PropertyCryptHandler(false);
@@ -42,7 +39,7 @@ public class MybatisCryptInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
         boolean isUpdate = args.length == 2;
-        if (isUpdate) {
+        if(isUpdate) {
             Object value = invocation.getArgs()[1];
             PropertyUtil.scanSimpleProperties(value, ENCRYPT_HANDLER);
             try {
@@ -59,7 +56,7 @@ public class MybatisCryptInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object target) {
-        if (target instanceof Executor || target instanceof StatementHandler) {
+        if(target instanceof Executor || target instanceof StatementHandler) {
             return Plugin.wrap(target, this);
         }
         return target;
@@ -75,7 +72,7 @@ public class MybatisCryptInterceptor implements Interceptor {
         @Override
         public void handle(BeanPropertyContext context) {
             Object propValue = context.propertyValue();
-            if (propValue instanceof String && context.propertyAnnotation(CryptProperty.class) != null) {
+            if(propValue instanceof String && context.propertyAnnotation(CryptProperty.class) != null) {
                 context.propertyValue(CryptUtil.crypt(isEncrypt, propValue.toString()));
             }
         }

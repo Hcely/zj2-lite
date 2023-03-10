@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *  Condition
+ * Condition
  *
  * @author peijie.ye
  * @date 2022/11/25 11:29
@@ -39,15 +39,15 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
 
     public W ignoreEmpty(boolean ignoreEmpty) {
         this.ignoreEmpty = ignoreEmpty;
-        return (W) this;
+        return (W)this;
     }
 
     protected boolean allowCondition(Object v) {
-        if (ignoreEmpty) {
-            if (v == null) { return false; }
-            if (v instanceof CharSequence) { return ((CharSequence) v).length() > 0; }
-            if (v instanceof Collection) { return !((Collection<?>) v).isEmpty(); }
-            if (v.getClass().isArray()) { return Array.getLength(v) > 0; }
+        if(ignoreEmpty) {
+            if(v == null) { return false; }
+            if(v instanceof CharSequence) { return ((CharSequence)v).length() > 0; }
+            if(v instanceof Collection) { return !((Collection<?>)v).isEmpty(); }
+            if(v.getClass().isArray()) { return Array.getLength(v) > 0; }
         }
         return true;
     }
@@ -196,26 +196,25 @@ public abstract class AbstractWrapper<T, W extends AbstractWrapper> implements S
         return addCondition(b, prop, WhereMode.NOT_BETWEEN, value1, value2, null);
     }
 
-    protected final W addCondition(boolean b, PropGetter<T, ?> prop, WhereMode mode, Object value1, Object value2,
-            Collection<Object> values) {
-        if (!b) { return (W) this; }
+    protected final W addCondition(boolean b, PropGetter<T, ?> prop, WhereMode mode, Object value1, Object value2, Collection<Object> values) {
+        if(!b) { return (W)this; }
         String name = getFieldName(prop);
-        if (conditions == null) { conditions = new ArrayList<>(); }
-        if (CollUtil.getFirst(values) instanceof CodeEnum) {
+        if(conditions == null) { conditions = new ArrayList<>(); }
+        if(CollUtil.getFirst(values) instanceof CodeEnum) {
             values = CollUtil.toList(values, AbstractWrapper::convertVal);
         }
         conditions.add(new PropCondition(name, mode, convertVal(value1), convertVal(value2), values));
-        return (W) this;
+        return (W)this;
     }
 
 
     protected static String getFieldName(PropGetter<?, ?> prop) {
         String fieldName = PropertyUtil.getLambdaFieldName(prop);
-        if (StringUtils.isEmpty(fieldName)) { throw new ZError("无法找到参数名称"); }
+        if(StringUtils.isEmpty(fieldName)) { throw new ZError("无法找到参数名称"); }
         return fieldName;
     }
 
     private static Object convertVal(Object v) {
-        return v instanceof CodeEnum ? ((CodeEnum<?>) v).getCode() : v;
+        return v instanceof CodeEnum ? ((CodeEnum<?>)v).getCode() : v;
     }
 }

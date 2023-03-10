@@ -4,7 +4,7 @@ import org.zj2.common.sys.base.dto.SysConfigDTO;
 import org.zj2.lite.service.ApiReference;
 
 /**
- *  SysConfigApi
+ * SysConfigApi
  *
  * @author peijie.ye
  * @date 2022/12/10 2:23

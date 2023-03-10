@@ -11,12 +11,11 @@ import org.springframework.http.client.ClientHttpRequestInitializer;
  * @author peijie.ye
  * @date 2022/12/9 1:57
  */
-public class RestTemplateRequestContextInitializer extends AbsClientRequestSignInterceptor<HttpRequest>
-        implements ClientHttpRequestInitializer {
+public class RestTemplateRequestContextInitializer extends AbsClientRequestSignInterceptor<HttpRequest> implements ClientHttpRequestInitializer {
 
     @Override
     protected void setValue(HttpRequest request, String key, String value) {
-        if (StringUtils.isNotEmpty(value)) {
+        if(StringUtils.isNotEmpty(value)) {
             request.getHeaders().add(key, value);
         }
     }

@@ -20,12 +20,12 @@ public class EmailValueHider implements PropertyValueHider {
 
     @Override
     public String hide(String value) {
-        int idx = StringUtils.indexOf(value, '@');
-        if (idx == -1) { return STAR_4_STR; }
+        int idx = StringUtils.indexOf(value, '@' );
+        if(idx == -1) { return STAR_4_STR; }
         int valueLen = StringUtils.length(value);
         int nameLen = idx + 1;
         StringBuilder sb = new StringBuilder(64);
-        if (nameLen <= 4) {
+        if(nameLen <= 4) {
             sb.append(STAR_4_STR).append(value, idx, valueLen);
         } else {
             sb.append(value, 0, Math.min(3, nameLen - 4)).append(STAR_4_STR).append(value, idx, valueLen);

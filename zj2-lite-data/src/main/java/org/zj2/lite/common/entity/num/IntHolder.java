@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zj2.lite.common.util.NumUtil;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
 
 /**
  * IntHolder
@@ -37,8 +34,8 @@ public class IntHolder extends Number {
     }
 
     public IntHolder add(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.add(this.value, v, context).intValue();
         }
         return this;
@@ -54,8 +51,8 @@ public class IntHolder extends Number {
     }
 
     public IntHolder sub(Number v, MathContext context) {
-        if (v != null) {
-            if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v != null) {
+            if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
             this.value = NumUtil.sub(this.value, v, context).intValue();
         }
         return this;
@@ -71,7 +68,7 @@ public class IntHolder extends Number {
     }
 
     public IntHolder multi(Number v, MathContext context) {
-        if (v instanceof NumHolder) { v = ((NumHolder) v).value; }
+        if(v instanceof NumHolder) { v = ((NumHolder)v).value; }
         this.value = NumUtil.multi(this.value, v, context).intValue();
         return this;
     }
@@ -86,7 +83,7 @@ public class IntHolder extends Number {
     }
 
     public IntHolder divide(Number value, MathContext context) {
-        if (value instanceof NumHolder) { value = ((NumHolder) value).value; }
+        if(value instanceof NumHolder) { value = ((NumHolder)value).value; }
         Number v = NumUtil.divide(this.value, value, context);
         this.value = v == null ? 0 : v.intValue();
         return this;

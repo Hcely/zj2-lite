@@ -30,10 +30,10 @@ public class DataOffsetReader<I extends Comparable, T> extends DataAbstarctReade
     @Override
     protected Collection<T> read0(int pageSize) {
         Collection<T> coll = query.query(offset, pageSize);
-        for (T data : CollUtil.of(coll)) {
-            if (data != null) {
+        for(T data : CollUtil.of(coll)) {
+            if(data != null) {
                 I newOffset = offsetGetter.get(data);
-                if (lt(offset, newOffset)) {
+                if(lt(offset, newOffset)) {
                     offset = newOffset;
                 }
             }
@@ -42,9 +42,9 @@ public class DataOffsetReader<I extends Comparable, T> extends DataAbstarctReade
     }
 
     private boolean lt(I offset, I newOffset) {
-        if (offset == null) { return true; }
-        if (newOffset == null) { return false; }
-        if (offset == newOffset) { return false; }
+        if(offset == null) { return true; }
+        if(newOffset == null) { return false; }
+        if(offset == newOffset) { return false; }
         return compare(offset, newOffset) < 0;
     }
 

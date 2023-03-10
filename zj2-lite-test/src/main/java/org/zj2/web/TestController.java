@@ -7,7 +7,7 @@ import org.zj2.common.sys.base.dto.req.NumNextReq;
 import org.zj2.common.sys.base.service.SysSequenceService;
 
 /**
- *  TestController
+ * TestController
  *
  * @author peijie.ye
  * @date 2022/12/22 18:08

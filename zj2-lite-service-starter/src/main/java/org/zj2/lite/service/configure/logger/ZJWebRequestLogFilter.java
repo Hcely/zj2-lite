@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *  ZJRequestLogFilter
+ * ZJRequestLogFilter
  *
  * @author peijie.ye
  * @date 2022/12/27 22:06
@@ -22,19 +22,18 @@ import java.io.IOException;
 @Order(-10000)
 public class ZJWebRequestLogFilter extends AbstractRequestLogFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         Throwable error = null;
         final RequestLogContext context = getContext(request);
         try {
             logRequest(context);
             chain.doFilter(request, response);
-        } catch (Throwable e) {//NOSONAR
+        } catch(Throwable e) {//NOSONAR
             error = e;
             throw e;
         } finally {
-            if (context.getLogState() != RequestLogContext.STATE_COMPLETED) {
-                if (context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
+            if(context.getLogState() != RequestLogContext.STATE_COMPLETED) {
+                if(context.getLogState() != RequestLogContext.STATE_RESPONSE) { context.response(null, null, error); }
                 final int responseStatus = getResponseStatus(response);
                 context.completed(responseStatus);
                 logResponse(context);
@@ -45,8 +44,8 @@ public class ZJWebRequestLogFilter extends AbstractRequestLogFilter implements F
     private RequestLogContext getContext(ServletRequest request) {
         String method = null;
         String uri = null;
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpReq = (HttpServletRequest) request;
+        if(request instanceof HttpServletRequest) {
+            HttpServletRequest httpReq = (HttpServletRequest)request;
             method = httpReq.getMethod();
             uri = httpReq.getRequestURI();
         }
@@ -54,8 +53,8 @@ public class ZJWebRequestLogFilter extends AbstractRequestLogFilter implements F
     }
 
     private int getResponseStatus(ServletResponse response) {
-        if (response instanceof HttpServletResponse) {
-            return ((HttpServletResponse) response).getStatus();
+        if(response instanceof HttpServletResponse) {
+            return ((HttpServletResponse)response).getStatus();
         }
         return -1;
     }

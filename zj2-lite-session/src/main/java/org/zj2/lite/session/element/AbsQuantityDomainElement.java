@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- *
  * <br>CreateDate 三月 27,2022
+ *
  * @author peijie.ye
  */
 @SuppressWarnings("rawtypes")
@@ -30,19 +30,19 @@ public abstract class AbsQuantityDomainElement<S extends DomainSession, D> exten
 
     @Override
     public boolean modify(String key, Quantity modify) {
-        if (modify == null || modify.eqZero()) { return false; }
+        if(modify == null || modify.eqZero()) { return false; }
         return modify0(true, key, modify);
     }
 
     protected boolean modify0(boolean leaf, String key, Quantity modify) {
         final Quantity before = quantities.get(key);
         final boolean b = quantities.modify(key, modify);
-        if (b && !modify.eqZero()) { onModify(leaf, key, before, modify, quantities.get(key)); }
-        if (parent != null) {
-            if (parent instanceof AbsQuantityDomainElement) {
-                ((AbsQuantityDomainElement) parent).modify0(!b && leaf, key, modify);
+        if(b && !modify.eqZero()) { onModify(leaf, key, before, modify, quantities.get(key)); }
+        if(parent != null) {
+            if(parent instanceof AbsQuantityDomainElement) {
+                ((AbsQuantityDomainElement)parent).modify0(!b && leaf, key, modify);
             } else {
-                ((QuantityDomainElement) parent).start().modify(key, modify);
+                ((QuantityDomainElement)parent).start().modify(key, modify);
             }
         }
         return b;

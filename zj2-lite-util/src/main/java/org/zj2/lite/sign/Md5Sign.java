@@ -6,7 +6,7 @@ import org.zj2.lite.codec.CodecUtil;
 import java.nio.charset.StandardCharsets;
 
 /**
- *  Md5SignFunc
+ * Md5SignFunc
  *
  * @author peijie.ye
  * @date 2022/11/28 0:54

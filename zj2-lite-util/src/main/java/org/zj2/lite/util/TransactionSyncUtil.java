@@ -27,8 +27,7 @@ import java.util.function.Supplier;
 public class TransactionSyncUtil {
     private static final Logger log = LoggerFactory.getLogger(TransactionSyncUtil.class);
     //
-    private static final SpringBeanRef<TransactionExecutor> TRANSACTION_EXECUTOR_REF = new SpringBeanRef<>(
-            TransactionExecutor.class);
+    private static final SpringBeanRef<TransactionExecutor> TRANSACTION_EXECUTOR_REF = new SpringBeanRef<>(TransactionExecutor.class);
     private static final ThreadLocal<AtomicInteger> IDX_TL = ThreadLocal.withInitial(AtomicInteger::new);
     // 防止被嵌套调用
     private static final ThreadLocal<Boolean> TRANS_STATE_TL = new ThreadLocal<>();
@@ -38,9 +37,8 @@ public class TransactionSyncUtil {
     static {
         ThreadLocal<Set> tmp;
         try {
-            tmp = (ThreadLocal<Set>) FieldUtils.readStaticField(TransactionSynchronizationManager.class,
-                    "synchronizations", true);
-        } catch (Throwable e) {
+            tmp = (ThreadLocal<Set>)FieldUtils.readStaticField(TransactionSynchronizationManager.class, "synchronizations", true);
+        } catch(Throwable e) {
             tmp = null;
         }
         synchronizations = tmp;
@@ -88,14 +86,13 @@ public class TransactionSyncUtil {
 
     private static <T> void transSync(Runnable cmd, T value, Consumer<T> consumer, boolean afterCommit) {
         Boolean committedflag = TRANS_STATE_TL.get();
-        if (committedflag != null) {
-            if (committedflag == afterCommit) { executeCmd(cmd, value, consumer); }
-        } else if (TransactionSynchronizationManager.isActualTransactionActive()) {
+        if(committedflag != null) {
+            if(committedflag == afterCommit) { executeCmd(cmd, value, consumer); }
+        } else if(TransactionSynchronizationManager.isActualTransactionActive()) {
             // 本地事务或全局事务起始
-            TransactionSynchronizationManager.registerSynchronization(
-                    new AfterCommitRunner(getSyncIdx(), cmd, value, consumer, afterCommit));
+            TransactionSynchronizationManager.registerSynchronization(new AfterCommitRunner(getSyncIdx(), cmd, value, consumer, afterCommit));
         } else {
-            if (afterCommit) { executeCmd(cmd, value, consumer); }
+            if(afterCommit) { executeCmd(cmd, value, consumer); }
         }
     }
 
@@ -109,9 +106,9 @@ public class TransactionSyncUtil {
     }
 
     private static void executeCmd(Runnable cmd, Object value, Consumer consumer) {
-        if (cmd != null) {
+        if(cmd != null) {
             cmd.run();
-        } else if (consumer != null) {
+        } else if(consumer != null) {
             consumer.accept(value);
         }
     }
@@ -139,19 +136,19 @@ public class TransactionSyncUtil {
 
         @Override
         public void afterCommit() {
-            if (afterCommit) { doExecute(Boolean.TRUE); }
+            if(afterCommit) { doExecute(Boolean.TRUE); }
         }
 
         @Override
         public void afterCompletion(int status) {
-            if (status == STATUS_ROLLED_BACK && !afterCommit) { doExecute(Boolean.FALSE); }
+            if(status == STATUS_ROLLED_BACK && !afterCommit) { doExecute(Boolean.FALSE); }
         }
 
         private void doExecute(Boolean commited) {
             try {
                 TRANS_STATE_TL.set(commited);
                 executeCmd(cmd, value, consumer);
-            } catch (Throwable e) {
+            } catch(Throwable e) {
                 throw e;
             } finally {
                 TRANS_STATE_TL.remove();
@@ -160,7 +157,7 @@ public class TransactionSyncUtil {
     }
 
     private static int getSyncIdx() {
-        if (synchronizations != null) {
+        if(synchronizations != null) {
             Set value = synchronizations.get();
             return value == null ? 0 : value.size();
         } else {

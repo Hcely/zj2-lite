@@ -34,11 +34,11 @@ public class AuthOrgEmployeeCheckStatusHandler implements Supportable<AuthContex
         OrgDTO org = context.getOrg();
         UserDTO user = context.getUser();
         OrgEmployeeDTO employee = orgEmployeeService.getEmployee(org.getOrgCode(), user.getUserId());
-        if (employee == null) {
+        if(employee == null) {
             throw ZRBuilder.failureErr("非机构职员");
-        } else if (!EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
+        } else if(!EmployeeStatusEnum.WORKING.eq(employee.getEmployeeStatus())) {
             throw ZRBuilder.failureErr("非机构职员");
-        } else if (BooleanUtil.isFalse(employee.getEnableFlag())) {
+        } else if(BooleanUtil.isFalse(employee.getEnableFlag())) {
             throw ZRBuilder.failureErr("机构职员账号停用");
         }
     }

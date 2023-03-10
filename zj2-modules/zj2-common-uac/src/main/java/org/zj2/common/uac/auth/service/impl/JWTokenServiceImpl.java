@@ -10,7 +10,7 @@ import org.zj2.common.uac.auth.service.helper.JWTBuildUtil;
 import java.util.concurrent.TimeUnit;
 
 /**
- *  JWTokenServiceImpl
+ * JWTokenServiceImpl
  *
  * @author peijie.ye
  * @date 2022/12/6 11:43
@@ -24,7 +24,7 @@ public class JWTokenServiceImpl implements JWTokenService {
     public String validToken(String appCode, String userId, String namespace, String token) {
         final String namespaceKey = getNamespaceKey(appCode, userId, namespace);
         String tokenSign = stringRedisTemplate.opsForValue().get(namespaceKey);
-        if (StringUtils.isEmpty(tokenSign) || !StringUtils.endsWith(token, tokenSign)) {
+        if(StringUtils.isEmpty(tokenSign) || !StringUtils.endsWith(token, tokenSign)) {
             String tokenKey = getTokenKey(JWTBuildUtil.getSignPart(token));
             String remark = stringRedisTemplate.opsForValue().get(tokenKey);
             return StringUtils.defaultIfEmpty(remark, "Token过期");
@@ -35,11 +35,9 @@ public class JWTokenServiceImpl implements JWTokenService {
     @Override
     public void setToken(String appCode, String userId, String namespace, String token, long expireTime) {
         final String namespaceKey = getNamespaceKey(appCode, userId, namespace);
-        String oldTokenSign = stringRedisTemplate.opsForValue()
-                .getAndSet(namespaceKey, JWTBuildUtil.getSignPart(token));
-        stringRedisTemplate.expire(namespaceKey, expireTime - System.currentTimeMillis() + 30000,
-                TimeUnit.MILLISECONDS);
-        if (StringUtils.isNotEmpty(oldTokenSign)) {
+        String oldTokenSign = stringRedisTemplate.opsForValue().getAndSet(namespaceKey, JWTBuildUtil.getSignPart(token));
+        stringRedisTemplate.expire(namespaceKey, expireTime - System.currentTimeMillis() + 30000, TimeUnit.MILLISECONDS);
+        if(StringUtils.isNotEmpty(oldTokenSign)) {
             setTokenErrorMsg(oldTokenSign, "账号在其他地方登录");
         }
     }
@@ -48,7 +46,7 @@ public class JWTokenServiceImpl implements JWTokenService {
     public void removeToken(String appCode, String userId, String namespace, String token, String remark) {
         final String namespaceKey = getNamespaceKey(appCode, userId, namespace);
         String tokenSign = stringRedisTemplate.opsForValue().get(namespaceKey);
-        if (StringUtils.isNotEmpty(tokenSign) && StringUtils.endsWith(token, tokenSign)) {
+        if(StringUtils.isNotEmpty(tokenSign) && StringUtils.endsWith(token, tokenSign)) {
             stringRedisTemplate.delete(namespaceKey);
         }
         setTokenErrorMsg(JWTBuildUtil.getSignPart(token), remark);
@@ -60,12 +58,11 @@ public class JWTokenServiceImpl implements JWTokenService {
     }
 
     private static String getNamespaceKey(String appCode, String userId, String namespace) {
-        StringBuilder sb = new StringBuilder(
-                StringUtils.length(appCode) + StringUtils.length(userId) + StringUtils.length(namespace) + 20);
+        StringBuilder sb = new StringBuilder(StringUtils.length(appCode) + StringUtils.length(userId) + StringUtils.length(namespace) + 20);
         sb.append("TOKEN");
-        if (StringUtils.isNotEmpty(appCode)) { sb.append(':').append(appCode); }
-        if (StringUtils.isNotEmpty(userId)) { sb.append(':').append(appCode); }
-        if (StringUtils.isNotEmpty(namespace)) { sb.append(':').append(appCode); }
+        if(StringUtils.isNotEmpty(appCode)) { sb.append(':' ).append(appCode); }
+        if(StringUtils.isNotEmpty(userId)) { sb.append(':' ).append(appCode); }
+        if(StringUtils.isNotEmpty(namespace)) { sb.append(':' ).append(appCode); }
         return sb.toString();
     }
 

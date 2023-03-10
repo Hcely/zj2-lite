@@ -28,6 +28,6 @@ public class TimeConsuming implements Serializable {
     }
 
     protected void finish() {
-        if (endTime == 0) { this.endTime = System.currentTimeMillis(); }
+        if(endTime == 0) { this.endTime = System.currentTimeMillis(); }
     }
 }

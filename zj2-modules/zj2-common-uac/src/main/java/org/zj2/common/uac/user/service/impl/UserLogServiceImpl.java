@@ -12,7 +12,7 @@ import org.zj2.lite.service.context.RequestContext;
 import org.zj2.lite.util.TransactionSyncUtil;
 
 /**
- *  UserServiceImpl
+ * UserServiceImpl
  *
  * @author peijie.ye
  * @date 2022/11/27 20:40
@@ -22,7 +22,7 @@ public class UserLogServiceImpl extends BaseServiceImpl<UserLogMapper, UserLog, 
     @Override
     public void addLogAfterCommit(UserLogDTO log) {
         // 初始化参数
-        if (log.getLogTime() == null) { log.setLogTime(DateUtil.now()); }
+        if(log.getLogTime() == null) { log.setLogTime(DateUtil.now()); }
         log.setLogRemark(StringUtils.abbreviate(log.getLogRemark(), 250));
         log.setLogAddrIp(StringUtils.abbreviate(RequestContext.currentAttrIp(), 100));
         log.setLogDevice(StringUtils.abbreviate(RequestContext.currentDevice(), 250));
